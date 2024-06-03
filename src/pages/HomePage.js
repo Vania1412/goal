@@ -75,7 +75,7 @@ const HomePage = () => {
   return (
     <div>
       <Menu /> 
-      <h1>Saving for your Goals</h1>
+      <h1>Saving for your Goal</h1>
       <div>
         <input
           type="text"
