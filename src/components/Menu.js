@@ -1,19 +1,40 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+
+const styles = {
+  menuContainer: {
+    position: 'absolute',
+    top: '0',
+    right: '0',
+    padding: '10px',
+  },
+  menuButton: {
+    fontSize: '24px',
+    padding: '10px',
+    cursor: 'pointer',
+  },
+  menuOptions: {
+    display: 'flex',
+    flexDirection: 'column',
+    position: 'absolute',
+    top: '100%',
+    left: '0',
+    backgroundColor: '#fff',
+    boxShadow: '0 8px 16px rgba(0,0,0,0.2)',
+    zIndex: 1,
+  },
+  link: {
+    display: 'block',
+    padding: '10px',
+    textDecoration: 'none',
+  },
+};
 
 const Menu = () => {
   const [showMenu, setShowMenu] = useState(false);
 
   const toggleMenu = () => {
     setShowMenu(!showMenu);
-  };
-
-  const navigateTo = (screen) => {
-    window.location.href = screen;
-    // Logic to navigate to the specified screen
-    // For web, you can use methods provided by React Router or other routing libraries
-    // Example:
-    // history.push(screen);
-    setShowMenu(false); // Close the menu after navigation
   };
 
   return (
@@ -23,45 +44,12 @@ const Menu = () => {
       </button>
       {showMenu && (
         <div className="menuOptions" style={styles.menuOptions}>
-          <button className="menuItem" onClick={() => navigateTo('/')}>
-            Home
-          </button>
-          <button className="menuItem" onClick={() => navigateTo('/achieved')}>
-            Achieved Goals
-          </button>
+          <Link to="/" style={styles.link}>Home</Link>
+          <Link to="/achieved" style={styles.link}>Achieved Goals</Link>
         </div>
       )}
     </div>
   );
-};
-
-const styles = {
-  menuContainer: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    zIndex: 1,
-  },
-  menuButton: {
-    backgroundColor: '#ccc',
-    padding: '8px 45px',
-    borderRadius: '4px',
-    fontSize: '20px',
-  },
-  menuOptions: {
-    position: 'absolute',
-    top: '32px',
-    right: 0,
-    backgroundColor: '#fff',
-    border: '1px solid #ccc',
-    borderRadius: '4px',
-    padding: '8px',
-  },
-  menuItem: {
-    display: 'block',
-    padding: '8px',
-    cursor: 'pointer',
-  },
 };
 
 export default Menu;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { collection, query, where, addDoc, getDocs } from "firebase/firestore";
 import { firestore } from '../firebase';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
+import { useNavigate} from 'react-router-dom'; // Import useNavigate from react-router-dom
 import Menu from '../components/Menu.js'; 
 
 const HomePage = () => {
@@ -71,6 +71,7 @@ const HomePage = () => {
       }
     }
   };
+ 
 
   return (
     <div>
