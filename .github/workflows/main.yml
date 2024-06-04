@@ -24,6 +24,14 @@ jobs:
       - name: Build
         run: npm run build
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Configure Git
         run: |
           git config --global user.email "wsc22@ic.ac.uk"
@@ -35,3 +43,4 @@ jobs:
           npm run deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
