@@ -96,7 +96,7 @@ const HomePage = () => {
           value={newGoal}
           onChange={(e) => setNewGoal(e.target.value)}
         />
-        <button onClick={addGoal}>Add Goal</button>
+        <button onClick={addGoal}>Add New Goal</button>
       </div>
      <ul>
       {goals.map(goal => (
