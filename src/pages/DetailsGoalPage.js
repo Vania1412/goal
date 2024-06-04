@@ -1,116 +1,72 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import profilePic from '../assets/icon.png';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { firestore } from '../firebase';
 
-function DetailsGoalPage() {
-  const { title } = useParams();
+const DetailsGoalPage = () => {
+  const { goalTitle } = useParams(); // Get the goalTitle from the URL params
+  const [goalData, setGoalData] = useState(null);
 
-  const containerStyle = {
-    padding: '20px',
-    textAlign: 'center',
-  };
+  function formatGoalTitle(goalTitle) {
+    // Split the goal title into an array of words separated by hyphens
+    const words = goalTitle.split('-');
+  
+    // Capitalize the first letter of each word and join them with spaces
+    const formattedTitle = words.join(' ');
+  
+    return formattedTitle;
+  }
 
-  const headerStyle = {
-    alignItems: 'center',
-  };
+  useEffect(() => {
+    const fetchGoalData = async () => {
+      try {
+        // Query Firestore to get the goal data based on the goalTitle
+        const formattedTitle = formatGoalTitle(goalTitle);
+        const q = query(collection(firestore, 'goals'), where('titlelc', '==', formattedTitle));
+        const querySnapshot = await getDocs(q);
 
-  const titleStyle = {
-    fontSize: '24px',
-    fontWeight: 'bold',
-    margin: '10px 0',
-  };
+        // Extract the goal data from the query snapshot
+        if (!querySnapshot.empty) {
+          const data = querySnapshot.docs[0].data();
+          setGoalData(data);
+        } else {
+          console.log('Goal not found');
+        }
+      } catch (error) {
+        console.error('Error fetching goal data:', error);
+      }
+    };
 
-  const textStyle = {
-    fontSize: '16px',
-    margin: '5px 0',
-  };
+    fetchGoalData();
+  }, [goalTitle]); // Fetch data whenever goalTitle changes
 
-  const profileContainerStyle = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    margin: '10px 0',
-  };
+  if (!goalData) {
+    return <div>Loading...</div>;
+  }
 
-  const profileStyle = {
-    alignItems: 'center',
-    margin: '0 10px',
-  };
-
-  const profileNameStyle = {
-    fontSize: '16px',
-    marginBottom: '5px',
-  };
-
-  const profilePicStyle = {
-    width: '50px',
-    height: '50px',
-    borderRadius: '25px',
-  };
-
-  const subtitleStyle = {
-    fontSize: '20px',
-    fontWeight: 'bold',
-    margin: '10px 0',
-  };
-
-  const profileTipStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    margin: '10px 0',
-  };
-
-  const profilePicTipStyle = {
-    width: '30px',
-    height: '30px',
-    borderRadius: '15px',
-    marginRight: '10px',
-  };
-
-  const profileNameTipStyle = {
-    fontSize: '16px',
-  };
+  // Destructure goalData for easier access
+  const { title, saver, achiever} = goalData;
 
   return (
-    <div style={containerStyle}>
-      <div style={headerStyle}>
-        <h1 style={titleStyle}>{title}</h1>
-        <p style={textStyle}>Trip To Italy</p>
-        <p style={textStyle}>23 users saving for this goal</p>
-        <p style={textStyle}>64 users achieved this goal</p>
-        <p style={textStyle}>Users expected to achieve within a similar timeframe as you:</p>
-        <div style={profileContainerStyle}>
-          <div style={profileStyle}>
-            <p style={profileNameStyle}>George</p>
-            <img src={profilePic} alt="Profile" style={profilePicStyle} />
-            <button className="followButton">Follow</button>
-          </div>
-          <div style={profileStyle}>
-            <p style={profileNameStyle}>Ivy</p>
-            <img src={profilePic} alt="Profile" style={profilePicStyle} />
-            <button className="followButton">Follow</button>
-          </div>
+    <div>
+      <h1>{title}</h1>
+      <p>{saver} users saving for this goal</p>
+      <p>{achiever} users achieved this goal</p>
+
+      {/* Render featured stories and tips */}
+      <h2>Featured Stories & Tips</h2>
+     {/* {featuredStories.map((story, index) => (
+        <div key={index}>
+          <p>{story.author}</p>
+          <p>{story.tip}</p>
         </div>
-        <h2 style={subtitleStyle}>Featured Stories & Tips</h2>
-        <div style={profileTipStyle}>
-          <img src={profilePic} alt="Profile" style={profilePicTipStyle} />
-          <p style={profileNameTipStyle}>Tim</p>
-        </div>
-        <p style={textStyle}>Buy round-trip tickets as soon as you know the starting date of your trip. Always keep track of the ticket price!</p>
-        <div style={profileTipStyle}>
-          <img src={profilePic} alt="Profile" style={profilePicTipStyle} />
-          <p style={profileNameTipStyle}>Olivia</p>
-        </div>
-        <p style={textStyle}>If you are going to Firenze, try Trattoria Dall'oste!! It's so delicious, definitely worth the price.</p>
-        <button onClick={() => window.history.back()}>Go back to Home</button>
-        <h2 style={subtitleStyle}>Memory Collection</h2>
-        <div>
-          <p style={textStyle}>John</p>
-          <p style={textStyle}>Freya</p>
-          <p style={textStyle}>Isabella</p>
-        </div>
-      </div>
+      ))}*/}
+
+      {/* Render memory collection */}
+      <h2>Memory Collection</h2>
+   
     </div>
   );
-}
+};
 
 export default DetailsGoalPage;

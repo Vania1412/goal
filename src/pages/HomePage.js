@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { collection, query, where, addDoc, getDocs } from "firebase/firestore";
+import { collection, query, where, addDoc, getDocs, updateDoc, FieldValue, increment} from "firebase/firestore";
 import { firestore } from '../firebase';
-import { useNavigate} from 'react-router-dom'; // Import useNavigate from react-router-dom
+import { useNavigate} from 'react-router-dom'; 
 import Menu from '../components/Menu.js'; 
 
 const HomePage = () => {
@@ -12,8 +12,9 @@ const HomePage = () => {
 
   const navigate = useNavigate(); 
 
-  const handleGoalClick = (goal) => { // Pass the goal object as an argument
-    navigate(`/details-goal`);  // Pass the goal object in the state
+  const handleGoalClick = (goal) => {  
+    const formattedTitle = goal.title.toLowerCase().replace(/\s+/g, '-');
+    navigate(`/details-goal/${formattedTitle}`)
   };
 
   useEffect(() => {
@@ -47,20 +48,39 @@ const HomePage = () => {
 
   const addGoal = async () => {
     if (newGoal.trim()) {
-      const newGoalData = {
-        title: newGoal,
-        progress: 0,
-        costs: parseFloat(cost),
-      };
       try {
-        // Assume "Wendy237" is the username of the user
+        const goalQuery = query(collection(firestore, "goals"), where("titlelc", "==", newGoal.toLowerCase()));
+        const goalSnapshot = await getDocs(goalQuery);
+  
+        if (!goalSnapshot.empty) {
+          const goalDocRef = goalSnapshot.docs[0].ref;
+          await updateDoc(goalDocRef, {
+            saver: increment(1)
+          });
+        } else {
+          const newGoalData = {
+            title: newGoal,
+            titlelc: newGoal.toLowerCase(),
+            saver: 1,
+            achiever: 0
+          };
+          const goalsCollectionRef = collection(firestore, `goals`);
+          await addDoc(goalsCollectionRef, newGoalData);
+        }
+  
+        // Add the new goal data for the user
+        const newGoalDataForUser = {
+          title: newGoal,
+          progress: 0,
+          costs: parseFloat(cost)
+        };
         const userQuery = query(collection(firestore, "users"), where("Username", "==", "Wendy237"));
         const userSnapshot = await getDocs(userQuery);
         if (!userSnapshot.empty) {
           const userId = userSnapshot.docs[0].id;
           const goalsCollectionRef = collection(firestore, `users/${userId}/goals`);
-          const docRef = await addDoc(goalsCollectionRef, newGoalData);
-          setGoals([...goals, { id: docRef.id, ...newGoalData }]);
+          const docRef = await addDoc(goalsCollectionRef, newGoalDataForUser);
+          setGoals([...goals, { id: docRef.id, ...newGoalDataForUser }]);
           setNewGoal('');
           setCost('');
         } else {
@@ -71,6 +91,8 @@ const HomePage = () => {
       }
     }
   };
+  
+  
  
 
   return (
@@ -96,7 +118,7 @@ const HomePage = () => {
           value={newGoal}
           onChange={(e) => setNewGoal(e.target.value)}
         />
-        <button onClick={addGoal}>Add Goal</button>
+        <button onClick={addGoal}>Add New Goal</button>
       </div>
      <ul>
       {goals.map(goal => (

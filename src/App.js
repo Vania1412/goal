@@ -10,6 +10,7 @@ function App() {
       <Routes>
         <Route exact path="/" element={<HomePage />} />
         <Route path="/details-goal" element={<DetailsGoalPage />} />
+        <Route path="/details-goal/:goalTitle" element={<DetailsGoalPage />} />
         <Route path="/achieved" element={<AchievedGoalsPage />} />
       </Routes>
     </Router>
