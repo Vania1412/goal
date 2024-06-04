@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { firestore } from '../firebase';
+import profilePic from '../assets/icon.png';
 
 const DetailsGoalPage = () => {
   const { goalTitle } = useParams(); // Get the goalTitle from the URL params
@@ -43,6 +44,35 @@ const DetailsGoalPage = () => {
   if (!goalData) {
     return <div>Loading...</div>;
   }
+
+
+  const textStyle = {
+    fontSize: '16px',
+    margin: '5px 0',
+  };
+
+  const profileContainerStyle = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    margin: '10px 0',
+  };
+
+  const profileStyle = {
+    alignItems: 'center',
+    margin: '0 10px',
+  };
+
+  const profileNameStyle = {
+    fontSize: '16px',
+    marginBottom: '5px',
+  };
+
+  const profilePicStyle = {
+    width: '50px',
+    height: '50px',
+    borderRadius: '25px',
+  };
+ 
 
   // Destructure goalData for easier access
   const { title, saver, achiever} = goalData;
