@@ -52,6 +52,19 @@ const DetailsGoalPage = () => {
       <h1>{title}</h1>
       <p>{saver} users saving for this goal</p>
       <p>{achiever} users achieved this goal</p>
+      <p style={textStyle}>Users expected to achieve within a similar timeframe as you:</p>
+        <div style={profileContainerStyle}>
+          <div style={profileStyle}>
+            <p style={profileNameStyle}>George</p>
+            <img src={profilePic} alt="Profile" style={profilePicStyle} />
+            <button className="followButton">Follow</button>
+          </div>
+          <div style={profileStyle}>
+            <p style={profileNameStyle}>Ivy</p>
+            <img src={profilePic} alt="Profile" style={profilePicStyle} />
+            <button className="followButton">Follow</button>
+          </div>
+        </div>
 
       {/* Render featured stories and tips */}
       <h2>Featured Stories & Tips</h2>
