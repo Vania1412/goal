@@ -204,13 +204,13 @@ const HomePage = () => {
 
 
   return (
-    <div>
+    <div className="container">
       <Menu />
       <Link to="/badges"> Wendy237 </Link>
       <p>Expected Saving Per Month: £{espm}</p>
       <p>Total Saving: £{totalSaving}</p>
       <h1>Saving for your Goal</h1>
-      <div>
+      <div className="input-container">
         <input
           type="text"
           placeholder="Enter savings"
@@ -218,7 +218,7 @@ const HomePage = () => {
           onChange={(e) => setSaving(e.target.value)}
         />
       </div>
-      <div>
+      <div className="input-container">
         <input
           type="number"
           placeholder="Enter costs"
@@ -254,20 +254,28 @@ const HomePage = () => {
         />*/}
         <button onClick={addGoal}>Add New Goal</button>
       </div>
-      <div>
+      <div className="input-container">
         <Link to="/suggestion"> Need Suggestions </Link>
         {/* <button onClick={updateAllExistGoals}>Update Goals</button> */}
       </div>
 
-      <ul>
-        {goals.map(goal => (
-          <li key={goal.id}>
-            <button onClick={() => handleGoalClick(goal)}> {/* Pass the goal object to the handleGoalClick function */}
-              {goal.title} - {goal.progress}% - £{goal.costs}
-            </button>
-          </li>
-        ))}
-      </ul>
+      <div className="goal-list">
+  {goals.map(goal => (
+    <div className="goal-box" key={goal.id}>
+      <Link to={`/details-goal/${goal.title.toLowerCase().replace(/ /g, '-')}`} className="goal-link">
+              <h3>{goal.title}</h3>
+              <p>Costs: £{goal.costs}</p>
+              <p>Progress: {goal.progress}%</p>
+        </Link>
+    {/*  <div className="goal-info">
+        <button onClick={() => handleGoalClick(goal)}>
+          Edit costs
+        </button>
+  </div>*/}
+    </div>
+  ))}
+</div>
+
     </div>
   );
 }

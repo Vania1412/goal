@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { collection, query, where, getDocs, addDoc, updateDoc, increment } from 'firebase/firestore';
 import { firestore } from '../firebase';
 import profilePic from '../assets/icon.png';
-import Menu from '../components/Menu.js'; 
+import Menu from '../components/Menu.js';
 import './DetailsGoalPage.css'; // Import the CSS file
 
 const DetailsGoalPage = () => {
@@ -11,7 +11,11 @@ const DetailsGoalPage = () => {
   const [goalData, setGoalData] = useState(null);
   const [isGoalSet, setIsGoalSet] = useState(true); // Start as true
   const [averageCosts, setAverageCosts] = useState(0);
+  const [featuredStories, setFeaturedStories] = useState([]);
+  const [showAllStories, setShowAllStories] = useState(false);
+
   const navigate = useNavigate();
+
 
   const username = "Wendy237"; // Replace with the actual username
 
@@ -32,6 +36,10 @@ const DetailsGoalPage = () => {
           const data = querySnapshot.docs[0].data();
           setGoalData(data);
           setAverageCosts(data['average costs']);
+          const featuredStoriesRef = collection(firestore, `goals/${querySnapshot.docs[0].id}/featured_s&t`);
+          const storiesSnapshot = await getDocs(featuredStoriesRef);
+          const storiesData = storiesSnapshot.docs.map(doc => doc.data());
+          setFeaturedStories(storiesData);
 
           // Check if the goal is already set for the user
           const userQuery = query(collection(firestore, 'users'), where('Username', '==', username));
@@ -69,7 +77,7 @@ const DetailsGoalPage = () => {
           await updateDoc(goalDocRef, {
             savers: increment(1),
           });
-        } 
+        }
         const userQuery = query(collection(firestore, 'users'), where('Username', '==', username));
         const userSnapshot = await getDocs(userQuery);
 
@@ -83,7 +91,7 @@ const DetailsGoalPage = () => {
             category: goalData.category[0]
           };
           await addDoc(goalsCollectionRef, newGoalData);
-          setIsGoalSet(true);  
+          setIsGoalSet(true);
           navigate('/home');
         } else {
           console.log('User not found');
@@ -93,6 +101,12 @@ const DetailsGoalPage = () => {
       }
     }
   };
+
+  
+  const toggleShowAllStories = () => {
+    setShowAllStories(!showAllStories);
+  };
+
 
   if (!goalData) {
     return <div>Loading...</div>;
@@ -119,14 +133,22 @@ const DetailsGoalPage = () => {
 
       {/* Render featured stories and tips */}
       <h2 className="section-title">Featured Stories & Tips</h2>
-      {/* <div className="featured-stories">
-        {featuredStories.map((story, index) => (
+      <div className="featured-stories">
+        {featuredStories.slice(0, showAllStories ? undefined : 3).map((story, index) => (
           <div key={index} className="story">
-            <p className="story-author">{story.author}</p>
-            <p className="story-tip">{story.tip}</p>
+            <p className="story-author">{story.username}</p>
+            <p className="story-content">{story.content}</p>
           </div>
         ))}
-      </div> */}
+      </div>
+      {featuredStories.length > 3 && (
+        <button onClick={toggleShowAllStories}>
+          {showAllStories ? 'Collapse' : 'View More'}
+        </button>
+      )}
+      {featuredStories.length === 0 && (
+        <p>No featured stories & tips currently.</p>
+      )}
 
       {/* Render memory collection */}
       <h2 className="section-title">Memory Collection</h2>
