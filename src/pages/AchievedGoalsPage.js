@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { collection, query, where, getDocs, updateDoc, doc } from 'firebase/firestore';
+import { collection, query, where, getDocs, updateDoc, doc, setDoc, addDoc } from 'firebase/firestore';
 import { firestore } from '../firebase';
-import Menu from '../components/Menu.js'; 
+import Menu from '../components/Menu.js';
 
 const AchievedGoalsPage = () => {
   const [achievedGoals, setAchievedGoals] = useState([]);
@@ -28,27 +28,65 @@ const AchievedGoalsPage = () => {
     fetchAchievedGoals();
   }, []);
 
-  const handleShare = async (itemId, text, originalText) => {
+  const handleShare = async (itemId, text, originalText, itemTitle) => {
     if (text !== undefined && text !== originalText) {
       try {
         // Query the user collection to find the document with the username "Wendy237"
         const userQuery = query(collection(firestore, "users"), where("Username", "==", "Wendy237"));
         const userSnapshot = await getDocs(userQuery);
-        
+
         if (!userSnapshot.empty) {
           const userId = userSnapshot.docs[0].id;
           // Update the "S&T" field of the corresponding achieved goal document under the user's document
           await updateDoc(doc(firestore, `users/${userId}/achieved_goals`, itemId), {
             's&t': text
           });
-          
+
+          // Update the "featured_s&t" collection within the goal document
+const goalDocQuery = query(collection(firestore, "goals"), where("title", "==", itemTitle));
+
+const goalSnapshot = await getDocs(goalDocQuery);
+if (!goalSnapshot.empty) {
+  const goalData = goalSnapshot.docs[0].data();
+  const goalDataRef = goalSnapshot.docs[0].ref;
+  const goalId = goalSnapshot.docs[0].id;
+
+  // Check if the "featured_s&t" collection exists
+  if (!goalData['featured_s&t']) {
+    // Create the "featured_s&t" collection if it doesn't exist
+    await setDoc(doc(firestore, `goals/${goalId}/featured_s&t/initialDoc`), {
+      username: userSnapshot.docs[0].data().Username,
+      content: text
+    });
+  } else {
+    // Update or add a new document in the "featured_s&t" collection
+    const featuredSTQuery = query(collection(firestore, `goals/${goalId}/featured_s&t`), where('username', '==', userSnapshot.docs[0].data().Username));
+    const featuredSTSnapshot = await getDocs(featuredSTQuery);
+
+    if (!featuredSTSnapshot.empty) {
+      // Update the existing document in the "featured_s&t" collection
+      const docRefToUpdate = featuredSTSnapshot.docs[0].ref;
+      await updateDoc(docRefToUpdate, {
+        content: text
+      });
+    } else {
+      // Add a new document to the "featured_s&t" collection
+      await addDoc(collection(goalDataRef, 'featured_s&t'), {
+        username: userSnapshot.docs[0].data().Username,
+        content: text
+      });
+    }
+  }
+}
+
+
           setAchievedGoals(prevGoals => prevGoals.map(goal => {
             if (goal.id === itemId) {
               return { ...goal, 's&t': text };
             }
             return goal;
           }));
-          
+
           if (text !== '') {
             setMessage('Shared successfully!');
           } else {
@@ -69,9 +107,10 @@ const AchievedGoalsPage = () => {
     }, 2000);
   };
 
+
   return (
     <div className="container">
-      <Menu /> 
+      <Menu />
       <h1>Achieved Goals</h1>
       {achievedGoals.map(item => (
         <div key={item.id} className="goalItem">
@@ -95,7 +134,7 @@ const AchievedGoalsPage = () => {
                   setAchievedGoals(updatedGoals);
                 }}
               />
-              <button onClick={() => handleShare(item.id, item.st, item['s&t'])}>
+              <button onClick={() => handleShare(item.id, item.st, item['s&t'], item.title)}>
                 Update
               </button>
             </div>

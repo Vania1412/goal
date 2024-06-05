@@ -38,7 +38,7 @@ const DetailsGoalPage = () => {
           setAverageCosts(data['average costs']);
           const featuredStoriesRef = collection(firestore, `goals/${querySnapshot.docs[0].id}/featured_s&t`);
           const storiesSnapshot = await getDocs(featuredStoriesRef);
-          const storiesData = storiesSnapshot.docs.map(doc => doc.data());
+          const storiesData = storiesSnapshot.docs.map(doc => doc.data()).filter(story => story.content !== "");
           setFeaturedStories(storiesData);
 
           // Check if the goal is already set for the user
