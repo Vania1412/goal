@@ -182,7 +182,7 @@ const HomePage = () => {
         const userSnapshot = await getDocs(userQuery);
         if (!userSnapshot.empty) {
           const userId = userSnapshot.docs[0].id;
-          const goalsCollectionRef = collection(firestore, `users/${userId}/goals`);
+          const goalsCollectionRef = collection(firestore, `users/${userId}/current_goals`);
           const docRef = await addDoc(goalsCollectionRef, newGoalDataForUser);
           setGoals([...goals, { id: docRef.id, ...newGoalDataForUser }]);
           setNewGoal('');
