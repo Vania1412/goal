@@ -66,11 +66,12 @@ const DetailsGoalPage = () => {
 
         if (!userSnapshot.empty) {
           const userId = userSnapshot.docs[0].id;
-          const goalsCollectionRef = collection(firestore, `users/${userId}/goals`);
+          const goalsCollectionRef = collection(firestore, `users/${userId}/current_goals`);
           const newGoalData = {
             title: goalData.title,
             progress: 0,
-            costs: averageCosts
+            costs: averageCosts,
+            category: goalData.category[0]
           };
           await addDoc(goalsCollectionRef, newGoalData);
           setIsGoalSet(true); // Set to true after successfully adding the goal
