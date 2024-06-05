@@ -9,6 +9,8 @@ const HomePage = () => {
   const [newGoal, setNewGoal] = useState('');
   const [saving, setSaving] = useState('');
   const [cost, setCost] = useState('');
+  const [totalSaving, setTotalSaving] = useState(0);
+  const [espm, setEspm] = useState(0);
 
   const navigate = useNavigate(); 
 
@@ -43,8 +45,26 @@ const HomePage = () => {
         console.error("Error fetching goals: ", error);
       }
     };
+    const fetchUserStats = async () => {
+      try {
+        const userQuery = query(collection(firestore, "users"), where("Username", "==", "Wendy237")); // Replace with actual username
+        const userSnapshot = await getDocs(userQuery);
+        if (!userSnapshot.empty) {
+          const userData = userSnapshot.docs[0].data();
+          setEspm(userData.espm);
+          setTotalSaving(userData['total saving']);
+        } else {
+          console.log("User not found");
+        }
+      } catch (error) {
+        console.error("Error fetching user stats: ", error);
+      }
+    };
+
     fetchGoals();
+    fetchUserStats();
   }, []);
+
 
   const addGoal = async () => {
     if (newGoal.trim()) {
@@ -54,15 +74,24 @@ const HomePage = () => {
   
         if (!goalSnapshot.empty) {
           const goalDocRef = goalSnapshot.docs[0].ref;
+          const goalData = goalSnapshot.docs[0].data();
+
+          const totalSavers = goalData.savers || 0;
+          const totalAchievers = goalData.achievers || 0;
+          const currentAverageCosts = goalData['average costs'] || 0;
+          const newAverageCosts = Math.ceil(((currentAverageCosts * (totalSavers + totalAchievers)) + parseFloat(cost)) / (1 + totalSavers + totalAchievers));
+
           await updateDoc(goalDocRef, {
-            saver: increment(1)
+            savers: increment(1),
+            'average costs': newAverageCosts
           });
         } else {
           const newGoalData = {
             title: newGoal,
             titlelc: newGoal.toLowerCase(),
-            saver: 1,
-            achiever: 0
+            'average costs': cost,
+            savers: 1,
+            achievers: 0
           };
           const goalsCollectionRef = collection(firestore, `goals`);
           await addDoc(goalsCollectionRef, newGoalData);
@@ -92,10 +121,14 @@ const HomePage = () => {
     }
   };
 
+  
+
   return (
     <div>
       <Menu /> 
       <Link to="/badges"> Wendy237 </Link>
+      <p>Expected Saving Per Month: £{espm}</p>
+      <p>Total Saving: £{totalSaving}</p>
       <h1>Saving for your Goal</h1>
       <div>
         <input

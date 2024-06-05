@@ -16,7 +16,7 @@ const SuggestionPage = () => {
         const allGoals = goalsSnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data(),
-        }));
+        })).sort((a, b) => b.savers - a.savers);;
 
         // Fetch user's current goals
         const userQuery = query(collection(firestore, "users"), where("Username", "==", "Wendy237")); // Replace with actual username
@@ -49,7 +49,7 @@ const SuggestionPage = () => {
         {goals.map(goal => (
           <li key={goal.id}>
             <Link to={`/details-goal/${goal.title.toLowerCase().replace(/ /g, '-')}`}>
-              {goal.title} - Savers: {goal.saver}, Achievers: {goal.achiever}
+              {goal.title} - Savers: {goal.savers}, Achievers: {goal.achievers}
             </Link>
           </li>
         ))}

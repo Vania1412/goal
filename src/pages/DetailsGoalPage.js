@@ -115,15 +115,15 @@ const DetailsGoalPage = () => {
     borderRadius: '25px',
   };
 
-  const { title, saver, achiever } = goalData;
+  const { title, savers, achievers } = goalData;
 
   return (
     <div>
       <Menu />
       <h1>{title}</h1>
       <p>The average costs is £{averageCosts}</p>
-      <p>{saver} users saving for this goal</p>
-      <p>{achiever} users achieved this goal</p>
+      <p>{savers} users saving for this goal</p>
+      <p>{achievers} users achieved this goal</p>
       {!isGoalSet && <button onClick={handleSetGoal}>Set Goal</button>}
       <p style={textStyle}>Users expected to achieve within a similar timeframe as you:</p>
       <div style={profileContainerStyle}>
