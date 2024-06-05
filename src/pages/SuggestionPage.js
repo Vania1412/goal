@@ -9,6 +9,10 @@ const SuggestionPage = () => {
     const [goals, setGoals] = useState([]);
     const [sortBy, setSortBy] = useState('savers');
 
+    const categories = ["Tech Gadgets", "Fashion and Accessories", "Travel", "Entertainment", "Education and Personal Development", "Social and Lifestyle"];
+    const [selectedCategories, setSelectedCategories] = useState(categories);
+
+
     useEffect(() => {
         const fetchGoals = async () => {
             try {
@@ -28,9 +32,13 @@ const SuggestionPage = () => {
                     const userGoalsQuery = query(collection(firestore, `users/${userId}/current_goals`));
                     const userGoalsSnapshot = await getDocs(userGoalsQuery);
                     const currentUserGoals = userGoalsSnapshot.docs.map(doc => doc.data().title);
+
+                    const filteredGoals = selectedCategories.length > 0
+                        ? allGoals.filter(goal => selectedCategories.some(category => goal.category.includes(category)))
+                        : [];
         
                     // Filter out goals that are not in the current user's goals
-                    const suggestedGoals = allGoals.filter(goal => !currentUserGoals.includes(goal.title));
+                    const suggestedGoals = filteredGoals.filter(goal => !currentUserGoals.includes(goal.title));
         
                     // Sort the goals based on the selected sort option
                     const sortedGoals = suggestedGoals.sort((a, b) => {
@@ -55,10 +63,19 @@ const SuggestionPage = () => {
         };
 
         fetchGoals();
-    }, [sortBy]);
+    }, [sortBy, selectedCategories]);
 
     const handleSortChange = (event) => {
         setSortBy(event.target.value);
+    };
+
+    const handleCategoryChange = (event) => {
+        const category = event.target.value;
+        setSelectedCategories(prevCategories =>
+            prevCategories.includes(category)
+                ? prevCategories.filter(c => c !== category)
+                : prevCategories.concat(category)
+        );
     };
 
     return (
@@ -72,6 +89,21 @@ const SuggestionPage = () => {
                     <option value="achievers">Achievers</option>
                     <option value="total">Total</option>
                 </select>
+            </div>
+            <div>
+                <label>Filter by categories:</label>
+                {categories.map(category => (
+                    <div key={category}>
+                        <input
+                            type="checkbox"
+                            id={category}
+                            value={category}
+                            checked={selectedCategories.includes(category)}
+                            onChange={handleCategoryChange}
+                        />
+                        <label htmlFor={category}>{category}</label>
+                    </div>
+                ))}
             </div>
             <div className="goal-list">
                 {goals.map(goal => (
