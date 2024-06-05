@@ -110,6 +110,7 @@ const SuggestionPage = () => {
                     <div key={goal.id} className="goal-box">
                         <Link to={`/details-goal/${goal.title.toLowerCase().replace(/ /g, '-')}`} className="goal-link">
                             <h2>{goal.title}</h2>
+                            {goal.url && <img src={goal.url} alt={goal.title} className="goal-image" />}
                             <p>Savers: {goal.savers}</p>
                             <p>Achievers: {goal.achievers}</p>
                         </Link>

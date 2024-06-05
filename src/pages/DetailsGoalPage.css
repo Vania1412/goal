@@ -12,6 +12,11 @@
     font-size: 18px;
     margin-bottom: 10px;
   }
+
+  .goal-image {
+    max-width: 100%;
+    height: auto;
+  } 
   
   .set-goal-button {
     display: inline-block;
