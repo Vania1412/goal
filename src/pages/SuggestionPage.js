@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, query, getDocs, where, or } from "firebase/firestore";
+import { collection, query, getDocs, where } from "firebase/firestore";
 import { firestore } from '../firebase';
 import Menu from '../components/Menu.js';
 import { Link } from 'react-router-dom';
@@ -41,12 +41,11 @@ const SuggestionPage = () => {
                         ? allGoals.filter(goal => selectedCategories.some(category => goal.category.includes(category)))
                         : [];
 
-                    // Filter out goals that are not in the current user's goals
                     const suggestedGoals = filteredGoals.filter(goal => !currentUserGoals.includes(goal.title));
 
                     const withinPriceGoals = suggestedGoals.filter(goal => {
                         const averageCost = goal['average costs'];
-                        if (minCost !== '' && averageCost < parseFloat(minCost) || maxCost !== '' && averageCost > parseFloat(maxCost)) {
+                        if ((minCost !== '' && averageCost < parseFloat(minCost)) || (maxCost !== '' && averageCost > parseFloat(maxCost))) {
                             return false;
                         }
                         return true;
