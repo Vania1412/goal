@@ -73,10 +73,10 @@ const HomePage = () => {
     fetchUserStats();
   }, []);
 
- /*  const extractKeywords = title => {
-     // You can customize this function based on how you want to extract keywords
-     return title.toLowerCase().split(' ');
-   }*/
+  /*  const extractKeywords = title => {
+      // You can customize this function based on how you want to extract keywords
+      return title.toLowerCase().split(' ');
+    }*/
   /* const updateAllExistGoals = async () => {
      const goalsCollection = collection(firestore, 'goals');
    
@@ -87,7 +87,7 @@ const HomePage = () => {
          const title = doc.data().title;
          //const keywords = extractKeywords(title);
          const docRef = doc.ref;
-         await updateDoc(docRef, { category:  "Fashion and Accessories"});
+         await updateDoc(docRef, { category:  ["Fashion and Accessories"]});
        });
    
        console.log('Title keywords updated successfully.');
@@ -147,12 +147,15 @@ const HomePage = () => {
           const totalAchievers = goalData.achievers || 0;
           const currentAverageCosts = goalData['average costs'] || 0;
           const newAverageCosts = Math.ceil(((currentAverageCosts * (totalSavers + totalAchievers)) + parseFloat(cost)) / (1 + totalSavers + totalAchievers));
-          //const updatedCategory = category.filter(cat => !goalData.category.includes(cat));
+          const updatedCategory = Array.isArray(goalData.category) ? goalData.category : [];
+          if (!updatedCategory.includes(category)) {
+            updatedCategory.push(category);
+          }
 
           await updateDoc(goalDocRef, {
             savers: increment(1),
             'average costs': newAverageCosts,
-            //category: arrayUnion(...updatedCategory, ...category),
+            category: arrayUnion(...updatedCategory),
             //  imageURL: imageURL // Add the imageURL to the goal data
           });
         } else {
@@ -163,7 +166,7 @@ const HomePage = () => {
             savers: 1,
             achievers: 0,
             titleKeywords: newGoal.toLowerCase().split(" "),
-            category: category
+            category: [category]
             //  imageURL: imageURL // Add the imageURL to the goal data
           };
           const goalsCollectionRef = collection(firestore, `goals`);
@@ -187,6 +190,7 @@ const HomePage = () => {
           setGoals([...goals, { id: docRef.id, ...newGoalDataForUser }]);
           setNewGoal('');
           setCost('');
+          setCategory('');
           //    setImageFile(null); // Reset image file after adding the goal
         } else {
           console.log("User not found");
@@ -251,7 +255,7 @@ const HomePage = () => {
         <button onClick={addGoal}>Add New Goal</button>
       </div>
       <div>
-        <button onClick={() => navigate('/suggestion')}>Need Suggestions</button>
+        <Link to="/suggestion"> Need Suggestions </Link>
         {/* <button onClick={updateAllExistGoals}>Update Goals</button> */}
       </div>
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, query, getDocs, where } from "firebase/firestore";
+import { collection, query, getDocs } from "firebase/firestore";
 import { firestore } from '../firebase';
 import Menu from '../components/Menu.js';
 import { Link } from 'react-router-dom'; 

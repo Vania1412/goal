@@ -85,7 +85,7 @@ const DetailsGoalPage = () => {
             category: goalData.category[0]
           };
           await addDoc(goalsCollectionRef, newGoalData);
-          setIsGoalSet(true); // Set to true after successfully adding the goal
+          setIsGoalSet(true);  
           navigate('/home');
         } else {
           console.log('User not found');
