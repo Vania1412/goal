@@ -4,6 +4,9 @@ import { collection, query, where, getDocs, addDoc, updateDoc, increment } from 
 import { firestore } from '../firebase';
 import profilePic from '../assets/icon.png';
 import Menu from '../components/Menu.js'; 
+import { ref, uploadBytes } from "firebase/storage"
+import { storage } from "../firebase.js"
+import { v4 } from "uuid"
 
 
 const DetailsGoalPage = () => {
@@ -12,6 +15,12 @@ const DetailsGoalPage = () => {
   const [isGoalSet, setIsGoalSet] = useState(true); // Start as true
   const [averageCosts, setAverageCosts] = useState(0);
   const navigate = useNavigate();
+  const [img,setImg] = useState(null);
+  const handleClick = () => {
+    const imgRef = ref(storage, `files/${v4()}`)
+    uploadBytes(imgRef)
+  }
+  
 
   const username = "Wendy237"; // Replace with the actual username
 
@@ -20,7 +29,6 @@ const DetailsGoalPage = () => {
     const formattedTitle = words.join(' ');
     return formattedTitle;
   }
-
 
   useEffect(() => {
     const fetchGoalData = async () => {
@@ -129,6 +137,7 @@ const DetailsGoalPage = () => {
 
   const { title, savers, achievers } = goalData;
 
+
   return (
     <div>
       <Menu />
@@ -146,6 +155,8 @@ const DetailsGoalPage = () => {
         </div>
       </div>
 
+      <input type="file" onChange={(e)=>setImg(e.target.files[0])}/>
+      <button onClick={handleClick}>Upload</button>
       {/* Render featured stories and tips */}
       <h2>Featured Stories & Tips</h2>
       {/* {featuredStories.map((story, index) => (
