@@ -1,35 +1,52 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { useParams, useNavigate } from 'react-router-dom';
+import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
 import { firestore } from '../firebase';
 import profilePic from '../assets/icon.png';
+import Menu from '../components/Menu.js'; 
+
 
 const DetailsGoalPage = () => {
   const { goalTitle } = useParams(); // Get the goalTitle from the URL params
   const [goalData, setGoalData] = useState(null);
+  const [isGoalSet, setIsGoalSet] = useState(true); // Start as true
+  const [averageCosts, setAverageCosts] = useState(0);
+  const navigate = useNavigate();
+
+  const username = "Wendy237"; // Replace with the actual username
 
   function formatGoalTitle(goalTitle) {
-    // Split the goal title into an array of words separated by hyphens
     const words = goalTitle.split('-');
-  
-    // Capitalize the first letter of each word and join them with spaces
     const formattedTitle = words.join(' ');
-  
     return formattedTitle;
   }
+
 
   useEffect(() => {
     const fetchGoalData = async () => {
       try {
-        // Query Firestore to get the goal data based on the goalTitle
         const formattedTitle = formatGoalTitle(goalTitle);
         const q = query(collection(firestore, 'goals'), where('titlelc', '==', formattedTitle));
         const querySnapshot = await getDocs(q);
 
-        // Extract the goal data from the query snapshot
         if (!querySnapshot.empty) {
           const data = querySnapshot.docs[0].data();
           setGoalData(data);
+          setAverageCosts(data['average costs']);
+
+          // Check if the goal is already set for the user
+          const userQuery = query(collection(firestore, 'users'), where('Username', '==', username));
+          const userSnapshot = await getDocs(userQuery);
+
+          if (!userSnapshot.empty) {
+            const userId = userSnapshot.docs[0].id;
+            const userGoalsQuery = query(collection(firestore, `users/${userId}/goals`), where('title', '==', data.title));
+            const userGoalsSnapshot = await getDocs(userGoalsQuery);
+
+            if (userGoalsSnapshot.empty) {
+              setIsGoalSet(false); // Set to false if the goal is not found in the user's collection
+            }
+          }
         } else {
           console.log('Goal not found');
         }
@@ -39,12 +56,37 @@ const DetailsGoalPage = () => {
     };
 
     fetchGoalData();
-  }, [goalTitle]); // Fetch data whenever goalTitle changes
+  }, [goalTitle]);
+
+  const handleSetGoal = async () => {
+    if (goalData) {
+      try {
+        const userQuery = query(collection(firestore, 'users'), where('Username', '==', username));
+        const userSnapshot = await getDocs(userQuery);
+
+        if (!userSnapshot.empty) {
+          const userId = userSnapshot.docs[0].id;
+          const goalsCollectionRef = collection(firestore, `users/${userId}/goals`);
+          const newGoalData = {
+            title: goalData.title,
+            progress: 0,
+            costs: averageCosts
+          };
+          await addDoc(goalsCollectionRef, newGoalData);
+          setIsGoalSet(true); // Set to true after successfully adding the goal
+          navigate('/home');
+        } else {
+          console.log('User not found');
+        }
+      } catch (error) {
+        console.error('Error setting goal: ', error);
+      }
+    }
+  };
 
   if (!goalData) {
     return <div>Loading...</div>;
   }
-
 
   const textStyle = {
     fontSize: '16px',
@@ -72,42 +114,37 @@ const DetailsGoalPage = () => {
     height: '50px',
     borderRadius: '25px',
   };
- 
 
-  // Destructure goalData for easier access
-  const { title, saver, achiever} = goalData;
+  const { title, saver, achiever } = goalData;
 
   return (
     <div>
+      <Menu />
       <h1>{title}</h1>
+      <p>The average costs is £{averageCosts}</p>
       <p>{saver} users saving for this goal</p>
       <p>{achiever} users achieved this goal</p>
+      {!isGoalSet && <button onClick={handleSetGoal}>Set Goal</button>}
       <p style={textStyle}>Users expected to achieve within a similar timeframe as you:</p>
-        <div style={profileContainerStyle}>
-          <div style={profileStyle}>
-            <p style={profileNameStyle}>George</p>
-            <img src={profilePic} alt="Profile" style={profilePicStyle} />
-            <button className="followButton">Follow</button>
-          </div>
-          <div style={profileStyle}>
-            <p style={profileNameStyle}>Ivy</p>
-            <img src={profilePic} alt="Profile" style={profilePicStyle} />
-            <button className="followButton">Follow</button>
-          </div>
+      <div style={profileContainerStyle}>
+        <div style={profileStyle}>
+          <p style={profileNameStyle}>George</p>
+          <img src={profilePic} alt="Profile" style={profilePicStyle} />
+          <button className="followButton">Follow</button>
         </div>
+      </div>
 
       {/* Render featured stories and tips */}
       <h2>Featured Stories & Tips</h2>
-     {/* {featuredStories.map((story, index) => (
+      {/* {featuredStories.map((story, index) => (
         <div key={index}>
           <p>{story.author}</p>
           <p>{story.tip}</p>
         </div>
-      ))}*/}
+      ))} */}
 
       {/* Render memory collection */}
       <h2>Memory Collection</h2>
-   
     </div>
   );
 };

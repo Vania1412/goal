@@ -1,17 +1,23 @@
 import React from 'react';
-import { HashRouter as Router, Route, Routes } from 'react-router-dom';
-import HomePage from './pages/HomePage.js';
-import DetailsGoalPage from './pages/DetailsGoalPage.js';
-import AchievedGoalsPage from './pages/AchievedGoalsPage.js';
+import { HashRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import HomePage from './pages/HomePage';
+import DetailsGoalPage from './pages/DetailsGoalPage';
+import AchievedGoalsPage from './pages/AchievedGoalsPage';
+import SuggestionPage from './pages/SuggestionPage';
+import BadgesPage from './pages/BadgesPage';
+import NotFoundPage from './pages/NotFoundPage';
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route exact path="/" element={<HomePage />} />
-        <Route path="/details-goal" element={<DetailsGoalPage />} />
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/" element={<Navigate to="/home" />} />
         <Route path="/details-goal/:goalTitle" element={<DetailsGoalPage />} />
         <Route path="/achieved" element={<AchievedGoalsPage />} />
+        <Route path="/suggestion" element={<SuggestionPage />} />
+        <Route path="/badges" element={<BadgesPage />} />
+        <Route path="*" element={<NotFoundPage />} /> {/* Catch-all route */}
       </Routes>
     </Router>
   );

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { collection, query, where, addDoc, getDocs, updateDoc, increment} from "firebase/firestore";
 import { firestore } from '../firebase';
-import { useNavigate} from 'react-router-dom'; 
+import { useNavigate, Link } from 'react-router-dom'; 
 import Menu from '../components/Menu.js'; 
 
 const HomePage = () => {
@@ -91,13 +91,11 @@ const HomePage = () => {
       }
     }
   };
-  
-  
- 
 
   return (
     <div>
       <Menu /> 
+      <Link to="/badges"> Wendy237 </Link>
       <h1>Saving for your Goal</h1>
       <div>
         <input
@@ -119,6 +117,7 @@ const HomePage = () => {
           onChange={(e) => setNewGoal(e.target.value)}
         />
         <button onClick={addGoal}>Add New Goal</button>
+        <button onClick={() => navigate('/suggestion')}>Need Suggestions</button>
       </div>
      <ul>
       {goals.map(goal => (
