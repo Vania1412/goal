@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { collection, query, where, addDoc, getDocs, updateDoc, increment, arrayUnion } from "firebase/firestore";
 import { firestore } from '../firebase';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Menu from '../components/Menu.js';
 /*import {
   getDownloadURL,
@@ -20,13 +20,8 @@ const HomePage = () => {
   const [totalSaving, setTotalSaving] = useState(0);
   const [espm, setEspm] = useState(0);
 
-  const navigate = useNavigate();
-
-  const handleGoalClick = (goal) => {
-    const formattedTitle = goal.title.toLowerCase().replace(/\s+/g, '-');
-    navigate(`/details-goal/${formattedTitle}`)
-  };
-
+ 
+   
   useEffect(() => {
     const fetchGoals = async () => {
       try {
