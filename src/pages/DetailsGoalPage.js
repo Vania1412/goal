@@ -4,7 +4,7 @@ import { collection, query, where, getDocs, addDoc, updateDoc, increment } from 
 import { firestore } from '../firebase';
 import profilePic from '../assets/icon.png';
 import Menu from '../components/Menu.js'; 
-
+import './DetailsGoalPage.css'; // Import the CSS file
 
 const DetailsGoalPage = () => {
   const { goalTitle } = useParams(); // Get the goalTitle from the URL params
@@ -20,7 +20,6 @@ const DetailsGoalPage = () => {
     const formattedTitle = words.join(' ');
     return formattedTitle;
   }
-
 
   useEffect(() => {
     const fetchGoalData = async () => {
@@ -69,7 +68,6 @@ const DetailsGoalPage = () => {
 
           await updateDoc(goalDocRef, {
             savers: increment(1),
-     
           });
         } 
         const userQuery = query(collection(firestore, 'users'), where('Username', '==', username));
@@ -100,65 +98,49 @@ const DetailsGoalPage = () => {
     return <div>Loading...</div>;
   }
 
-  const textStyle = {
-    fontSize: '16px',
-    margin: '5px 0',
-  };
-
-  const profileContainerStyle = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    margin: '10px 0',
-  };
-
-  const profileStyle = {
-    alignItems: 'center',
-    margin: '0 10px',
-  };
-
-  const profileNameStyle = {
-    fontSize: '16px',
-    marginBottom: '5px',
-  };
-
-  const profilePicStyle = {
-    width: '50px',
-    height: '50px',
-    borderRadius: '25px',
-  };
-
   const { title, savers, achievers } = goalData;
 
   return (
-    <div>
+    <div className="details-container">
       <Menu />
-      <h1>{title}</h1>
-      <p>The average costs is £{averageCosts}</p>
-      <p>{savers} users saving for this goal</p>
-      <p>{achievers} users achieved this goal</p>
-      {!isGoalSet && <button onClick={handleSetGoal}>Set Goal</button>}
-      <p style={textStyle}>Users expected to achieve within a similar timeframe as you:</p>
-      <div style={profileContainerStyle}>
-        <div style={profileStyle}>
-          <p style={profileNameStyle}>George</p>
-          <img src={profilePic} alt="Profile" style={profilePicStyle} />
-          <button className="followButton">Follow</button>
+      <h1 className="goal-title">{title}</h1>
+      <p className="goal-info">The average costs is £{averageCosts}</p>
+      <p className="goal-info">{savers} users saving for this goal</p>
+      <p className="goal-info">{achievers} users achieved this goal</p>
+      {!isGoalSet && <button className="set-goal-button" onClick={handleSetGoal}>Set Goal</button>}
+      <p className="goal-info">Users expected to achieve within a similar timeframe as you:</p>
+      <div className="profile-container">
+        <div className="profile">
+          <img src={profilePic} alt="Profile" className="profile-pic" />
+          <p className="profile-name">George</p>
+          <button className="follow-button">Follow</button>
         </div>
       </div>
 
       {/* Render featured stories and tips */}
-      <h2>Featured Stories & Tips</h2>
-      {/* {featuredStories.map((story, index) => (
-        <div key={index}>
-          <p>{story.author}</p>
-          <p>{story.tip}</p>
-        </div>
-      ))} */}
+      <h2 className="section-title">Featured Stories & Tips</h2>
+      {/* <div className="featured-stories">
+        {featuredStories.map((story, index) => (
+          <div key={index} className="story">
+            <p className="story-author">{story.author}</p>
+            <p className="story-tip">{story.tip}</p>
+          </div>
+        ))}
+      </div> */}
 
       {/* Render memory collection */}
-      <h2>Memory Collection</h2>
+      <h2 className="section-title">Memory Collection</h2>
+      {/* <div className="memory-collection">
+        {memoryCollection.map((memory, index) => (
+          <div key={index} className="memory">
+            <p className="memory-author">{memory.author}</p>
+            <p className="memory-tip">{memory.tip}</p>
+          </div>
+        ))}
+      </div> */}
     </div>
   );
 };
 
 export default DetailsGoalPage;
+

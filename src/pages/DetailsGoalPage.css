@@ -1,0 +1,90 @@
+.details-container {
+    padding: 20px;
+  }
+  
+  .goal-title {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .goal-info {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  .set-goal-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  .set-goal-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .profile-container {
+    margin: 20px 0;
+  }
+  
+  .profile {
+    display: flex;
+    flex-direction: column; /* Column layout */
+    align-items: flex-start; /* Align items to the left */
+    margin: 0 10px;
+  }
+  
+  .profile-name {
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
+  
+  .profile-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+  }
+  
+  .follow-button {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  .follow-button:hover {
+    background-color: #218838;
+  }
+  
+  .section-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 30px;
+    margin-bottom: 10px;
+  }
+  
+  .featured-stories, .memory-collection {
+    margin-top: 20px;
+  }
+  
+  .story, .memory {
+    margin-bottom: 15px;
+  }
+  
+  .story-author, .memory-author {
+    font-weight: bold;
+  }
+  
+  .story-tip, .memory-tip {
+    margin-top: 5px;
+  }
+  
