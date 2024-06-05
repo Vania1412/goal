@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { collection, query, getDocs, where } from "firebase/firestore";
+import { collection, query, getDocs, where, or } from "firebase/firestore";
 import { firestore } from '../firebase';
 import Menu from '../components/Menu.js';
 import { Link } from 'react-router-dom';
 import './SuggestionPage.css';
+import sortIcon from '../assets/sort ascending icon.png';
 
 const SuggestionPage = () => {
     const [goals, setGoals] = useState([]);
     const [sortBy, setSortBy] = useState('savers');
-
+    const [sortOrder, setSortOrder] = useState('desc');
+    const [minCost, setMinCost] = useState(''); // State for minimum cost filter
+    const [maxCost, setMaxCost] = useState(''); // State for maximum cost filter
+    const [keywords, setKeywords] = useState([]);
     const categories = ["Tech Gadgets", "Fashion and Accessories", "Travel", "Entertainment", "Education and Personal Development", "Social and Lifestyle"];
     const [selectedCategories, setSelectedCategories] = useState(categories);
 
@@ -23,7 +27,7 @@ const SuggestionPage = () => {
                     id: doc.id,
                     ...doc.data(),
                 }));
-        
+
                 // Fetch user's current goals
                 const userQuery = query(collection(firestore, "users"), where("Username", "==", "Wendy237")); // Replace with actual username
                 const userSnapshot = await getDocs(userQuery);
@@ -36,26 +40,47 @@ const SuggestionPage = () => {
                     const filteredGoals = selectedCategories.length > 0
                         ? allGoals.filter(goal => selectedCategories.some(category => goal.category.includes(category)))
                         : [];
-        
+
                     // Filter out goals that are not in the current user's goals
                     const suggestedGoals = filteredGoals.filter(goal => !currentUserGoals.includes(goal.title));
-        
-                    // Sort the goals based on the selected sort option
-                    const sortedGoals = suggestedGoals.sort((a, b) => {
-                        if (sortBy === 'savers') {
-                            return b.savers - a.savers;
-                        } else if (sortBy === 'achievers') {
-                            return b.achievers - a.achievers;
-                        } else if (sortBy === 'total') {
-                            return (b.savers + (b.achievers || 0)) - (a.savers + (a.achievers || 0));
+
+                    const withinPriceGoals = suggestedGoals.filter(goal => {
+                        const averageCost = goal['average costs'];
+                        if (minCost !== '' && averageCost < parseFloat(minCost) || maxCost !== '' && averageCost > parseFloat(maxCost)) {
+                            return false;
                         }
-                        return 0;
+                        return true;
                     });
-        
-                    setGoals(sortedGoals);
-                } else {
-                    // If user not found, set all goals without filtering
-                    setGoals(allGoals);
+
+                    let sortedGoals = suggestedGoals
+                    if (sortBy !== 'random') {
+                        sortedGoals = withinPriceGoals.sort((a, b) => {
+                            const orderMultiplier = sortOrder === 'desc' ? 1 : -1;
+                            if (sortBy === 'savers') {
+                                return (b.savers - a.savers) * orderMultiplier;
+                            } else if (sortBy === 'achievers') {
+                                return (b.achievers - a.achievers) * orderMultiplier;
+                            } else if (sortBy === 'total') {
+                                return ((b.savers + (b.achievers || 0)) - (a.savers + (a.achievers || 0))) * orderMultiplier;
+                            } else if (sortBy === 'saving days') {
+                                return (b.asd - a.asd) * orderMultiplier;
+                            }
+                            return 0;
+                        });
+                    } else {
+                        sortedGoals = shuffleArray(withinPriceGoals);
+                    }
+
+                    const keyGoals = keywords.length === 0 ? sortedGoals : sortedGoals
+                        .map(goal => ({
+                            ...goal,
+                            matchCount: keywords.reduce((count, keyword) => {
+                                return count + (goal.titleKeywords.includes(keyword) ? 1 : 0);
+                            }, 0)
+                        }))
+                        .sort((a, b) => b.matchCount - a.matchCount).filter(a => a.matchCount > 0);
+
+                    setGoals(keyGoals);
                 }
             } catch (error) {
                 console.error("Error fetching goals: ", error);
@@ -63,10 +88,14 @@ const SuggestionPage = () => {
         };
 
         fetchGoals();
-    }, [sortBy, selectedCategories]);
+    }, [sortBy, selectedCategories, sortOrder, minCost, maxCost, keywords]);
 
     const handleSortChange = (event) => {
         setSortBy(event.target.value);
+    };
+
+    const modifySortOrder = () => {
+        setSortOrder(prevOrder => prevOrder === 'asc' ? 'desc' : 'asc');
     };
 
     const handleCategoryChange = (event) => {
@@ -76,6 +105,30 @@ const SuggestionPage = () => {
                 ? prevCategories.filter(c => c !== category)
                 : prevCategories.concat(category)
         );
+    };
+
+    const handleMinCostChange = (event) => {
+        setMinCost(event.target.value);
+    };
+
+    const handleMaxCostChange = (event) => {
+        setMaxCost(event.target.value);
+    };
+
+    const handleKeywordsChange = (event) => {
+        setKeywords(event.target.value.toLowerCase().split(' '))
+    }
+
+    const shuffleArray = (array) => {
+        let currentIndex = array.length, temporaryValue, randomIndex;
+        while (0 !== currentIndex) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+        return array;
     };
 
     return (
@@ -88,7 +141,28 @@ const SuggestionPage = () => {
                     <option value="savers">Savers</option>
                     <option value="achievers">Achievers</option>
                     <option value="total">Total</option>
+                    <option value="costs">Costs</option>
+                    <option value="saving days">Saving days</option>
+                    <option value="random">Random</option>
                 </select>
+                <button onClick={modifySortOrder} className="sort-button">
+                    <img src={sortIcon} alt="Sort" className={`sort-icon ${sortOrder}`} />
+                </button>
+            </div>
+            <div className="cost-filter">
+                <label>Costs (£) in range: </label>
+                <input id="min-cost" type="number" value={minCost} onChange={handleMinCostChange} />
+                <label> to </label>
+                <input id="max-cost" type="number" value={maxCost} onChange={handleMaxCostChange} />
+            </div>
+            <div className="search-filter">
+                <label htmlFor="search-keyword">Search: </label>
+                <input
+                    id="search-keyword"
+                    type="text"
+                    onChange={handleKeywordsChange}
+                    placeholder="Enter keywords"
+                />
             </div>
             <div>
                 <label>Filter by categories:</label>
@@ -113,6 +187,8 @@ const SuggestionPage = () => {
                             {goal.url && <img src={goal.url} alt={goal.title} className="goal-image" />}
                             <p>Savers: {goal.savers}</p>
                             <p>Achievers: {goal.achievers}</p>
+                            <p>Average Costs: {goal['average costs']}</p>
+                            <p>Average Saving Days: {goal.asd}</p>
                         </Link>
                     </div>
                 ))}

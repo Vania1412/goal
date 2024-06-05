@@ -3,6 +3,7 @@ import { collection, query, where, addDoc, getDocs, updateDoc, increment, arrayU
 import { firestore } from '../firebase';
 import { Link } from 'react-router-dom';
 import Menu from '../components/Menu.js';
+
 /*import {
   getDownloadURL,
   ref as storageRef,
@@ -20,8 +21,8 @@ const HomePage = () => {
   const [totalSaving, setTotalSaving] = useState(0);
   const [espm, setEspm] = useState(0);
 
- 
-   
+
+
   useEffect(() => {
     const fetchGoals = async () => {
       try {
@@ -73,23 +74,23 @@ const HomePage = () => {
       return title.toLowerCase().split(' ');
     }*/
   /* const updateAllExistGoals = async () => {
-     const goalsCollection = collection(firestore, 'goals');
-   
-     try {
-       const snapshot = await getDocs(goalsCollection);
-   
-       snapshot.forEach(async doc => {
-         const title = doc.data().title;
-         //const keywords = extractKeywords(title);
-         const docRef = doc.ref;
-         await updateDoc(docRef, { category:  ["Fashion and Accessories"]});
-       });
-   
-       console.log('Title keywords updated successfully.');
-     } catch (error) {
-       console.error('Error updating title keywords:', error);
-     }
-   }*/
+    const goalsCollection = collection(firestore, 'goals');
+  
+    try {
+      const snapshot = await getDocs(goalsCollection);
+  
+      snapshot.forEach(async doc => {
+        const title = doc.data().title;
+        //const keywords = extractKeywords(title);
+        const docRef = doc.ref;
+        await updateDoc(docRef, { asd: Math.ceil(doc.data()['average costs'] /35 * 30 )});
+      });
+  
+      console.log('Title keywords updated successfully.');
+    } catch (error) {
+      console.error('Error updating title keywords:', error);
+    }
+  } */
 
 
 
@@ -255,21 +256,21 @@ const HomePage = () => {
       </div>
 
       <div className="goal-list">
-  {goals.map(goal => (
-    <div className="goal-box" key={goal.id}>
-      <Link to={`/details-goal/${goal.title.toLowerCase().replace(/ /g, '-')}`} className="goal-link">
+        {goals.map(goal => (
+          <div className="goal-box" key={goal.id}>
+            <Link to={`/details-goal/${goal.title.toLowerCase().replace(/ /g, '-')}`} className="goal-link">
               <h3>{goal.title}</h3>
               <p>Costs: £{goal.costs}</p>
               <p>Progress: {goal.progress}%</p>
-        </Link>
-    {/*  <div className="goal-info">
+            </Link>
+            {/*  <div className="goal-info">
         <button onClick={() => handleGoalClick(goal)}>
           Edit costs
         </button>
   </div>*/}
-    </div>
-  ))}
-</div>
+          </div>
+        ))}
+      </div>
 
     </div>
   );

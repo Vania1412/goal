@@ -41,3 +41,62 @@
 .goal-link:hover {
   text-decoration: underline;
 }
+
+#sort-select {
+  appearance: none; /* Hide default appearance */
+  padding: 6px 8px; /* Add padding for better readability */
+  font-size: 14px; /* Adjust font size */
+  border: 1px solid #ccc; /* Add border */
+  border-radius: 4px; /* Add border radius */
+  background-color: #fff; /* Set background color */
+  cursor: pointer; /* Show pointer cursor on hover */
+  margin-bottom: 10px;
+}
+
+#sort-select:hover {
+  background-color: #f0f0f0; /* Change background color on hover */
+}
+
+#sort-select:focus {
+  outline: none; /* Remove default focus outline */
+  border-color: #007bff; /* Change border color on focus */
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); /* Add focus shadow */
+}
+
+
+.sort-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.sort-icon {
+  width: 20px;  
+  height: 20px;
+}
+
+.cost-filter {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Add space between elements */
+  margin-bottom: 10px;
+}
+
+.cost-filter label {
+  margin-right: 5px; /* Add space between label and input */
+}
+
+.cost-filter input {
+  width: 50px; /* Adjust the width of the input fields */
+  padding: 1px;
+  box-sizing: border-box;
+}
+
+.search-filter {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Add space between elements */
+  margin-bottom: 10px;
+}
+
+ 
