@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, addDoc, updateDoc, increment } from 'firebase/firestore';
 import { firestore } from '../firebase';
 import profilePic from '../assets/icon.png';
 import Menu from '../components/Menu.js'; 
@@ -40,7 +40,7 @@ const DetailsGoalPage = () => {
 
           if (!userSnapshot.empty) {
             const userId = userSnapshot.docs[0].id;
-            const userGoalsQuery = query(collection(firestore, `users/${userId}/goals`), where('title', '==', data.title));
+            const userGoalsQuery = query(collection(firestore, `users/${userId}/current_goals`), where('title', '==', data.title));
             const userGoalsSnapshot = await getDocs(userGoalsQuery);
 
             if (userGoalsSnapshot.empty) {
@@ -61,6 +61,17 @@ const DetailsGoalPage = () => {
   const handleSetGoal = async () => {
     if (goalData) {
       try {
+        const goalQuery = query(collection(firestore, "goals"), where("titlelc", "==", formatGoalTitle(goalTitle)));
+        const goalSnapshot = await getDocs(goalQuery);
+
+        if (!goalSnapshot.empty) {
+          const goalDocRef = goalSnapshot.docs[0].ref;
+
+          await updateDoc(goalDocRef, {
+            savers: increment(1),
+     
+          });
+        } 
         const userQuery = query(collection(firestore, 'users'), where('Username', '==', username));
         const userSnapshot = await getDocs(userQuery);
 

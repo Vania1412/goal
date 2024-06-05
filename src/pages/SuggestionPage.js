@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { collection, query, getDocs, where } from "firebase/firestore";
 import { firestore } from '../firebase';
 import Menu from '../components/Menu.js';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'; 
+import './SuggestionPage.css';  
 
 const SuggestionPage = () => {
   const [goals, setGoals] = useState([]);
+  const [sortBy, setSortBy] = useState('savers');
 
   useEffect(() => {
     const fetchGoals = async () => {
@@ -16,44 +18,56 @@ const SuggestionPage = () => {
         const allGoals = goalsSnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data(),
-        })).sort((a, b) => b.savers - a.savers);;
+        }));
 
-        // Fetch user's current goals
-        const userQuery = query(collection(firestore, "users"), where("Username", "==", "Wendy237")); // Replace with actual username
-        const userSnapshot = await getDocs(userQuery);
-        if (!userSnapshot.empty) {
-          const userId = userSnapshot.docs[0].id;
-          const userGoalsQuery = query(collection(firestore, `users/${userId}/goals`));
-          const userGoalsSnapshot = await getDocs(userGoalsQuery);
-          const currentUserGoals = userGoalsSnapshot.docs.map(doc => doc.data().title);
+        // Sort the goals based on the selected sort option
+        const sortedGoals = allGoals.sort((a, b) => {
+          if (sortBy === 'savers') {
+            return b.savers - a.savers;
+          } else if (sortBy === 'achievers') {
+            return b.achievers - a.achievers;
+          } else if (sortBy === 'total') {
+            return (b.savers + (b.achievers || 0)) - (a.savers + (a.achievers || 0));
+          }
+          return 0;
+        });
 
-          // Filter out goals that are not in the current user's goals
-          const suggestedGoals = allGoals.filter(goal => !currentUserGoals.includes(goal.title));
-          setGoals(suggestedGoals);
-        } else {
-          console.log("User not found");
-        }
+        setGoals(sortedGoals);
       } catch (error) {
         console.error("Error fetching goals: ", error);
       }
     };
 
     fetchGoals();
-  }, []);
+  }, [sortBy]);
+
+  const handleSortChange = (event) => {
+    setSortBy(event.target.value);
+  };
 
   return (
     <div>
       <Menu />
       <h1>Suggested Goals</h1>
-      <ul>
+      <div>
+        <label htmlFor="sort-select">Sort by: </label>
+        <select id="sort-select" value={sortBy} onChange={handleSortChange}>
+          <option value="savers">Savers</option>
+          <option value="achievers">Achievers</option>
+          <option value="total">Total</option>
+        </select>
+      </div>
+      <div className="goal-list">
         {goals.map(goal => (
-          <li key={goal.id}>
-            <Link to={`/details-goal/${goal.title.toLowerCase().replace(/ /g, '-')}`}>
-              {goal.title} - Savers: {goal.savers}, Achievers: {goal.achievers}
+          <div key={goal.id} className="goal-box">
+            <Link to={`/details-goal/${goal.title.toLowerCase().replace(/ /g, '-')}`} className="goal-link">
+              <h2>{goal.title}</h2>
+              <p>Savers: {goal.savers}</p>
+              <p>Achievers: {goal.achievers}</p>
             </Link>
-          </li>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };

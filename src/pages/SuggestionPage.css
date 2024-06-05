@@ -1,0 +1,36 @@
+.goal-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 20px;
+  }
+  
+  .goal-box {
+    border: 1px solid #ccc;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 100%; /* Full width for small screens */
+    max-width: 500px; /* Max width to control box size */
+    box-sizing: border-box;
+    background-color: #f9f9f9;
+    transition: transform 0.2s;
+  }
+  
+  .goal-box:hover {
+    transform: translateY(-5px);
+  }
+  
+  .goal-box h2, .goal-box p {
+    margin: 8px 0;
+  }
+  
+  .goal-link {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .goal-link:hover {
+    text-decoration: underline;
+  }
+  

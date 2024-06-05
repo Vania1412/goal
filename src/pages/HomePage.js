@@ -147,12 +147,12 @@ const HomePage = () => {
           const totalAchievers = goalData.achievers || 0;
           const currentAverageCosts = goalData['average costs'] || 0;
           const newAverageCosts = Math.ceil(((currentAverageCosts * (totalSavers + totalAchievers)) + parseFloat(cost)) / (1 + totalSavers + totalAchievers));
-          const updatedCategory = category.filter(cat => !goalData.category.includes(cat));
+          //const updatedCategory = category.filter(cat => !goalData.category.includes(cat));
 
           await updateDoc(goalDocRef, {
             savers: increment(1),
             'average costs': newAverageCosts,
-            category: arrayUnion(...updatedCategory, ...category),
+            //category: arrayUnion(...updatedCategory, ...category),
             //  imageURL: imageURL // Add the imageURL to the goal data
           });
         } else {
