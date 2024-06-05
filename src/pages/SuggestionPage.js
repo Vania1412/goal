@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 
 const SuggestionPage = () => {
   const [goals, setGoals] = useState([]);
-  const [userGoals, setUserGoals] = useState([]);
 
   useEffect(() => {
     const fetchGoals = async () => {
