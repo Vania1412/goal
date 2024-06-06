@@ -3,6 +3,7 @@ import { collection, query, where, addDoc, getDocs, updateDoc, increment, arrayU
 import { firestore } from '../firebase';
 import { Link } from 'react-router-dom';
 import Menu from '../components/Menu.js';
+import './HomePage.css'; 
 
 /*import {
   getDownloadURL,
@@ -213,7 +214,9 @@ const HomePage = () => {
           value={saving}
           onChange={(e) => setSaving(e.target.value)}
         />
+        <button onClick={() => setSaving(saving)}>Add Saving</button>
       </div>
+
       <div className="input-container">
         <input
           type="number"
@@ -249,12 +252,13 @@ const HomePage = () => {
           }}
         />*/}
         <button onClick={addGoal}>Add New Goal</button>
-      </div>
-      <div className="input-container">
         <Link to="/suggestion"> Need Suggestions </Link>
-        {/* <button onClick={updateAllExistGoals}>Update Goals</button> */}
       </div>
-
+     {/* <div className="input-container">
+        
+         <button onClick={updateAllExistGoals}>Update Goals</button>
+      </div>
+ */}
       <div className="goal-list">
         {goals.map(goal => (
           <div className="goal-box" key={goal.id}>
