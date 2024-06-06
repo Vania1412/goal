@@ -1,13 +1,11 @@
 .details-container {
     padding: 20px;
-    text-align: center; 
   }
   
   .goal-title {
     font-size: 32px;
     font-weight: bold;
     margin-bottom: 20px;
-    text-align: center; 
   }
   
   .goal-info {
@@ -30,6 +28,13 @@
     cursor: pointer;
     margin-top: 10px;
   }
+
+  .goal-image {
+    max-width: 100%;
+    height: auto;
+    max-height: 300px; /* Set maximum height */
+  }
+  
   
   .set-goal-button:hover {
     background-color: #0056b3;

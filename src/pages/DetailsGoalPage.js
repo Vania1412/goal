@@ -112,12 +112,13 @@ const DetailsGoalPage = () => {
     return <div>Loading...</div>;
   }
 
-  const { title, savers, achievers } = goalData;
+  const { title, savers, achievers, url } = goalData;
 
   return (
     <div className="details-container">
       <Menu />
       <h1 className="goal-title">{title}</h1>
+      <img src={url} alt={title} className="goal-image" />
       <p className="goal-info">The average costs is £{averageCosts}</p>
       <p className="goal-info">{savers} users saving for this goal</p>
       <p className="goal-info">{achievers} users achieved this goal</p>
