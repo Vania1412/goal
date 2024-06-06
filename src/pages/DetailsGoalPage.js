@@ -4,7 +4,6 @@ import { collection, query, where, getDocs, addDoc, updateDoc, increment, doc, a
 import { firestore } from '../firebase';
 import Menu from '../components/Menu.js';
 import './DetailsGoalPage.css';
-import Modal from '../components/Modal';
 
 const DetailsGoalPage = () => {
   const { goalTitle } = useParams(); // Get the goalTitle from the URL params
