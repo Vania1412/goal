@@ -21,7 +21,7 @@
    }
   
   /* Media query for mobile devices */
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 400px) {
     .goal-show-image {
       width: 100%; /* Show full width on mobile devices */
     }
@@ -141,6 +141,10 @@
     background-color: #218838;
   }
   
+  .featured-stories.grayed-out {
+    filter: grayscale(100%);
+  }
+  
   .section-title {
     font-size: 24px;
     font-weight: bold;
@@ -195,3 +199,87 @@
     border-color: #0056b3;
   }
   
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Align modal content at the top */
+    z-index: 999; /* Ensure modal appears above other content */
+  }
+  
+  /* Modal content */
+  .modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Box shadow for depth */
+  }
+  
+
+/* Modal title */
+.modal-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+/* Modal input fields */
+.modal-input {
+  margin-bottom: 10px;
+}
+
+/* Modal button */
+.modal-button {
+  background-color: #007bff; /* Blue background color */
+  color: white; /* White text color */
+  padding: 10px 10px;
+  border: none;
+  border-radius: 5px;
+  margin-right: 50px;
+  cursor: pointer;
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+ 
+.modal-close {
+  position: absolute;
+  
+  background-color: #007bff; /* Blue background color */
+  color: white; /* White text color */
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.modal-button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.modal-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 7px;
+ 
+  font-size: 16px;
+  color: #333;
+  background-color: #fff;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+/* Hover effect */
+.modal-input:hover {
+  border-color: #999;
+}
+
+/* Focus effect */
+.modal-input:focus {
+  outline: none;
+  border-color: #007bff; /* Example color for focus state */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Example box shadow for focus state */
+}

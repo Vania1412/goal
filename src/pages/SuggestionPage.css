@@ -22,6 +22,7 @@
 .goal-image {
   width: 100%; /* Show half of the container's width */
   height: auto; /* Maintain aspect ratio */
+  border-radius: 4px;
   object-fit: cover; /* Maintain aspect ratio and cover the container */
 }
 
