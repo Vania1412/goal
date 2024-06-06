@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { collection, query, where, getDocs, addDoc, updateDoc, increment } from 'firebase/firestore';
+import { collection, query, where, getDocs, addDoc, updateDoc, increment, doc, arrayRemove, arrayUnion } from 'firebase/firestore';
 import { firestore } from '../firebase';
-//import profilePic from '../assets/icon.png';
+import likeIcon from '../assets/like icon.png';
 import Menu from '../components/Menu.js';
 import './DetailsGoalPage.css'; // Import the CSS file
 
@@ -12,11 +12,10 @@ const DetailsGoalPage = () => {
   const [isGoalSet, setIsGoalSet] = useState(true); // Start as true
   const [averageCosts, setAverageCosts] = useState(0);
   const [featuredStories, setFeaturedStories] = useState([]);
+  const [userUsefulStories, setUserUsefulStories] = useState({});
   const [showAllStories, setShowAllStories] = useState(false);
 
   const navigate = useNavigate();
-
-
   const username = "Wendy237"; // Replace with the actual username
 
   function formatGoalTitle(goalTitle) {
@@ -36,10 +35,21 @@ const DetailsGoalPage = () => {
           const data = querySnapshot.docs[0].data();
           setGoalData(data);
           setAverageCosts(data['average costs']);
+
           const featuredStoriesRef = collection(firestore, `goals/${querySnapshot.docs[0].id}/featured_s&t`);
           const storiesSnapshot = await getDocs(featuredStoriesRef);
-          const storiesData = storiesSnapshot.docs.map(doc => doc.data()).filter(story => story.content !== "");
+          const storiesData = storiesSnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+          })).filter(story => story.content !== "");
+
+          const userUsefulMap = storiesData.reduce((acc, story) => {
+            acc[story.id] = story.useful.includes(username);
+            return acc;
+          }, {});
+          
           setFeaturedStories(storiesData);
+          setUserUsefulStories(userUsefulMap);
 
           // Check if the goal is already set for the user
           const userQuery = query(collection(firestore, 'users'), where('Username', '==', username));
@@ -64,6 +74,56 @@ const DetailsGoalPage = () => {
 
     fetchGoalData();
   }, [goalTitle]);
+
+  const handleUsefulClick = async (storyId) => {
+    console.log("Clicked on useful for storyId:", storyId);
+    try {
+      const goalDocQuery = query(collection(firestore, "goals"), where("titlelc", "==", formatGoalTitle(goalTitle)));
+      const goalDocSnapshot = await getDocs(goalDocQuery);
+  
+      if (!goalDocSnapshot.empty) {
+        const goalDocRef = goalDocSnapshot.docs[0].ref;
+        const storyRef = doc(firestore, `goals/${goalDocRef.id}/featured_s&t`, storyId);
+        const currentUsefulState = userUsefulStories[storyId];
+  
+        if (currentUsefulState) {
+          // Remove user from useful array
+          console.log("Removing user from useful array:", username);
+          await updateDoc(storyRef, {
+            useful: arrayRemove(username)
+          });
+        } else {
+          // Add user to useful array
+          console.log("Adding user to useful array:", username);
+          await updateDoc(storyRef, {
+            useful: arrayUnion(username)
+          });
+        }
+  
+        // Update local state
+        setUserUsefulStories(prevState => ({
+          ...prevState,
+          [storyId]: !currentUsefulState
+        }));
+  
+        // Update useful count locally
+        setFeaturedStories(prevStories => prevStories.map(story => {
+          if (story.id === storyId) {
+            const newUsefulArray = currentUsefulState ? 
+              story.useful.filter(user => user !== username) : 
+              [...story.useful, username];
+            return { ...story, useful: newUsefulArray };
+          }
+          return story;
+        }));
+      } else {
+        console.error("Goal not found for goalTitle:", goalTitle);
+      }
+    } catch (error) {
+      console.error('Error updating useful status:', error);
+    }
+  };  
+
 
   const handleSetGoal = async () => {
     if (goalData) {
@@ -133,13 +193,24 @@ const DetailsGoalPage = () => {
       </div>
   */}
       {/* Render featured stories and tips */}
-      <h2 className="section-title">Featured Stories & Tips</h2>
+            <h2 className="section-title">Featured Stories & Tips</h2>
       <div className="featured-stories">
-        {featuredStories.slice(0, showAllStories ? undefined : 3).map((story, index) => (
+        {featuredStories.sort((a, b) => b.useful.length - a.useful.length).slice(0, showAllStories ? undefined : 3).map((story, index) => (
           <div key={index} className="story">
-            <p className="story-author">{story.username}</p>
+          <p className="story-author">{story.username}</p>
+          <div className="story-header">
             <p className="story-content">{story.content}</p>
+            <button
+              className={`useful-button ${userUsefulStories[story.id] ? 'active' : ''}`}
+              onClick={() => handleUsefulClick(story.id)}
+            >
+              {userUsefulStories[story.id] ? 'Liked' : 'Like'}
+
+            </button>
           </div>
+          <p className="story-useful">{story.useful.length} users think this is helpful.</p>
+        </div>
+        
         ))}
       </div>
       {featuredStories.length > 3 && (
@@ -150,6 +221,7 @@ const DetailsGoalPage = () => {
       {featuredStories.length === 0 && (
         <p>No featured stories & tips currently.</p>
       )}
+
 
       {/* Render memory collection */}
       <h2 className="section-title">Memory Collection</h2>

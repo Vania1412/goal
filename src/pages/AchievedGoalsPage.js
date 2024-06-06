@@ -43,41 +43,42 @@ const AchievedGoalsPage = () => {
           });
 
           // Update the "featured_s&t" collection within the goal document
-const goalDocQuery = query(collection(firestore, "goals"), where("title", "==", itemTitle));
+          const goalDocQuery = query(collection(firestore, "goals"), where("title", "==", itemTitle));
 
-const goalSnapshot = await getDocs(goalDocQuery);
-if (!goalSnapshot.empty) {
-  const goalData = goalSnapshot.docs[0].data();
-  const goalDataRef = goalSnapshot.docs[0].ref;
-  const goalId = goalSnapshot.docs[0].id;
+          const goalSnapshot = await getDocs(goalDocQuery);
+          if (!goalSnapshot.empty) {
+            const goalData = goalSnapshot.docs[0].data();
+            const goalDataRef = goalSnapshot.docs[0].ref;
+            const goalId = goalSnapshot.docs[0].id;
 
-  // Check if the "featured_s&t" collection exists
-  if (!goalData['featured_s&t']) {
-    // Create the "featured_s&t" collection if it doesn't exist
-    await setDoc(doc(firestore, `goals/${goalId}/featured_s&t/initialDoc`), {
-      username: userSnapshot.docs[0].data().Username,
-      content: text
-    });
-  } else {
-    // Update or add a new document in the "featured_s&t" collection
-    const featuredSTQuery = query(collection(firestore, `goals/${goalId}/featured_s&t`), where('username', '==', userSnapshot.docs[0].data().Username));
-    const featuredSTSnapshot = await getDocs(featuredSTQuery);
+            // Check if the "featured_s&t" collection exists
+            if (!goalData['featured_s&t']) {
+              // Create the "featured_s&t" collection if it doesn't exist
+              await setDoc(doc(firestore, `goals/${goalId}/featured_s&t/initialDoc`), {
+                username: userSnapshot.docs[0].data().Username,
+                content: text,
+                useful: []
+              });
+            } else {
+              // Update or add a new document in the "featured_s&t" collection
+              const featuredSTQuery = query(collection(firestore, `goals/${goalId}/featured_s&t`), where('username', '==', userSnapshot.docs[0].data().Username));
+              const featuredSTSnapshot = await getDocs(featuredSTQuery);
 
-    if (!featuredSTSnapshot.empty) {
-      // Update the existing document in the "featured_s&t" collection
-      const docRefToUpdate = featuredSTSnapshot.docs[0].ref;
-      await updateDoc(docRefToUpdate, {
-        content: text
-      });
-    } else {
-      // Add a new document to the "featured_s&t" collection
-      await addDoc(collection(goalDataRef, 'featured_s&t'), {
-        username: userSnapshot.docs[0].data().Username,
-        content: text
-      });
-    }
-  }
-}
+              if (!featuredSTSnapshot.empty) {
+                // Update the existing document in the "featured_s&t" collection
+                const docRefToUpdate = featuredSTSnapshot.docs[0].ref;
+                await updateDoc(docRefToUpdate, {
+                  content: text  //maybe a record show it is updated
+                });
+              } else {
+                // Add a new document to the "featured_s&t" collection
+                await addDoc(collection(goalDataRef, 'featured_s&t'), {
+                  username: userSnapshot.docs[0].data().Username,
+                  content: text
+                });
+              }
+            }
+          }
 
 
           setAchievedGoals(prevGoals => prevGoals.map(goal => {
