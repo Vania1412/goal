@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { collection, query, where, getDocs, addDoc, updateDoc, increment, doc, arrayRemove, arrayUnion } from 'firebase/firestore';
 import { firestore } from '../firebase';
-import likeIcon from '../assets/like icon.png';
 import Menu from '../components/Menu.js';
 import './DetailsGoalPage.css'; // Import the CSS file
 
