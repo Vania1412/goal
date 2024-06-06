@@ -203,7 +203,7 @@ const HomePage = () => {
   return (
     <div className="container">
       <Menu />
-      <Link to="/badges"> Wendy237 </Link>
+      <Link to="/badges"> Percy0816 </Link>
       <p>Expected Saving Per Month: £{espm}</p>
       <p>Total Saving: £{totalSaving}</p>
       <h1>Saving for your Goal</h1>

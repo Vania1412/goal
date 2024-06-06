@@ -21,8 +21,8 @@
    }
   
   /* Media query for mobile devices */
-  @media screen and (max-width: 600px) {
-    .goal-image {
+  @media screen and (max-width: 767px) {
+    .goal-show-image {
       width: 100%; /* Show full width on mobile devices */
       height: 100vh; /* Show full screen height */
     }
