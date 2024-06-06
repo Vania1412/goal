@@ -122,7 +122,7 @@ const DetailsGoalPage = () => {
       <p className="goal-info">{savers} users saving for this goal</p>
       <p className="goal-info">{achievers} users achieved this goal</p>
       {!isGoalSet && <button className="set-goal-button" onClick={handleSetGoal}>Set Goal</button>}
-      <p className="goal-info">Users expected to achieve within a similar timeframe as you:</p>
+     {/* <p className="goal-info">Users expected to achieve within a similar timeframe as you:</p>
       <div className="profile-container">
         <div className="profile">
           <img src={profilePic} alt="Profile" className="profile-pic" />
@@ -130,7 +130,7 @@ const DetailsGoalPage = () => {
           <button className="follow-button">Follow</button>
         </div>
       </div>
-
+  */}
       {/* Render featured stories and tips */}
       <h2 className="section-title">Featured Stories & Tips</h2>
       <div className="featured-stories">
