@@ -47,7 +47,7 @@ const Menu = () => {
           <Link to="/home" style={styles.link}>Home</Link>
           <Link to="/achieved" style={styles.link}>Achieved Goals</Link>
           <Link to="/suggestion" style={styles.link}>Suggested Goals</Link>
-
+          <Link to="/interested" style={styles.link}>Interests</Link>
         </div>
       )}
     </div>

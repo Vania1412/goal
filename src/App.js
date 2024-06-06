@@ -6,6 +6,7 @@ import AchievedGoalsPage from './pages/AchievedGoalsPage';
 import SuggestionPage from './pages/SuggestionPage';
 import BadgesPage from './pages/BadgesPage';
 import NotFoundPage from './pages/NotFoundPage';
+import InterestedPage from './pages/InterestedPage';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/achieved" element={<AchievedGoalsPage />} />
         <Route path="/suggestion" element={<SuggestionPage />} />
         <Route path="/badges" element={<BadgesPage />} />
+        <Route path="/interested" element={<InterestedPage />} />
         <Route path="*" element={<NotFoundPage />} /> {/* Catch-all route */}
       </Routes>
     </Router>

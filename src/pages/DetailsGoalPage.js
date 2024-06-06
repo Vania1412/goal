@@ -16,6 +16,7 @@ const DetailsGoalPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [newGoalCosts, setNewGoalCosts] = useState('');
   const [newGoalCategory, setNewGoalCategory] = useState('');
+  const [isSavedAsInterested, setIsSavedAsInterested] = useState(false);
 
   const navigate = useNavigate();
   const username = "Wendy237"; // Replace with the actual username
@@ -61,10 +62,12 @@ const DetailsGoalPage = () => {
             const userId = userSnapshot.docs[0].id;
             const userGoalsQuery = query(collection(firestore, `users/${userId}/current_goals`), where('title', '==', data.title));
             const userGoalsSnapshot = await getDocs(userGoalsQuery);
-
             if (userGoalsSnapshot.empty) {
               setIsGoalSet(false); // Set to false if the goal is not found in the user's collection
             }
+            const interestedList = userSnapshot.docs[0].data().interested_list || [];
+            setIsSavedAsInterested(interestedList.includes(goalData.titlelc));
+            
           }
         } else {
           console.log('Goal not found');
@@ -73,6 +76,8 @@ const DetailsGoalPage = () => {
         console.error('Error fetching goal data:', error);
       }
     };
+
+     
 
     fetchGoalData();
   }, [goalTitle]);
@@ -127,42 +132,6 @@ const DetailsGoalPage = () => {
   };
 
 
-  /* const handleSetGoal = async () => {
-     if (goalData) {
-       try {
-         const goalQuery = query(collection(firestore, "goals"), where("titlelc", "==", formatGoalTitle(goalTitle)));
-         const goalSnapshot = await getDocs(goalQuery);
- 
-         if (!goalSnapshot.empty) {
-           const goalDocRef = goalSnapshot.docs[0].ref;
- 
-           await updateDoc(goalDocRef, {
-             savers: increment(1),
-           });
-         }
-         const userQuery = query(collection(firestore, 'users'), where('Username', '==', username));
-         const userSnapshot = await getDocs(userQuery);
- 
-         if (!userSnapshot.empty) {
-           const userId = userSnapshot.docs[0].id;
-           const goalsCollectionRef = collection(firestore, `users/${userId}/current_goals`);
-           const newGoalData = {
-             title: goalData.title,
-             progress: 0,
-             costs: averageCosts,
-             category: goalData.category[0]
-           };
-           await addDoc(goalsCollectionRef, newGoalData);
-           setIsGoalSet(true);
-           navigate('/home');
-         } else {
-           console.log('User not found');
-         }
-       } catch (error) {
-         console.error('Error setting goal: ', error);
-       }
-     }
-   };*/
 
   const handleSetGoal = () => {
     setShowModal(true);
@@ -207,16 +176,37 @@ const DetailsGoalPage = () => {
       }
     }
     setShowModal(false);
-    document.body.style.overflow = 'auto'; 
+    document.body.style.overflow = 'auto';
   };
 
   const handleModalClose = () => {
     setShowModal(false);
-    document.body.style.overflow = 'auto'; 
+    document.body.style.overflow = 'auto';
   };
 
   const toggleShowAllStories = () => {
     setShowAllStories(!showAllStories);
+  };
+
+  const handleSaveAsInterested = async () => {
+    if (goalData) {
+    const userQuery = query(collection(firestore, 'users'), where('Username', '==', username));
+    const userSnapshot = await getDocs(userQuery);
+    const userDocRef = userSnapshot.docs[0].ref;
+
+    if (!userSnapshot.empty) {
+      const interestedList = userSnapshot.docs[0].data().interested_list || [];
+      if (isSavedAsInterested) {
+        const updatedInterestedList = interestedList.filter(t => t !== formatGoalTitle(goalTitle));
+        await updateDoc(userDocRef, { interested_list: updatedInterestedList });
+      } else {
+        const updatedInterestedList = [...interestedList, formatGoalTitle(goalTitle)];
+        await updateDoc(userDocRef, { interested_list: updatedInterestedList });
+      }
+    }
+    setIsSavedAsInterested(!isSavedAsInterested);
+
+  }
   };
 
 
@@ -272,7 +262,14 @@ const DetailsGoalPage = () => {
         </div>
       )}
 
+      <div>
       {!isGoalSet && <button className="set-goal-button" onClick={handleSetGoal}>Set Goal</button>}
+      </div>
+      <div>
+      <button className="set-goal-button" onClick={handleSaveAsInterested}>
+        {isSavedAsInterested ? 'Remove from Interested List' : 'Add to Interests'}
+      </button>
+      </div>
       {/* <p className="goal-info">Users expected to achieve within a similar timeframe as you:</p>
       <div className="profile-container">
         <div className="profile">
@@ -303,7 +300,7 @@ const DetailsGoalPage = () => {
           </div>
 
         ))}
-      </div> 
+      </div>
       {featuredStories.length > 3 && (
         <button onClick={toggleShowAllStories}>
           {showAllStories ? 'Collapse' : 'View More'}
