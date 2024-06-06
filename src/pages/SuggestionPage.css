@@ -70,9 +70,18 @@
   cursor: pointer;
 }
 
+.randomize-icon{
+  width: 24px;  
+  height: 24px;
+  position: relative; 
+  top: 6px;
+}
+
 .sort-icon {
   width: 20px;  
   height: 20px;
+  position: relative; 
+  top: 3px;
 }
 
 .cost-filter {

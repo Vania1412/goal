@@ -5,6 +5,7 @@ import Menu from '../components/Menu.js';
 import { Link } from 'react-router-dom';
 import './SuggestionPage.css';
 import sortIcon from '../assets/sort ascending icon.png';
+import randomizeIcon from '../assets/randomize icon.png';
 
 const SuggestionPage = () => {
     const [goals, setGoals] = useState([]);
@@ -147,7 +148,11 @@ const SuggestionPage = () => {
                     <option value="random">Random</option>
                 </select>
                 <button onClick={modifySortOrder} className="sort-button">
-                    <img src={sortIcon} alt="Sort" className={`sort-icon ${sortOrder}`} />
+                    {sortBy === "random" ? (
+                        <img src={randomizeIcon} alt="Randomize" className={`randomize-icon`} />
+                    ) : (
+                        <img src={sortIcon} alt="Sort" className={`sort-icon ${sortOrder}`} />
+                    )}
                 </button>
             </div>
             <div className="cost-filter">
