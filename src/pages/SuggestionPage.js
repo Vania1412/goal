@@ -62,6 +62,8 @@ const SuggestionPage = () => {
                             } else if (sortBy === 'total') {
                                 return ((b.savers + (b.achievers || 0)) - (a.savers + (a.achievers || 0))) * orderMultiplier;
                             } else if (sortBy === 'saving days') {
+                                return (b['average costs'] - a['average costs']) * orderMultiplier;
+                            } else if (sortBy === 'saving days') {
                                 return (b.asd - a.asd) * orderMultiplier;
                             }
                             return 0;
