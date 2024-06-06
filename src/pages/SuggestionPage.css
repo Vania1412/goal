@@ -20,8 +20,17 @@
 }
 
 .goal-image {
-  max-width: 100%;
-  height: auto;
+  width: 100%; /* Show half of the container's width */
+  height: auto; /* Maintain aspect ratio */
+  object-fit: cover; /* Maintain aspect ratio and cover the container */
+}
+
+/* Media query for mobile devices */
+@media screen and (max-width: 600px) {
+  .goal-image {
+    width: 100%; /* Show full width on mobile devices */
+    height: 100vh; /* Show full screen height */
+  }
 }
 
 .goal-box:hover {

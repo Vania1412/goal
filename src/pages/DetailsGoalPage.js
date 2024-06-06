@@ -177,7 +177,7 @@ const DetailsGoalPage = () => {
     <div className="details-container">
       <Menu />
       <h1 className="goal-title">{title}</h1>
-      <img src={url} alt={title} className="goal-image" />
+      <img src={url} alt={title} className="goal-show-image" />
       <p className="goal-info">The average costs is £{averageCosts}</p>
       <p className="goal-info">{savers} users saving for this goal</p>
       <p className="goal-info">{achievers} users achieved this goal</p>
@@ -197,8 +197,9 @@ const DetailsGoalPage = () => {
         {featuredStories.sort((a, b) => b.useful.length - a.useful.length).slice(0, showAllStories ? undefined : 3).map((story, index) => (
           <div key={index} className="story">
           <p className="story-author">{story.username}</p>
+          <p className="story-content">{story.content}</p>
           <div className="story-header">
-            <p className="story-content">{story.content}</p>
+            <p className="story-useful">{story.useful.length} users think this is helpful.</p>
             <button
               className={`useful-button ${userUsefulStories[story.id] ? 'active' : ''}`}
               onClick={() => handleUsefulClick(story.id)}
@@ -207,7 +208,7 @@ const DetailsGoalPage = () => {
 
             </button>
           </div>
-          <p className="story-useful">{story.useful.length} users think this is helpful.</p>
+          
         </div>
         
         ))}

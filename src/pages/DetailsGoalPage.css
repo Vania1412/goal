@@ -13,11 +13,19 @@
     margin-bottom: 10px;
   }
 
-  .goal-image {
-    width: 40%;
+  .goal-show-image {
     height: auto;
     border-radius: 8px;
     margin-bottom: 20px;
+    width: 50%; /* Show half of the container's width */
+   }
+  
+  /* Media query for mobile devices */
+  @media screen and (max-width: 600px) {
+    .goal-image {
+      width: 100%; /* Show full width on mobile devices */
+      height: 100vh; /* Show full screen height */
+    }
   }
   
  /* Style for the overall story container */
