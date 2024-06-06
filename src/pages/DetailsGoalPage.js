@@ -66,7 +66,7 @@ const DetailsGoalPage = () => {
               setIsGoalSet(false); // Set to false if the goal is not found in the user's collection
             }
             const interestedList = userSnapshot.docs[0].data().interested_list || [];
-            setIsSavedAsInterested(interestedList.includes(goalData.titlelc));
+            setIsSavedAsInterested(interestedList.includes(formatGoalTitle(goalTitle)));
             
           }
         } else {
