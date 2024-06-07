@@ -145,8 +145,7 @@ const SuggestionPage = () => {
                     <option value="total">Total</option>
                     <option value="costs">Costs</option>
                     <option value="saving days">Saving days</option>
-                    <option value="random">Random</option>
-                </select>
+                 </select>
                 <button onClick={modifySortOrder} className="sort-button">
                     {sortBy === "random" ? (
                         <img src={randomizeIcon} alt="Randomize" className={`randomize-icon`} />
@@ -194,7 +193,7 @@ const SuggestionPage = () => {
                             {goal.url && <img src={goal.url} alt={goal.title} className="goal-image" />}
                             <p>Savers: {goal.savers}</p>
                             <p>Achievers: {goal.achievers}</p>
-                            <p>Average Costs: {goal['average costs']}</p>
+                            <p>Average Costs: £{goal['average costs']}</p>
                             <p>Average Saving Days: {goal.asd}</p>
                         </Link>
                     </div>

@@ -170,7 +170,9 @@ const DetailsGoalPage = () => {
           const interestedList = userSnapshot.docs[0].data().interested_list || [];
           const updatedInterestedList = interestedList.filter(t => t !== goalData.titlelc);
           await updateDoc(userDocRef, { interested_list: updatedInterestedList });
-          navigate('/home');
+          setShowModal(false);
+          document.body.style.overflow = 'auto';
+          navigate('/home', { state: { message: `You have successfully added the goal: '${goalData.title}'` } });
         } else {
           console.log('User not found');
         }
@@ -178,8 +180,7 @@ const DetailsGoalPage = () => {
         console.error('Error setting goal: ', error);
       }
     }
-    setShowModal(false);
-    document.body.style.overflow = 'auto';
+    
   };
 
   const handleModalClose = () => {
@@ -259,7 +260,7 @@ const DetailsGoalPage = () => {
                 <option value="Social and Lifestyle">Social and Lifestyle</option>
               </select>
             </div>
-            <button className="modal-button" onClick={handleAddNewGoal}>Add New Goal</button>
+            <button className="modal-button" onClick={handleAddNewGoal}>Confirm</button>
             <button className="modal-close" onClick={handleModalClose}>Close</button>
           </div>
         </div>

@@ -80,7 +80,7 @@ const InterestedPage = () => {
                 const interestedList = userSnapshot.docs[0].data().interested_list || [];
                 const updatedInterestedList = interestedList.filter(t => t !== goalAddData.titlelc);
                 await updateDoc(userDocRef, { interested_list: updatedInterestedList });
-                navigate('/home');
+                navigate('/home', { state: { message: `You have successfully added the goal: '${goalAddData.title}'` } });
             } else {
                 console.log('User not found');
             }
@@ -125,7 +125,7 @@ const InterestedPage = () => {
                             {goal.url && <img src={goal.url} alt={goal.title} className="goal-image" />}
                             <p>Savers: {goal.savers}</p>
                             <p>Achievers: {goal.achievers}</p>
-                            <p>Average Costs: {goal['average costs']}</p>
+                            <p>Average Costs: £{goal['average costs']}</p>
                             <p>Average Saving Days: {goal.asd}</p>
                         </Link>
                         
@@ -167,7 +167,7 @@ const InterestedPage = () => {
                                             <option value="Social and Lifestyle">Social and Lifestyle</option>
                                         </select>
                                     </div>
-                                    <button className="modal-button" onClick={handleAddNewGoal}>Add New Goal</button>
+                                    <button className="modal-button" onClick={handleAddNewGoal}>Confirm</button>
                                     <button className="modal-close" onClick={handleModalClose}>Close</button>
                                 </div>
                             </div>

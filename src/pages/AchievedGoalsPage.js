@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { collection, query, where, getDocs, updateDoc, doc, setDoc, addDoc } from 'firebase/firestore';
 import { firestore } from '../firebase';
 import Menu from '../components/Menu.js';
+import { Link } from 'react-router-dom';
+
 
 const AchievedGoalsPage = () => {
   const [achievedGoals, setAchievedGoals] = useState([]);
@@ -113,6 +115,7 @@ const AchievedGoalsPage = () => {
     <div className="container">
       <Menu />
       <h1>Achieved Goals</h1>
+      {achievedGoals.length === 0 ? <Link to={`/home`}> Keep saving and achieve your first goal! </Link> : <></>}
       {achievedGoals.map(item => (
         <div key={item.id} className="goalItem">
           <p className="goalText">Title: {item.title}</p>

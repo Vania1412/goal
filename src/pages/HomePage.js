@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { collection, query, where, addDoc, getDocs, updateDoc, increment, arrayUnion } from "firebase/firestore";
 import { firestore } from '../firebase';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Menu from '../components/Menu.js';
 import './HomePage.css'; 
 
@@ -22,8 +22,9 @@ const HomePage = () => {
   const [category, setCategory] = useState('');
   const [totalSaving, setTotalSaving] = useState(0);
   const [espm, setEspm] = useState(0);
-
-
+  const location = useLocation();
+  const [showMessage, setShowMessage] = useState(false);
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     const fetchGoals = async () => {
@@ -69,9 +70,18 @@ const HomePage = () => {
       }
     };
 
+    if (location.state?.message) {
+      setMessage(location.state.message);
+      setShowMessage(true);
+    }
+
     fetchGoals();
     fetchUserStats();
-  }, []);
+  }, [location.state]);
+
+  const handleCloseMessage = () => {
+    setShowMessage(false);
+  };
 
   /*  const extractKeywords = title => {
       // You can customize this function based on how you want to extract keywords
@@ -188,6 +198,7 @@ const HomePage = () => {
           const userId = userSnapshot.docs[0].id;
           const goalsCollectionRef = collection(firestore, `users/${userId}/current_goals`);
           const docRef = await addDoc(goalsCollectionRef, newGoalDataForUser);
+          setMessage(`You have successfully added the goal: '${newGoal}'`);
           setGoals([...goals, { id: docRef.id, ...newGoalDataForUser }]);
           setNewGoal('');
           setCost('');
@@ -195,6 +206,8 @@ const HomePage = () => {
           const interestedList = userSnapshot.docs[0].data().interested_list || [];
           const updatedInterestedList = interestedList.filter(t => t !== newGoal.toLowerCase());
           await updateDoc(userDocRef, { interested_list: updatedInterestedList });
+          
+         setShowMessage(true);
           //    setImageFile(null); // Reset image file after adding the goal
         } else {
           console.log("User not found");
@@ -202,6 +215,9 @@ const HomePage = () => {
       } catch (error) {
         console.error("Error adding goal: ", error);
       }
+    } else {
+      setMessage(`You have not entered your goal.`);
+      setShowMessage(true);
     }
   };
 
@@ -224,6 +240,13 @@ const HomePage = () => {
         <button onClick={() => setSaving(saving)}>Add Saving</button>
       </div>
 
+        {showMessage && (
+        <div className="message-modal">
+          <p>{message}</p>
+          <button onClick={handleCloseMessage}>Close</button>
+        </div>
+      )}
+ 
       <div className="input-container">
         <input
           type="number"

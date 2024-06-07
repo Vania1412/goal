@@ -31,6 +31,7 @@ const BadgesPage = () => {
     <div className="container">
       <Menu /> 
       <h1>Badges</h1>
+      {badges.length === 0 ? <p> Save and Share more actively to earn badges! </p> : <></>}
       {badges.map(item => (
         <div key={item.id} className="badgesItem">
           <p className="badgesItem">{item.title} lvl: {item.level}</p>
