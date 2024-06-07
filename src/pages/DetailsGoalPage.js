@@ -19,7 +19,7 @@ const DetailsGoalPage = () => {
   const [isSavedAsInterested, setIsSavedAsInterested] = useState(false);
 
   const navigate = useNavigate();
-  const username = "Wendy237"; // Replace with the actual username
+  const username = "Percy0816"; // Replace with the actual username
 
   function formatGoalTitle(goalTitle) {
     const words = goalTitle.split('-');

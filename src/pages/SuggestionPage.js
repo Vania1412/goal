@@ -30,7 +30,7 @@ const SuggestionPage = () => {
                 }));
 
                 // Fetch user's current goals
-                const userQuery = query(collection(firestore, "users"), where("Username", "==", "Wendy237")); // Replace with actual username
+                const userQuery = query(collection(firestore, "users"), where("Username", "==", "Percy0816")); // Replace with actual username
                 const userSnapshot = await getDocs(userQuery);
                 if (!userSnapshot.empty) {
                     const userId = userSnapshot.docs[0].id;

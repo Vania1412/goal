@@ -24,7 +24,7 @@ const InterestedPage = () => {
                 }));
 
                 // Fetch user's current goals
-                const userQuery = query(collection(firestore, "users"), where("Username", "==", "Wendy237")); // Replace with actual username
+                const userQuery = query(collection(firestore, "users"), where("Username", "==", "Percy0816")); // Replace with actual username
                 const userSnapshot = await getDocs(userQuery);
                 if (!userSnapshot.empty) {
                     const titles = userSnapshot.docs[0].data().interested_list || [];
@@ -64,7 +64,7 @@ const InterestedPage = () => {
                     savers: increment(1),
                 });
             }
-            const userQuery = query(collection(firestore, 'users'), where('Username', '==', "Wendy237"));
+            const userQuery = query(collection(firestore, 'users'), where('Username', '==', "Percy0816"));
             const userSnapshot = await getDocs(userQuery);
             const userDocRef = userSnapshot.docs[0].ref;
             if (!userSnapshot.empty) {
@@ -98,7 +98,7 @@ const InterestedPage = () => {
     };
 
     const handleRemoveGoal = async (removeTitle) => {
-        const userQuery = query(collection(firestore, 'users'), where('Username', '==', "Wendy237"));
+        const userQuery = query(collection(firestore, 'users'), where('Username', '==', "Percy0816"));
         const userSnapshot = await getDocs(userQuery);
         const userDocRef = userSnapshot.docs[0].ref;
 

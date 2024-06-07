@@ -12,7 +12,7 @@ const AchievedGoalsPage = () => {
   useEffect(() => {
     const fetchAchievedGoals = async () => {
       try {
-        const userQuery = query(collection(firestore, 'users'), where("Username", "==", "Wendy237"));
+        const userQuery = query(collection(firestore, 'users'), where("Username", "==", "Percy0816"));
         const userSnapshot = await getDocs(userQuery);
         if (!userSnapshot.empty) {
           const userId = userSnapshot.docs[0].id;
@@ -33,8 +33,8 @@ const AchievedGoalsPage = () => {
   const handleShare = async (itemId, text, originalText, itemTitle) => {
     if (text !== undefined && text !== originalText) {
       try {
-        // Query the user collection to find the document with the username "Wendy237"
-        const userQuery = query(collection(firestore, "users"), where("Username", "==", "Wendy237"));
+        // Query the user collection to find the document with the username "Percy0816"
+        const userQuery = query(collection(firestore, "users"), where("Username", "==", "Percy0816"));
         const userSnapshot = await getDocs(userQuery);
 
         if (!userSnapshot.empty) {

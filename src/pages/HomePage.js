@@ -29,8 +29,8 @@ const HomePage = () => {
   useEffect(() => {
     const fetchGoals = async () => {
       try {
-        // Construct a query to fetch goals for the user with username "Wendy237"
-        const userQuery = query(collection(firestore, "users"), where("Username", "==", "Wendy237"));
+        // Construct a query to fetch goals for the user with username "Percy0816"
+        const userQuery = query(collection(firestore, "users"), where("Username", "==", "Percy0816"));
         const userSnapshot = await getDocs(userQuery);
         if (!userSnapshot.empty) {
           const userId = userSnapshot.docs[0].id;
@@ -56,7 +56,7 @@ const HomePage = () => {
     };
     const fetchUserStats = async () => {
       try {
-        const userQuery = query(collection(firestore, "users"), where("Username", "==", "Wendy237")); // Replace with actual username
+        const userQuery = query(collection(firestore, "users"), where("Username", "==", "Percy0816")); // Replace with actual username
         const userSnapshot = await getDocs(userQuery);
         if (!userSnapshot.empty) {
           const userData = userSnapshot.docs[0].data();
@@ -145,7 +145,7 @@ const HomePage = () => {
             // Check if an image file is selected
             if (imageFile) {
               // Upload the image file to Firebase Storage
-              imageURL = await uploadImage(imageFile, "Wendy237", newGoal);
+              imageURL = await uploadImage(imageFile, "Percy0816", newGoal);
             }*/
 
         const goalQuery = query(collection(firestore, "goals"), where("titlelc", "==", newGoal.toLowerCase()));
@@ -193,7 +193,7 @@ const HomePage = () => {
           category: category
           //  imageURL: imageURL
         };
-        const userQuery = query(collection(firestore, "users"), where("Username", "==", "Wendy237"));
+        const userQuery = query(collection(firestore, "users"), where("Username", "==", "Percy0816"));
         const userSnapshot = await getDocs(userQuery);
         const userDocRef = userSnapshot.docs[0].ref;
         if (!userSnapshot.empty) {
