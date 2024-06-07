@@ -17,6 +17,7 @@ const HomePage = () => {
   const [newGoal, setNewGoal] = useState('');
   const [saving, setSaving] = useState('');
   const [cost, setCost] = useState('');
+  const [interestsNumber, setInterestsNumber] = useState(0);
   // const [imageFile, setImageFile] = useState(null);
   const [category, setCategory] = useState('');
   const [totalSaving, setTotalSaving] = useState(0);
@@ -42,6 +43,8 @@ const HomePage = () => {
             selected: doc.data().selected || false,
             startingDate: doc.data().startingDate || null,
           }));
+          const interestedList = userSnapshot.docs[0].data().interested_list || [];
+          setInterestsNumber(interestedList.length)
           setGoals(data);
         } else {
           console.log("User not found");
@@ -180,6 +183,7 @@ const HomePage = () => {
         };
         const userQuery = query(collection(firestore, "users"), where("Username", "==", "Wendy237"));
         const userSnapshot = await getDocs(userQuery);
+        const userDocRef = userSnapshot.docs[0].ref;
         if (!userSnapshot.empty) {
           const userId = userSnapshot.docs[0].id;
           const goalsCollectionRef = collection(firestore, `users/${userId}/current_goals`);
@@ -188,6 +192,9 @@ const HomePage = () => {
           setNewGoal('');
           setCost('');
           setCategory('');
+          const interestedList = userSnapshot.docs[0].data().interested_list || [];
+          const updatedInterestedList = interestedList.filter(t => t !== newGoal.toLowerCase());
+          await updateDoc(userDocRef, { interested_list: updatedInterestedList });
           //    setImageFile(null); // Reset image file after adding the goal
         } else {
           console.log("User not found");
@@ -252,6 +259,7 @@ const HomePage = () => {
           }}
         />*/}
         <button onClick={addGoal}>Add New Goal</button>
+        {interestsNumber !== 0 && <Link to="/interested"> View Interested List </Link>}
         <Link to="/suggestion"> Need Suggestions </Link>
       </div>
      {/* <div className="input-container">

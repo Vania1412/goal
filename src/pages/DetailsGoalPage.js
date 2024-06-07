@@ -14,7 +14,7 @@ const DetailsGoalPage = () => {
   const [userUsefulStories, setUserUsefulStories] = useState({});
   const [showAllStories, setShowAllStories] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [newGoalCosts, setNewGoalCosts] = useState('');
+  const [newGoalCosts, setNewGoalCosts] = useState(0);
   const [newGoalCategory, setNewGoalCategory] = useState('');
   const [isSavedAsInterested, setIsSavedAsInterested] = useState(false);
 
@@ -135,7 +135,7 @@ const DetailsGoalPage = () => {
 
   const handleSetGoal = () => {
     setShowModal(true);
-    setNewGoalCosts('');
+    setNewGoalCosts(0);
     setNewGoalCategory('');
     document.body.style.overflow = 'hidden';
   };
@@ -155,18 +155,21 @@ const DetailsGoalPage = () => {
         }
         const userQuery = query(collection(firestore, 'users'), where('Username', '==', username));
         const userSnapshot = await getDocs(userQuery);
-
+        const userDocRef = userSnapshot.docs[0].ref;
         if (!userSnapshot.empty) {
           const userId = userSnapshot.docs[0].id;
           const goalsCollectionRef = collection(firestore, `users/${userId}/current_goals`);
           const newGoalData = {
             title: goalData.title,
             progress: 0,
-            costs: parseFloat(newGoalCosts !== '' ? newGoalCosts : averageCosts),
+            costs: parseFloat(newGoalCosts !== 0 ? newGoalCosts : averageCosts),
             category: newGoalCategory !== '' ? newGoalCategory : category[0]
           };
           await addDoc(goalsCollectionRef, newGoalData);
           setIsGoalSet(true);
+          const interestedList = userSnapshot.docs[0].data().interested_list || [];
+          const updatedInterestedList = interestedList.filter(t => t !== goalData.titlelc);
+          await updateDoc(userDocRef, { interested_list: updatedInterestedList });
           navigate('/home');
         } else {
           console.log('User not found');
@@ -236,7 +239,7 @@ const DetailsGoalPage = () => {
               <input
                 type="number"
                 id="new-goal-costs"
-                value={newGoalCosts !== '' ? newGoalCosts : averageCosts}
+                value={newGoalCosts !== 0 ? newGoalCosts : averageCosts}
                 onChange={(e) => setNewGoalCosts(e.target.value)}
               />
             </div>
