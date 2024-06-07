@@ -266,9 +266,9 @@ const DetailsGoalPage = () => {
       {!isGoalSet && <button className="set-goal-button" onClick={handleSetGoal}>Set Goal</button>}
       </div>
       <div>
-      <button className="set-goal-button" onClick={handleSaveAsInterested}>
+      {!isGoalSet && <button className="set-goal-button" onClick={handleSaveAsInterested}>
         {isSavedAsInterested ? 'Remove from Interested List' : 'Add to Interests'}
-      </button>
+      </button>}
       </div>
       {/* <p className="goal-info">Users expected to achieve within a similar timeframe as you:</p>
       <div className="profile-container">

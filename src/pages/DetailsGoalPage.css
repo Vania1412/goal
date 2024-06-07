@@ -21,7 +21,7 @@
    }
   
   /* Media query for mobile devices */
-  @media screen and (max-width: 400px) {
+  @media screen and (max-width: 700px) {
     .goal-show-image {
       width: 100%; /* Show full width on mobile devices */
     }
@@ -224,7 +224,7 @@
 /* Modal title */
 .modal-title {
   font-size: 24px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 /* Modal input fields */
@@ -239,7 +239,8 @@
   padding: 10px 10px;
   border: none;
   border-radius: 5px;
-  margin-right: 50px;
+  margin-right: 20px;
+  margin-top: 15px;
   cursor: pointer;
   transition: background-color 0.3s; /* Smooth transition for hover effect */
 }
@@ -254,6 +255,7 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin-top: 15px;
   transition: background-color 0.3s; /* Smooth transition for hover effect */
 }
 

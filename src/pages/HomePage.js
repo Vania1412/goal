@@ -74,7 +74,7 @@ const HomePage = () => {
       // You can customize this function based on how you want to extract keywords
       return title.toLowerCase().split(' ');
     }*/
-  /* const updateAllExistGoals = async () => {
+   const updateAllExistGoals = async () => {
     const goalsCollection = collection(firestore, 'goals');
   
     try {
@@ -91,7 +91,7 @@ const HomePage = () => {
     } catch (error) {
       console.error('Error updating title keywords:', error);
     }
-  } */
+  } 
 
 
 
@@ -183,8 +183,8 @@ const HomePage = () => {
         if (!userSnapshot.empty) {
           const userId = userSnapshot.docs[0].id;
           const goalsCollectionRef = collection(firestore, `users/${userId}/current_goals`);
-          const docRef = await addDoc(goalsCollectionRef, newGoalDataForUser);
-          setGoals([...goals, { id: docRef.id, ...newGoalDataForUser }]);
+        /////  const docRef = await addDoc(goalsCollectionRef, newGoalDataForUser);
+        /////  setGoals([...goals, { id: docRef.id, ...newGoalDataForUser }]);
           setNewGoal('');
           setCost('');
           setCategory('');
@@ -254,11 +254,11 @@ const HomePage = () => {
         <button onClick={addGoal}>Add New Goal</button>
         <Link to="/suggestion"> Need Suggestions </Link>
       </div>
-     {/* <div className="input-container">
+      <div className="input-container">
         
          <button onClick={updateAllExistGoals}>Update Goals</button>
       </div>
- */}
+
       <div className="goal-list">
         {goals.map(goal => (
           <div className="goal-box" key={goal.id}>

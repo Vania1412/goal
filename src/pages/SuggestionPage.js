@@ -185,6 +185,7 @@ const SuggestionPage = () => {
                     </div>
                 ))}
             </div>
+            {goals.length === 0 ? <p>No suggestion found</p> : <></>}
             <div className="goal-list">
                 {goals.map(goal => (
                     <div key={goal.id} className="goal-box">
