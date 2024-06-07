@@ -1,33 +1,35 @@
 .details-container {
-    padding: 20px;
-  }
-  
-  .goal-title {
-    font-size: 32px;
-    font-weight: bold;
-    margin-bottom: 20px;
-  }
-  
-  .goal-info {
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
+  padding: 20px;
+}
 
+.goal-title {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.goal-info {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.goal-show-image {
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  width: 50%;
+  /* Show half of the container's width */
+}
+
+/* Media query for mobile devices */
+@media screen and (max-width: 700px) {
   .goal-show-image {
-    height: auto;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    width: 50%; /* Show half of the container's width */
-   }
-  
-  /* Media query for mobile devices */
-  @media screen and (max-width: 700px) {
-    .goal-show-image {
-      width: 100%; /* Show full width on mobile devices */
-    }
+    width: 100%;
+    /* Show full width on mobile devices */
   }
-  
- /* Style for the overall story container */
+}
+
+/* Style for the overall story container */
 .story {
   border: 1px solid #ccc;
   padding: 16px;
@@ -45,182 +47,193 @@
   align-items: center;
 }
 
- .useful-button {
-  background-color: white;  
-  border: 1px solid #ccc;  
+.useful-button {
+  background-color: white;
+  border: 1px solid #ccc;
   border-radius: 50%;
-  width: 50px; 
-  height: 30px;  
+  width: 50px;
+  height: 30px;
   display: flex;
   justify-content: center;
   right: 20px;
   position: absolute;
   align-items: center;
-  transition: background-color 0.3s, border 0.3s;  
-}
- 
-.useful-button.active {
-  background-color: blue;  
-  border: 1px solid blue;  
+  transition: background-color 0.3s, border 0.3s;
 }
 
- .story-author {
+.useful-button.active {
+  background-color: blue;
+  border: 1px solid blue;
+}
+
+.story-author {
   margin-right: 10px;
   font-weight: bold;
-  flex: 1;  
+  flex: 1;
 }
 
 .story-content {
-  flex: 2;  
+  flex: 2;
   margin-right: 10px;
 }
 
 .story-useful {
-  flex: 1; 
+  flex: 1;
   margin-right: 10px;
-  text-align: right; 
+  text-align: right;
 }
 
-  
-  .set-goal-button {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px;
-    margin-right: 25px;
-  }
 
-  .goal-image {
-    max-width: 100%;
-    height: auto;
-    max-height: 300px; /* Set maximum height */
-  }
-  
-  
-  .set-goal-button:hover {
-    background-color: #0056b3;
-  }
-  
-  .profile-container {
-    margin: 20px 0;
-  }
-  
-  .profile {
-    display: flex;
-    flex-direction: column; /* Column layout */
-    align-items: flex-start; /* Align items to the left */
-    margin: 0 10px;
-  }
-  
-  .profile-name {
-    font-size: 16px;
-    margin-bottom: 5px;
-  }
-  
-  .profile-pic {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin-bottom: 10px;
-  }
-  
-  .follow-button {
-    display: inline-block;
-    padding: 5px 10px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-  }
-  
-  .follow-button:hover {
-    background-color: #218838;
-  }
-  
-  .featured-stories.grayed-out {
-    filter: grayscale(100%);
-  }
-  
-  .section-title {
-    font-size: 24px;
-    font-weight: bold;
-    margin-top: 30px;
-    margin-bottom: 10px;
-  }
-  
-  .featured-stories, .memory-collection {
-    margin-top: 20px;
-  }
-  
-  .story, .memory {
-    margin-bottom: 15px;
-  }
-  
-  .story-author, .memory-author {
-    font-weight: bold;
-  }
-  
-  .story-tip, .memory-tip {
-    margin-top: 5px;
-  }
-  
-  .featured-stories .story {
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    margin-bottom: 10px;
-  }
-  
-  .featured-stories .useful-button {
-    margin-right: 10px;
-    padding: 8px 12px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #f0f0f0;
-    cursor: pointer;
-    outline: none;
-    transition: background-color 0.3s;
-  }
-  
-  .featured-stories .useful-button.active {
-    background-color: #007bff;
-    color: #fff;
-    border-color: #007bff;
-  }
-  
-  .featured-stories .useful-button:hover {
-    background-color: #0056b3;
-    color: #fff;
-    border-color: #0056b3;
-  }
-  
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
-    display: flex;
-    justify-content: center;
-    align-items: center; /* Align modal content at the top */
-    z-index: 999; /* Ensure modal appears above other content */
-  }
-  
-  /* Modal content */
-  .modal-content {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Box shadow for depth */
-  }
-  
+.set-goal-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-right: 25px;
+}
+
+.goal-image {
+  max-width: 100%;
+  height: auto;
+  max-height: 300px;
+  /* Set maximum height */
+}
+
+
+.set-goal-button:hover {
+  background-color: #0056b3;
+}
+
+.profile-container {
+  margin: 20px 0;
+}
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  /* Column layout */
+  align-items: flex-start;
+  /* Align items to the left */
+  margin: 0 10px;
+}
+
+.profile-name {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.profile-pic {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.follow-button {
+  display: inline-block;
+  padding: 5px 10px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.follow-button:hover {
+  background-color: #218838;
+}
+
+.featured-stories.grayed-out {
+  filter: grayscale(100%);
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 30px;
+  margin-bottom: 10px;
+}
+
+.featured-stories,
+.memory-collection {
+  margin-top: 20px;
+}
+
+.story,
+.memory {
+  margin-bottom: 15px;
+}
+
+.story-author,
+.memory-author {
+  font-weight: bold;
+}
+
+.story-tip,
+.memory-tip {
+  margin-top: 5px;
+}
+
+.featured-stories .story {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  margin-bottom: 10px;
+}
+
+.featured-stories .useful-button {
+  margin-right: 10px;
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.3s;
+}
+
+.featured-stories .useful-button.active {
+  background-color: #007bff;
+  color: #fff;
+  border-color: #007bff;
+}
+
+.featured-stories .useful-button:hover {
+  background-color: #0056b3;
+  color: #fff;
+  border-color: #0056b3;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  /* Semi-transparent black background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* Align modal content at the top */
+  z-index: 999;
+  /* Ensure modal appears above other content */
+}
+
+/* Modal content */
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  /* Box shadow for depth */
+}
+
 
 /* Modal title */
 .modal-title {
@@ -235,40 +248,47 @@
 
 /* Modal button */
 .modal-button {
-  background-color: #007bff; /* Blue background color */
-  color: white; /* White text color */
+  background-color: #007bff;
+  /* Blue background color */
+  color: white;
+  /* White text color */
   padding: 10px 10px;
   border: none;
   border-radius: 5px;
   margin-right: 20px;
   margin-top: 15px;
   cursor: pointer;
-  transition: background-color 0.3s; /* Smooth transition for hover effect */
+  transition: background-color 0.3s;
+  /* Smooth transition for hover effect */
 }
 
- 
+
 .modal-close {
   position: absolute;
-  
-  background-color: #007bff; /* Blue background color */
-  color: white; /* White text color */
+
+  background-color: #007bff;
+  /* Blue background color */
+  color: white;
+  /* White text color */
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   margin-top: 15px;
-  transition: background-color 0.3s; /* Smooth transition for hover effect */
+  transition: background-color 0.3s;
+  /* Smooth transition for hover effect */
 }
 
 .modal-button:hover {
-  background-color: #0056b3; /* Darker blue on hover */
+  background-color: #0056b3;
+  /* Darker blue on hover */
 }
 
 .modal-input {
   width: 100%;
   padding: 10px;
   margin-bottom: 7px;
- 
+
   font-size: 16px;
   color: #333;
   background-color: #fff;
@@ -283,6 +303,8 @@
 /* Focus effect */
 .modal-input:focus {
   outline: none;
-  border-color: #007bff; /* Example color for focus state */
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Example box shadow for focus state */
+  border-color: #007bff;
+  /* Example color for focus state */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  /* Example box shadow for focus state */
 }
