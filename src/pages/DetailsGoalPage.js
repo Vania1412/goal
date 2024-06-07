@@ -172,7 +172,7 @@ const DetailsGoalPage = () => {
           await updateDoc(userDocRef, { interested_list: updatedInterestedList });
           setShowModal(false);
           document.body.style.overflow = 'auto';
-          navigate('/home', { state: { message: `You have successfully added the goal: '${goalData.title}'` } });
+          navigate('/home', { state: { message: `You have successfully added the goal: ${goalData.title}` } });
         } else {
           console.log('User not found');
         }

@@ -200,7 +200,7 @@ const HomePage = () => {
           const userId = userSnapshot.docs[0].id;
           const goalsCollectionRef = collection(firestore, `users/${userId}/current_goals`);
           const docRef = await addDoc(goalsCollectionRef, newGoalDataForUser);
-          setMessage(`You have successfully added the goal: '${newGoal}'`);
+          setMessage(`You have successfully added the goal: ${newGoal}`);
           setGoals([...goals, { id: docRef.id, ...newGoalDataForUser }]);
           setNewGoal('');
           setCost('');

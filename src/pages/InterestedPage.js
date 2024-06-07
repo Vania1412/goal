@@ -80,7 +80,7 @@ const InterestedPage = () => {
                 const interestedList = userSnapshot.docs[0].data().interested_list || [];
                 const updatedInterestedList = interestedList.filter(t => t !== goalAddData.titlelc);
                 await updateDoc(userDocRef, { interested_list: updatedInterestedList });
-                navigate('/home', { state: { message: `You have successfully added the goal: '${goalAddData.title}'` } });
+                navigate('/home', { state: { message: `You have successfully added the goal: ${goalAddData.title}` } });
             } else {
                 console.log('User not found');
             }
