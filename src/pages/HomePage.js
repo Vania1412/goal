@@ -3,7 +3,8 @@ import { collection, query, where, addDoc, getDocs, updateDoc, increment, arrayU
 import { firestore } from '../firebase';
 import { Link } from 'react-router-dom';
 import Menu from '../components/Menu.js';
-import './HomePage.css'; 
+import './HomePage.css';
+import { getAuth } from 'firebase/auth';
 
 /*import {
   getDownloadURL,
@@ -21,6 +22,9 @@ const HomePage = () => {
   const [category, setCategory] = useState('');
   const [totalSaving, setTotalSaving] = useState(0);
   const [espm, setEspm] = useState(0);
+
+  const auth = getAuth();
+  const currentUser = auth.currentUser; // Get the current user
 
 
 
@@ -203,7 +207,7 @@ const HomePage = () => {
   return (
     <div className="container">
       <Menu />
-      <Link to="/badges"> Percy0816 </Link>
+      <Link to="/badges"> {currentUser ? currentUser.email : 'Loading...'} </Link>
       <p>Expected Saving Per Month: £{espm}</p>
       <p>Total Saving: £{totalSaving}</p>
       <h1>Saving for your Goal</h1>
