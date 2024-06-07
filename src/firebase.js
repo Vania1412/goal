@@ -17,12 +17,12 @@ import 'firebase/storage';
 };*/
 
 const firebaseConfig = {
-    apiKey: "AIzaSyB1hvcgxbSgUx_zJnTT8Zs26RWKfLNImvQ",
+    apiKey: "AIzaSyDt9p7b8cmcUI7RgSwxC_JBxpbdp3L1joU",
     authDomain: "goal-simple.firebaseapp.com",
     projectId: "goal-simple",
     storageBucket: "goal-simple.appspot.com",
     messagingSenderId: "33739735162",
-    appId: "1:33739735162:android:82f3630cb38ea3fb817bc3",
+    appId: "1:472859181501:web:36df775371b082c7fd52d4",
 };
 
 const app = initializeApp(firebaseConfig);
