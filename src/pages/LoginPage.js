@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 function LoginPage() {
   const [email, setEmail] = useState('admin@admin.com'); // Default email.
@@ -38,6 +38,7 @@ function LoginPage() {
         <button type="submit">Log In</button>
         {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
       </form>
+      <p>Don't have an account? <Link to="/signup">Sign Up</Link></p>
     </div>
   );
 }
