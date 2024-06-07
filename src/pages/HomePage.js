@@ -3,7 +3,7 @@ import { collection, query, where, addDoc, getDocs, updateDoc, increment, arrayU
 import { firestore } from '../firebase';
 import { Link, useLocation } from 'react-router-dom';
 import Menu from '../components/Menu.js';
-import './HomePage.css'; 
+import './HomePage.css';
 
 /*import {
   getDownloadURL,
@@ -73,6 +73,7 @@ const HomePage = () => {
     if (location.state?.message) {
       setMessage(location.state.message);
       setShowMessage(true);
+      document.body.style.overflow = 'hidden';
     }
 
     fetchGoals();
@@ -81,6 +82,7 @@ const HomePage = () => {
 
   const handleCloseMessage = () => {
     setShowMessage(false);
+    document.body.style.overflow = 'auto';
   };
 
   /*  const extractKeywords = title => {
@@ -206,8 +208,9 @@ const HomePage = () => {
           const interestedList = userSnapshot.docs[0].data().interested_list || [];
           const updatedInterestedList = interestedList.filter(t => t !== newGoal.toLowerCase());
           await updateDoc(userDocRef, { interested_list: updatedInterestedList });
-          
-         setShowMessage(true);
+
+          setShowMessage(true);
+          document.body.style.overflow = 'hidden';
           //    setImageFile(null); // Reset image file after adding the goal
         } else {
           console.log("User not found");
@@ -218,6 +221,7 @@ const HomePage = () => {
     } else {
       setMessage(`You have not entered your goal.`);
       setShowMessage(true);
+      document.body.style.overflow = 'hidden';
     }
   };
 
@@ -240,13 +244,15 @@ const HomePage = () => {
         <button onClick={() => setSaving(saving)}>Add Saving</button>
       </div>
 
-        {showMessage && (
-        <div className="message-modal">
-          <p>{message}</p>
-          <button onClick={handleCloseMessage}>Close</button>
+      {showMessage && (
+        <div className='modal-overlay'>
+          <div className="message-modal">
+            <p>{message}</p>
+            <button onClick={handleCloseMessage}>Close</button>
+          </div>
         </div>
       )}
- 
+
       <div className="input-container">
         <input
           type="number"
@@ -285,7 +291,7 @@ const HomePage = () => {
         {interestsNumber !== 0 && <Link to="/interested"> View Interested List </Link>}
         <Link to="/suggestion"> Need Suggestions </Link>
       </div>
-     {/* <div className="input-container">
+      {/* <div className="input-container">
         
          <button onClick={updateAllExistGoals}>Update Goals</button>
       </div>
