@@ -23,13 +23,13 @@ const HomePage = () => {
   const [interestsNumber, setInterestsNumber] = useState(0);
   // const [imageFile, setImageFile] = useState(null);
   const [category, setCategory] = useState('');
- // const [totalSaving, setTotalSaving] = useState(0);
+  // const [totalSaving, setTotalSaving] = useState(0);
   const [espm, setEspm] = useState(0);
   const location = useLocation();
   const [showMessage, setShowMessage] = useState(false);
   const [message, setMessage] = useState('');
-//  const [unclaimedSaving, setUnclaimedSaving] = useState(0);
- // const [allUnclaimed, setAllUnclaimed] = useState(false);
+  //  const [unclaimedSaving, setUnclaimedSaving] = useState(0);
+  // const [allUnclaimed, setAllUnclaimed] = useState(false);
   const { totalSaving, setTotalSaving, unclaimedSaving, setUnclaimedSaving, allUnclaimed, setAllUnclaimed } = useGlobalState();
 
 
@@ -92,7 +92,7 @@ const HomePage = () => {
     fetchGoals();
     fetchUserStats();
 
-  }, [ goals]);
+  }, [goals]);
 
   useEffect(() => {
     if (location.state?.message) {
@@ -104,7 +104,7 @@ const HomePage = () => {
     /*if (location.state?.newUnclaimedSaving) {
       setUnclaimedSaving(location.state.newUnclaimedSaving);
     }*/
-  }, [location.state]); 
+  }, [location.state]);
 
   const handleCloseMessage = () => {
     setShowMessage(false);
@@ -162,13 +162,13 @@ const HomePage = () => {
    };*/
 
   const handleAddSaving = async () => {
-    if (saving !== '') {
+    if (saving !== '' && (savingGoal !== '' || allUnclaimed)) {
       const userQuery = query(collection(firestore, "users"), where("Username", "==", "Percy0816"));
       const userSnapshot = await getDocs(userQuery);
       const userId = userSnapshot.docs[0].id;
       const userDocRef = userSnapshot.docs[0].ref;
       if (!userSnapshot.empty) {
-        
+
         const newSaving = userSnapshot.docs[0].data()['total saving'] + parseInt(saving);
         await updateDoc(userDocRef, { 'total saving': newSaving });
         setTotalSaving(newSaving);
@@ -183,22 +183,26 @@ const HomePage = () => {
           if (goalDocData.costs <= remainSaving) {
             setUnclaimedSaving(unclaimedSaving + goalDocData.costs);
           }
-       /*   const goalsNotSelectRef = query(collection(firestore, `users/${userId}/current_goals`), where("select", "==", false));
-          const goalNotSelectSnapshot = await getDocs(goalsNotSelectRef);
-
-          if (!goalNotSelectSnapshot.empty && newProgress === 100) {
-            const goalDocNewRef = goalNotSelectSnapshot.docs[0].ref;
-            await updateDoc(goalDocNewRef, { select: true });
-          }*/
+          /*   const goalsNotSelectRef = query(collection(firestore, `users/${userId}/current_goals`), where("select", "==", false));
+             const goalNotSelectSnapshot = await getDocs(goalsNotSelectRef);
+   
+             if (!goalNotSelectSnapshot.empty && newProgress === 100) {
+               const goalDocNewRef = goalNotSelectSnapshot.docs[0].ref;
+               await updateDoc(goalDocNewRef, { select: true });
+             }*/
 
           await updateDoc(goalDocRef, { progress: newProgress });
         }
       }
       setSaving('');
-      
+
       setSavingGoal('');
     } else {
-      setMessage(`You have not entered your saving.`);
+      if (saving === '') {
+        setMessage(`You have not entered your saving.`);
+      } else if (savingGoal === '') {
+        setMessage(`You need to pick a goal when you have not achieved all your current goals.`);
+      }
       setShowMessage(true);
     }
   }
@@ -259,7 +263,7 @@ const HomePage = () => {
           progress: 0,
           costs: parseFloat(cost),
           category: category,
-         // select: false
+          // select: false
           //  imageURL: imageURL
         };
         if (remainSaving > 0 && allUnclaimed) {
@@ -279,9 +283,9 @@ const HomePage = () => {
           const goalsCollectionRef = collection(firestore, `users/${userId}/current_goals`);
           //const goalsSnapshot = await getDocs(goalsCollectionRef);
 
-        /*  if (goalsSnapshot.empty) {
-            newGoalDataForUser.select = true;
-          }*/
+          /*  if (goalsSnapshot.empty) {
+              newGoalDataForUser.select = true;
+            }*/
           const docRef = await addDoc(goalsCollectionRef, newGoalDataForUser);
           setMessage(`You have successfully added the goal: ${newGoal}`);
           setGoals([...goals, { id: docRef.id, ...newGoalDataForUser }]);
@@ -328,12 +332,12 @@ const HomePage = () => {
           onChange={(e) => setSaving(e.target.value)}
         />
         <select
-          value={savingGoal}
+          // value={savingGoal}
           onChange={(e) => setSavingGoal(e.target.value)}
         >
           <option value="">Select a goals</option>
           {goals.filter(goal => goal.progress !== 100).map(goal => <option value={goal.title}>{goal.title}</option>)}
-        
+
         </select>
         <button onClick={handleAddSaving}>Add Saving</button>
       </div>
@@ -413,4 +417,3 @@ const HomePage = () => {
 }
 
 export default HomePage;
- 
