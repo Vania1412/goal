@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
-import { auth, firestore } from '../firebase';
+import { firestore } from '../firebase';
 import { useGlobalState } from '../GlobalStateContext.js';
 
 const SignUpPage = () => {
