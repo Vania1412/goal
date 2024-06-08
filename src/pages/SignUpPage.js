@@ -21,7 +21,7 @@ const SignUpPage = () => {
         return;
       }
  
-      const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+      //const userCredential = await auth.createUserWithEmailAndPassword(email, password);
        
       const userData = { email, username };
       await addDoc(collection(firestore, 'users'), userData);
