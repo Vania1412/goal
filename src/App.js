@@ -7,6 +7,8 @@ import SuggestionPage from './pages/SuggestionPage';
 import BadgesPage from './pages/BadgesPage';
 import NotFoundPage from './pages/NotFoundPage';
 import InterestedPage from './pages/InterestedPage';
+import SignupPage from './pages/SignUpPage';
+
 import { GlobalStateProvider } from './GlobalStateContext';
 
 function App() {
@@ -21,6 +23,7 @@ function App() {
           <Route path="/suggestion" element={<SuggestionPage />} />
           <Route path="/badges" element={<BadgesPage />} />
           <Route path="/interested" element={<InterestedPage />} />
+          <Route path="/sign-up" element={<SignupPage />} />
           <Route path="*" element={<NotFoundPage />} /> {/* Catch-all route */}
         </Routes>
       </Router>

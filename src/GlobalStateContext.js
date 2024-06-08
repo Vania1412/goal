@@ -6,6 +6,7 @@ export const GlobalStateProvider = ({ children }) => {
   const [totalSaving, setTotalSaving] = useState(0);
   const [unclaimedSaving, setUnclaimedSaving] = useState(0);
   const [allUnclaimed, setAllUnclaimed] = useState(false);  
+  const [username, setUsername] = useState('');
 
   return (
     <GlobalStateContext.Provider value={{
@@ -14,7 +15,9 @@ export const GlobalStateProvider = ({ children }) => {
       unclaimedSaving,
       setUnclaimedSaving,
       allUnclaimed,
-      setAllUnclaimed
+      setAllUnclaimed,
+      username,
+      setUsername
     }}>
       {children}
     </GlobalStateContext.Provider>
