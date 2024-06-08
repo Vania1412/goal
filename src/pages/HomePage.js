@@ -92,7 +92,7 @@ const HomePage = () => {
     fetchGoals();
     fetchUserStats();
 
-  }, [goals]);
+  }, [goals, unclaimedSaving, setAllUnclaimed, setTotalSaving, setUnclaimedSaving]);
 
   useEffect(() => {
     if (location.state?.message) {
