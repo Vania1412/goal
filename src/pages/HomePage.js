@@ -4,6 +4,8 @@ import { firestore } from '../firebase';
 import { Link, useLocation } from 'react-router-dom';
 import Menu from '../components/Menu.js';
 import './HomePage.css';
+import { useGlobalState } from '../GlobalStateContext.js';
+
 
 /*import {
   getDownloadURL,
@@ -17,14 +19,19 @@ const HomePage = () => {
   const [newGoal, setNewGoal] = useState('');
   const [saving, setSaving] = useState('');
   const [cost, setCost] = useState('');
+  const [savingGoal, setSavingGoal] = useState('');
   const [interestsNumber, setInterestsNumber] = useState(0);
   // const [imageFile, setImageFile] = useState(null);
   const [category, setCategory] = useState('');
-  const [totalSaving, setTotalSaving] = useState(0);
+ // const [totalSaving, setTotalSaving] = useState(0);
   const [espm, setEspm] = useState(0);
   const location = useLocation();
   const [showMessage, setShowMessage] = useState(false);
   const [message, setMessage] = useState('');
+//  const [unclaimedSaving, setUnclaimedSaving] = useState(0);
+ // const [allUnclaimed, setAllUnclaimed] = useState(false);
+  const { totalSaving, setTotalSaving, unclaimedSaving, setUnclaimedSaving, allUnclaimed, setAllUnclaimed } = useGlobalState();
+
 
   useEffect(() => {
     const fetchGoals = async () => {
@@ -34,19 +41,31 @@ const HomePage = () => {
         const userSnapshot = await getDocs(userQuery);
         if (!userSnapshot.empty) {
           const userId = userSnapshot.docs[0].id;
+          let unclaimed = 0;
+          const goalsProgressRef = query(collection(firestore, `users/${userId}/current_goals`), where("progress", "==", 100));
+          const goalProgressSnapshot = await getDocs(goalsProgressRef);
+          if (!goalProgressSnapshot.empty) {
+            goalProgressSnapshot.docs.forEach(doc => {
+              const goalData = doc.data();
+              unclaimed += goalData.costs;
+            });
+          }
+          setUnclaimedSaving(unclaimed);
           const goalsQuery = query(collection(firestore, `users/${userId}/current_goals`));
           const goalsSnapshot = await getDocs(goalsQuery);
+          setAllUnclaimed(goalsSnapshot.docs.every(doc => doc.data().progress === 100) || goalsSnapshot.empty);
           const data = goalsSnapshot.docs.map(doc => ({
             id: doc.id,
             title: doc.data().title || '',
             progress: doc.data().progress || 0,
             costs: doc.data().costs || 0,
-            selected: doc.data().selected || false,
+            select: doc.data().select || false,
             startingDate: doc.data().startingDate || null,
           }));
           const interestedList = userSnapshot.docs[0].data().interested_list || [];
           setInterestsNumber(interestedList.length)
           setGoals(data);
+
         } else {
           console.log("User not found");
         }
@@ -70,15 +89,22 @@ const HomePage = () => {
       }
     };
 
+    fetchGoals();
+    fetchUserStats();
+
+  }, [ goals]);
+
+  useEffect(() => {
     if (location.state?.message) {
       setMessage(location.state.message);
       setShowMessage(true);
       document.body.style.overflow = 'hidden';
     }
 
-    fetchGoals();
-    fetchUserStats();
-  }, [location.state]);
+    /*if (location.state?.newUnclaimedSaving) {
+      setUnclaimedSaving(location.state.newUnclaimedSaving);
+    }*/
+  }, [location.state]); 
 
   const handleCloseMessage = () => {
     setShowMessage(false);
@@ -135,7 +161,47 @@ const HomePage = () => {
      return downloadURL; // Return the filename for reference
    };*/
 
+  const handleAddSaving = async () => {
+    if (saving !== '') {
+      const userQuery = query(collection(firestore, "users"), where("Username", "==", "Percy0816"));
+      const userSnapshot = await getDocs(userQuery);
+      const userId = userSnapshot.docs[0].id;
+      const userDocRef = userSnapshot.docs[0].ref;
+      if (!userSnapshot.empty) {
+        
+        const newSaving = userSnapshot.docs[0].data()['total saving'] + parseInt(saving);
+        await updateDoc(userDocRef, { 'total saving': newSaving });
+        setTotalSaving(newSaving);
+        const goalsCollectionRef = query(collection(firestore, `users/${userId}/current_goals`), where("title", "==", savingGoal));
+        const goalSnapshot = await getDocs(goalsCollectionRef);
 
+        if (!goalSnapshot.empty) {
+          const goalDocRef = goalSnapshot.docs[0].ref;
+          const goalDocData = goalSnapshot.docs[0].data();
+          const remainSaving = newSaving - unclaimedSaving;
+          const newProgress = goalDocData.costs >= remainSaving ? Math.floor((remainSaving / goalDocData.costs) * 100) : 100;
+          if (goalDocData.costs <= remainSaving) {
+            setUnclaimedSaving(unclaimedSaving + goalDocData.costs);
+          }
+       /*   const goalsNotSelectRef = query(collection(firestore, `users/${userId}/current_goals`), where("select", "==", false));
+          const goalNotSelectSnapshot = await getDocs(goalsNotSelectRef);
+
+          if (!goalNotSelectSnapshot.empty && newProgress === 100) {
+            const goalDocNewRef = goalNotSelectSnapshot.docs[0].ref;
+            await updateDoc(goalDocNewRef, { select: true });
+          }*/
+
+          await updateDoc(goalDocRef, { progress: newProgress });
+        }
+      }
+      setSaving('');
+      
+      setSavingGoal('');
+    } else {
+      setMessage(`You have not entered your saving.`);
+      setShowMessage(true);
+    }
+  }
 
   const addGoal = async () => {
     if (newGoal.trim()) {
@@ -185,20 +251,37 @@ const HomePage = () => {
           await addDoc(goalsCollectionRef, newGoalData);
         }
 
+        const remainSaving = totalSaving - unclaimedSaving;
+
         // Add the new goal data for the user
         const newGoalDataForUser = {
           title: newGoal,
           progress: 0,
           costs: parseFloat(cost),
-          category: category
+          category: category,
+         // select: false
           //  imageURL: imageURL
         };
+        if (remainSaving > 0 && allUnclaimed) {
+          const costFloat = parseFloat(cost);
+          if (remainSaving >= costFloat) {
+            newGoalDataForUser.progress = 100;
+            setUnclaimedSaving(unclaimedSaving + costFloat);
+          } else {
+            newGoalDataForUser.progress = Math.floor((remainSaving / costFloat) * 100);
+          }
+        }
         const userQuery = query(collection(firestore, "users"), where("Username", "==", "Percy0816"));
         const userSnapshot = await getDocs(userQuery);
         const userDocRef = userSnapshot.docs[0].ref;
         if (!userSnapshot.empty) {
           const userId = userSnapshot.docs[0].id;
           const goalsCollectionRef = collection(firestore, `users/${userId}/current_goals`);
+          //const goalsSnapshot = await getDocs(goalsCollectionRef);
+
+        /*  if (goalsSnapshot.empty) {
+            newGoalDataForUser.select = true;
+          }*/
           const docRef = await addDoc(goalsCollectionRef, newGoalDataForUser);
           setMessage(`You have successfully added the goal: ${newGoal}`);
           setGoals([...goals, { id: docRef.id, ...newGoalDataForUser }]);
@@ -225,6 +308,9 @@ const HomePage = () => {
     }
   };
 
+  const handldeClaim = async (reachedGoal) => {
+
+  }
 
 
   return (
@@ -241,7 +327,15 @@ const HomePage = () => {
           value={saving}
           onChange={(e) => setSaving(e.target.value)}
         />
-        <button onClick={() => setSaving(saving)}>Add Saving</button>
+        <select
+          value={savingGoal}
+          onChange={(e) => setSavingGoal(e.target.value)}
+        >
+          <option value="">Select a goals</option>
+          {goals.filter(goal => goal.progress !== 100).map(goal => <option value={goal.title}>{goal.title}</option>)}
+        
+        </select>
+        <button onClick={handleAddSaving}>Add Saving</button>
       </div>
 
       {showMessage && (
@@ -297,13 +391,14 @@ const HomePage = () => {
       </div>
  */}
       <div className="goal-list">
-        {goals.map(goal => (
+        {goals.sort((a, b) => b.progress - a.progress).map(goal => (
           <div className="goal-box" key={goal.id}>
             <Link to={`/details-goal/${goal.title.toLowerCase().replace(/ /g, '-')}`} className="goal-link">
               <h3>{goal.title}</h3>
               <p>Costs: £{goal.costs}</p>
               <p>Progress: {goal.progress}%</p>
             </Link>
+            {goal.progress === 100 ? <button onClick={() => handldeClaim(goal)}> Claim </button> : <></>}
             {/*  <div className="goal-info">
         <button onClick={() => handleGoalClick(goal)}>
           Edit costs
@@ -318,3 +413,4 @@ const HomePage = () => {
 }
 
 export default HomePage;
+ 

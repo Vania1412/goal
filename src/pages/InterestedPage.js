@@ -3,6 +3,7 @@ import { collection, query, getDocs, where, updateDoc, increment, addDoc } from 
 import { firestore } from '../firebase';
 import Menu from '../components/Menu.js';
 import { Link, useNavigate } from 'react-router-dom';
+import { useGlobalState } from '../GlobalStateContext.js';
 
 const InterestedPage = () => {
     const [goals, setGoals] = useState([]);
@@ -10,6 +11,8 @@ const InterestedPage = () => {
     const [newGoalCosts, setNewGoalCosts] = useState(0);
     const [newGoalCategory, setNewGoalCategory] = useState('');
     const [goalAddData, setGoalAddData] = useState(null);
+    const { totalSaving, setTotalSaving, unclaimedSaving, setUnclaimedSaving, allUnclaimed, setAllUnclaimed } = useGlobalState();
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -51,7 +54,7 @@ const InterestedPage = () => {
     };
 
     const handleAddNewGoal = async () => {
-        
+
         try {
             const goalQuery = query(collection(firestore, "goals"), where("titlelc", "==", goalAddData.titlelc
             ));
@@ -76,11 +79,22 @@ const InterestedPage = () => {
                     costs: parseFloat(newGoalCosts !== 0 ? newGoalCosts : goalAddData['average costs']),
                     category: newGoalCategory !== '' ? newGoalCategory : goalAddData.category[0]
                 };
+                let costFloat = 0;
+                const remainSaving = totalSaving - unclaimedSaving;
+                if (remainSaving > 0 && allUnclaimed) {
+                    costFloat = newGoalData.costs;
+                    if (remainSaving >= costFloat) {
+                        newGoalData.progress = 100;
+                        setUnclaimedSaving(unclaimedSaving + costFloat);
+                    } else {
+                        newGoalData.progress = Math.floor((remainSaving / costFloat) * 100);
+                    }
+                }
                 await addDoc(goalsCollectionRef, newGoalData);
                 const interestedList = userSnapshot.docs[0].data().interested_list || [];
                 const updatedInterestedList = interestedList.filter(t => t !== goalAddData.titlelc);
                 await updateDoc(userDocRef, { interested_list: updatedInterestedList });
-                navigate('/home', { state: { message: `You have successfully added the goal: ${goalAddData.title}` } });
+                navigate('/home', { state: { message: `You have successfully added the goal: ${goalAddData.title}`, newUnclaimedSaving: unclaimedSaving - costFloat } });
             } else {
                 console.log('User not found');
             }
@@ -128,50 +142,50 @@ const InterestedPage = () => {
                             <p>Average Costs: £{goal['average costs']}</p>
                             <p>Average Saving Days: {goal.asd}</p>
                         </Link>
-                        
-                        <button className="set-goal-button" onClick={() => {setGoalAddData(goal); handleSetGoal()}}>Set Goal</button>
+
+                        <button className="set-goal-button" onClick={() => { setGoalAddData(goal); handleSetGoal() }}>Set Goal</button>
                         <button className="set-goal-button" onClick={() => handleRemoveGoal(goal.titlelc)}>Remove</button>
                     </div>
-                    
+
                 ))}
             </div>
             {showModal && (
-                            <div className="modal-overlay">
-                                <div className="modal-content">
-                                    <h2 className="modal-title">Add New Goal</h2>
-                                    <div className="modal-input">
-                                        <label htmlFor="new-goal-title">Goal: {goalAddData.title}</label>
-                                    </div>
-                                    <div className="modal-input">
-                                        <label htmlFor="new-goal-costs">Costs:</label>
-                                        <input
-                                            type="number"
-                                            id="new-goal-costs"
-                                            value={newGoalCosts !== 0 ? newGoalCosts : goalAddData['average costs']}
-                                            onChange={(e) => setNewGoalCosts(e.target.value)}
-                                        />
-                                    </div>
-                                    <div className="modal-input">
-                                        <label htmlFor="new-goal-category">Category:</label>
-                                        <select
-                                            id="new-goal-category"
-                                            value={newGoalCategory !== '' ? newGoalCategory : goalAddData.category[0]}
-                                            onChange={(e) => setNewGoalCategory(e.target.value)}
-                                        >
-                                            <option value="">Select a category</option>
-                                            <option value="Tech Gadgets">Tech Gadgets</option>
-                                            <option value="Fashion and Accessories">Fashion and Accessories</option>
-                                            <option value="Travel">Travel</option>
-                                            <option value="Entertainment">Entertainment</option>
-                                            <option value="Education and Personal Development">Education and Personal Development</option>
-                                            <option value="Social and Lifestyle">Social and Lifestyle</option>
-                                        </select>
-                                    </div>
-                                    <button className="modal-button" onClick={handleAddNewGoal}>Confirm</button>
-                                    <button className="modal-close" onClick={handleModalClose}>Close</button>
-                                </div>
-                            </div>
-                        )}
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <h2 className="modal-title">Add New Goal</h2>
+                        <div className="modal-input">
+                            <label htmlFor="new-goal-title">Goal: {goalAddData.title}</label>
+                        </div>
+                        <div className="modal-input">
+                            <label htmlFor="new-goal-costs">Costs:</label>
+                            <input
+                                type="number"
+                                id="new-goal-costs"
+                                value={newGoalCosts !== 0 ? newGoalCosts : goalAddData['average costs']}
+                                onChange={(e) => setNewGoalCosts(e.target.value)}
+                            />
+                        </div>
+                        <div className="modal-input">
+                            <label htmlFor="new-goal-category">Category:</label>
+                            <select
+                                id="new-goal-category"
+                                value={newGoalCategory !== '' ? newGoalCategory : goalAddData.category[0]}
+                                onChange={(e) => setNewGoalCategory(e.target.value)}
+                            >
+                                <option value="">Select a category</option>
+                                <option value="Tech Gadgets">Tech Gadgets</option>
+                                <option value="Fashion and Accessories">Fashion and Accessories</option>
+                                <option value="Travel">Travel</option>
+                                <option value="Entertainment">Entertainment</option>
+                                <option value="Education and Personal Development">Education and Personal Development</option>
+                                <option value="Social and Lifestyle">Social and Lifestyle</option>
+                            </select>
+                        </div>
+                        <button className="modal-button" onClick={handleAddNewGoal}>Confirm</button>
+                        <button className="modal-close" onClick={handleModalClose}>Close</button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

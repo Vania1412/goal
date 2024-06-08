@@ -7,21 +7,24 @@ import SuggestionPage from './pages/SuggestionPage';
 import BadgesPage from './pages/BadgesPage';
 import NotFoundPage from './pages/NotFoundPage';
 import InterestedPage from './pages/InterestedPage';
+import { GlobalStateProvider } from './GlobalStateContext';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/" element={<Navigate to="/home" />} />
-        <Route path="/details-goal/:goalTitle" element={<DetailsGoalPage />} />
-        <Route path="/achieved" element={<AchievedGoalsPage />} />
-        <Route path="/suggestion" element={<SuggestionPage />} />
-        <Route path="/badges" element={<BadgesPage />} />
-        <Route path="/interested" element={<InterestedPage />} />
-        <Route path="*" element={<NotFoundPage />} /> {/* Catch-all route */}
-      </Routes>
-    </Router>
+    <GlobalStateProvider>
+      <Router>
+        <Routes>
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/" element={<Navigate to="/home" />} />
+          <Route path="/details-goal/:goalTitle" element={<DetailsGoalPage />} />
+          <Route path="/achieved" element={<AchievedGoalsPage />} />
+          <Route path="/suggestion" element={<SuggestionPage />} />
+          <Route path="/badges" element={<BadgesPage />} />
+          <Route path="/interested" element={<InterestedPage />} />
+          <Route path="*" element={<NotFoundPage />} /> {/* Catch-all route */}
+        </Routes>
+      </Router>
+    </GlobalStateProvider>
   );
 }
 
