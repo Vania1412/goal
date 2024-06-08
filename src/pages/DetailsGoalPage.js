@@ -18,7 +18,7 @@ const DetailsGoalPage = () => {
   const [newGoalCosts, setNewGoalCosts] = useState(0);
   const [newGoalCategory, setNewGoalCategory] = useState('');
   const [isSavedAsInterested, setIsSavedAsInterested] = useState(false);
-  const { totalSaving, setTotalSaving, unclaimedSaving, setUnclaimedSaving, allUnclaimed, setAllUnclaimed } = useGlobalState();
+  const { totalSaving, unclaimedSaving, setUnclaimedSaving, allUnclaimed } = useGlobalState();
 
   const navigate = useNavigate();
   const username = "Percy0816"; // Replace with the actual username

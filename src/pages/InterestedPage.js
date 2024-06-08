@@ -11,7 +11,7 @@ const InterestedPage = () => {
     const [newGoalCosts, setNewGoalCosts] = useState(0);
     const [newGoalCategory, setNewGoalCategory] = useState('');
     const [goalAddData, setGoalAddData] = useState(null);
-    const { totalSaving, setTotalSaving, unclaimedSaving, setUnclaimedSaving, allUnclaimed, setAllUnclaimed } = useGlobalState();
+    const { totalSaving, unclaimedSaving, setUnclaimedSaving, allUnclaimed } = useGlobalState();
 
     const navigate = useNavigate();
 
