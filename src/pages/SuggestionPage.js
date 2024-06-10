@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 import './SuggestionPage.css';
 import sortIcon from '../assets/sort ascending icon.png';
 import randomizeIcon from '../assets/randomize icon.png';
+import { useGlobalState } from '../GlobalStateContext.js';
+
 
 const SuggestionPage = () => {
     const [goals, setGoals] = useState([]);
@@ -16,7 +18,7 @@ const SuggestionPage = () => {
     const [keywords, setKeywords] = useState([]);
     const categories = ["Tech Gadgets", "Fashion and Accessories", "Travel", "Entertainment", "Education and Personal Development", "Social and Lifestyle"];
     const [selectedCategories, setSelectedCategories] = useState(categories);
-
+    const { username } = useGlobalState();
 
     useEffect(() => {
         const fetchGoals = async () => {
@@ -30,7 +32,7 @@ const SuggestionPage = () => {
                 }));
 
                 // Fetch user's current goals
-                const userQuery = query(collection(firestore, "users"), where("Username", "==", "Percy0816")); // Replace with actual username
+                const userQuery = query(collection(firestore, "users"), where("Username", "==", username)); // Replace with actual username
                 const userSnapshot = await getDocs(userQuery);
                 if (!userSnapshot.empty) {
                     const userId = userSnapshot.docs[0].id;
@@ -90,7 +92,7 @@ const SuggestionPage = () => {
         };
 
         fetchGoals();
-    }, [sortBy, selectedCategories, sortOrder, minCost, maxCost, keywords]);
+    }, [sortBy, selectedCategories, sortOrder, minCost, maxCost, keywords, username]);
 
     const handleSortChange = (event) => {
         setSortBy(event.target.value);

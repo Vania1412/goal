@@ -9,6 +9,7 @@ const SignUpPage = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
   const [error, setError] = useState('');
+  const [espm, setEspm] = useState('');
   const { username, setUsername } = useGlobalState();
 
   const handleSignUp = async () => {
@@ -21,9 +22,9 @@ const SignUpPage = () => {
         return;
       }
  
-      //const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+  //    await auth.createUserWithEmailAndPassword(email, password);
        
-      const userData = { email, username };
+      const userData = { email: email, Username: username, pwd: password, espm: parseInt(espm), 'total saving': 0};
       await addDoc(collection(firestore, 'users'), userData);
  
       navigate('/home');
@@ -64,6 +65,16 @@ const SignUpPage = () => {
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+        </label>
+        <br />
+        <label>
+          Expected Saving per month:
+          <input
+            type="text"
+            value={espm}
+            onChange={(e) => setEspm(e.target.value)}
             required
           />
         </label>

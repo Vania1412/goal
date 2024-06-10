@@ -2,14 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { firestore } from '../firebase';
 import Menu from '../components/Menu.js'; 
+import { useGlobalState } from '../GlobalStateContext.js';
+
 
 const BadgesPage = () => {
   const [badges, setBadges] = useState([]);
+  const { username } = useGlobalState();
+
 
   useEffect(() => {
     const fetchBadges = async () => {
       try {
-        const userQuery = query(collection(firestore, 'users'), where("Username", "==", "Percy0816"));
+        const userQuery = query(collection(firestore, 'users'), where("Username", "==", username));
         const userSnapshot = await getDocs(userQuery);
         if (!userSnapshot.empty) {
           const userId = userSnapshot.docs[0].id;
@@ -25,7 +29,7 @@ const BadgesPage = () => {
       }
     };
     fetchBadges();
-  }, []);
+  }, [username]);
 
   return (
     <div className="container">

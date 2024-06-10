@@ -18,10 +18,10 @@ const DetailsGoalPage = () => {
   const [newGoalCosts, setNewGoalCosts] = useState(0);
   const [newGoalCategory, setNewGoalCategory] = useState('');
   const [isSavedAsInterested, setIsSavedAsInterested] = useState(false);
-  const { totalSaving, unclaimedSaving, setUnclaimedSaving, allUnclaimed } = useGlobalState();
+  const { username, totalSaving, unclaimedSaving, setUnclaimedSaving, allUnclaimed } = useGlobalState();
 
   const navigate = useNavigate();
-  const username = "Percy0816"; // Replace with the actual username
+
 
   function formatGoalTitle(goalTitle) {
     const words = goalTitle.split('-');
@@ -82,7 +82,7 @@ const DetailsGoalPage = () => {
 
 
     fetchGoalData();
-  }, [goalTitle]);
+  }, [goalTitle, username]);
 
   const handleUsefulClick = async (storyId) => {
     console.log("Clicked on useful for storyId:", storyId);

@@ -11,7 +11,7 @@ const InterestedPage = () => {
     const [newGoalCosts, setNewGoalCosts] = useState(0);
     const [newGoalCategory, setNewGoalCategory] = useState('');
     const [goalAddData, setGoalAddData] = useState(null);
-    const { totalSaving, unclaimedSaving, setUnclaimedSaving, allUnclaimed } = useGlobalState();
+    const { username, totalSaving, unclaimedSaving, setUnclaimedSaving, allUnclaimed } = useGlobalState();
 
     const navigate = useNavigate();
 
@@ -27,7 +27,7 @@ const InterestedPage = () => {
                 }));
 
                 // Fetch user's current goals
-                const userQuery = query(collection(firestore, "users"), where("Username", "==", "Percy0816")); // Replace with actual username
+                const userQuery = query(collection(firestore, "users"), where("Username", "==", username)); // Replace with actual username
                 const userSnapshot = await getDocs(userQuery);
                 if (!userSnapshot.empty) {
                     const titles = userSnapshot.docs[0].data().interested_list || [];
@@ -44,7 +44,7 @@ const InterestedPage = () => {
         };
 
         fetchGoals();
-    }, [goals]);
+    }, [goals, username]);
 
     const handleSetGoal = () => {
         setShowModal(true);
@@ -67,7 +67,7 @@ const InterestedPage = () => {
                     savers: increment(1),
                 });
             }
-            const userQuery = query(collection(firestore, 'users'), where('Username', '==', "Percy0816"));
+            const userQuery = query(collection(firestore, 'users'), where('Username', '==', username));
             const userSnapshot = await getDocs(userQuery);
             const userDocRef = userSnapshot.docs[0].ref;
             if (!userSnapshot.empty) {
@@ -112,7 +112,7 @@ const InterestedPage = () => {
     };
 
     const handleRemoveGoal = async (removeTitle) => {
-        const userQuery = query(collection(firestore, 'users'), where('Username', '==', "Percy0816"));
+        const userQuery = query(collection(firestore, 'users'), where('Username', '==', username));
         const userSnapshot = await getDocs(userQuery);
         const userDocRef = userSnapshot.docs[0].ref;
 

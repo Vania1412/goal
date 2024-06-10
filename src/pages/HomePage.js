@@ -30,14 +30,14 @@ const HomePage = () => {
   const [message, setMessage] = useState('');
   //  const [unclaimedSaving, setUnclaimedSaving] = useState(0);
   // const [allUnclaimed, setAllUnclaimed] = useState(false);
-  const { totalSaving, setTotalSaving, unclaimedSaving, setUnclaimedSaving, allUnclaimed, setAllUnclaimed } = useGlobalState();
+  const { username, totalSaving, setTotalSaving, unclaimedSaving, setUnclaimedSaving, allUnclaimed, setAllUnclaimed } = useGlobalState();
 
 
   useEffect(() => {
     const fetchGoals = async () => {
       try {
-        // Construct a query to fetch goals for the user with username "Percy0816"
-        const userQuery = query(collection(firestore, "users"), where("Username", "==", "Percy0816"));
+        // Construct a query to fetch goals for the user with username username
+        const userQuery = query(collection(firestore, "users"), where("Username", "==", username));
         const userSnapshot = await getDocs(userQuery);
         if (!userSnapshot.empty) {
           const userId = userSnapshot.docs[0].id;
@@ -75,7 +75,7 @@ const HomePage = () => {
     };
     const fetchUserStats = async () => {
       try {
-        const userQuery = query(collection(firestore, "users"), where("Username", "==", "Percy0816")); // Replace with actual username
+        const userQuery = query(collection(firestore, "users"), where("Username", "==", username)); // Replace with actual username
         const userSnapshot = await getDocs(userQuery);
         if (!userSnapshot.empty) {
           const userData = userSnapshot.docs[0].data();
@@ -92,7 +92,7 @@ const HomePage = () => {
     fetchGoals();
     fetchUserStats();
 
-  }, [goals, unclaimedSaving, setAllUnclaimed, setTotalSaving, setUnclaimedSaving]);
+  }, [goals, unclaimedSaving, setAllUnclaimed, setTotalSaving, setUnclaimedSaving, username]);
 
   useEffect(() => {
     if (location.state?.message) {
@@ -163,7 +163,7 @@ const HomePage = () => {
 
   const handleAddSaving = async () => {
     if (saving !== '' && (savingGoal !== '' || allUnclaimed)) {
-      const userQuery = query(collection(firestore, "users"), where("Username", "==", "Percy0816"));
+      const userQuery = query(collection(firestore, "users"), where("Username", "==", username));
       const userSnapshot = await getDocs(userQuery);
       const userId = userSnapshot.docs[0].id;
       const userDocRef = userSnapshot.docs[0].ref;
@@ -215,7 +215,7 @@ const HomePage = () => {
             // Check if an image file is selected
             if (imageFile) {
               // Upload the image file to Firebase Storage
-              imageURL = await uploadImage(imageFile, "Percy0816", newGoal);
+              imageURL = await uploadImage(imageFile, username, newGoal);
             }*/
 
         const goalQuery = query(collection(firestore, "goals"), where("titlelc", "==", newGoal.toLowerCase()));
@@ -275,7 +275,7 @@ const HomePage = () => {
             newGoalDataForUser.progress = Math.floor((remainSaving / costFloat) * 100);
           }
         }
-        const userQuery = query(collection(firestore, "users"), where("Username", "==", "Percy0816"));
+        const userQuery = query(collection(firestore, "users"), where("Username", "==", username));
         const userSnapshot = await getDocs(userQuery);
         const userDocRef = userSnapshot.docs[0].ref;
         if (!userSnapshot.empty) {
@@ -320,7 +320,7 @@ const HomePage = () => {
   return (
     <div className="container">
       <Menu />
-      <Link to="/badges"> Percy0816 </Link>
+      <Link to="/badges"> {username} </Link>
       <p>Expected Saving Per Month: £{espm}</p>
       <p>Total Saving: £{totalSaving}</p>
       <h1>Saving for your Goal</h1>
