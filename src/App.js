@@ -10,6 +10,7 @@ import InterestedPage from './pages/InterestedPage';
 import SignupPage from './pages/SignUpPage';
 import FollowersPage from './pages/FollowersPage';
 import FollowingPage from './pages/FollowingPage';
+import ProgressBoardPage from './pages/ProgressBoardPage';
 
 import { GlobalStateProvider } from './GlobalStateContext';
 
@@ -28,6 +29,7 @@ function App() {
           <Route path="/sign-up" element={<SignupPage />} />
           <Route path="/followers" element={<FollowersPage />} />
           <Route path="/following" element={<FollowingPage />} />
+          <Route path="/progress-board" element={<ProgressBoardPage />} />
           <Route path="*" element={<NotFoundPage />} /> {/* Catch-all route */}
         </Routes>
       </Router>

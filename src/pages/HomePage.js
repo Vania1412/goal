@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, query, where, addDoc, getDocs, updateDoc, increment, arrayUnion } from "firebase/firestore";
+import { collection, query, where, addDoc, getDocs, updateDoc, increment, arrayUnion, serverTimestamp } from "firebase/firestore";
 import { firestore } from '../firebase';
 import { Link, useLocation } from 'react-router-dom';
 import Menu from '../components/Menu.js';
@@ -183,6 +183,23 @@ const HomePage = () => {
           if (goalDocData.costs <= remainSaving) {
             setUnclaimedSaving(unclaimedSaving + goalDocData.costs);
           }
+          if (newProgress >= 50 && goalDocData.progress < 50) {
+            await addDoc(collection(firestore, "progressUpdates"), {
+              username,
+              goalTitle: savingGoal,
+              progress: 50,
+              timestamp: serverTimestamp()
+            });
+          }
+          if (newProgress === 100 && goalDocData.progress < 100) {
+            await addDoc(collection(firestore, "progressUpdates"), {
+              username,
+              goalTitle: savingGoal,
+              progress: 100,
+              timestamp: serverTimestamp()
+            });
+          }
+          
           /*   const goalsNotSelectRef = query(collection(firestore, `users/${userId}/current_goals`), where("select", "==", false));
              const goalNotSelectSnapshot = await getDocs(goalsNotSelectRef);
    
@@ -287,6 +304,12 @@ const HomePage = () => {
               newGoalDataForUser.select = true;
             }*/
           const docRef = await addDoc(goalsCollectionRef, newGoalDataForUser);
+          await addDoc(collection(firestore, "progressUpdates"), {
+            username,
+            goalTitle: newGoal,
+            progress: 0,
+            timestamp: serverTimestamp()
+          });
           setMessage(`You have successfully added the goal: ${newGoal}`);
           setGoals([...goals, { id: docRef.id, ...newGoalDataForUser }]);
           setNewGoal('');
@@ -332,7 +355,7 @@ const HomePage = () => {
           onChange={(e) => setSaving(e.target.value)}
         />
         <select
-          // value={savingGoal}
+          value={savingGoal}
           onChange={(e) => setSavingGoal(e.target.value)}
         >
           <option value="">Select a goals</option>

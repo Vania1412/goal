@@ -50,6 +50,7 @@ const Menu = () => {
           <Link to="/interested" style={styles.link}>Interests</Link>
           <Link to="/following" style={styles.link}>Manage Following</Link> 
           <Link to="/followers" style={styles.link}>Your Followers</Link> 
+          <Link to="/progress-board" style={styles.link}>Progress Board</Link> 
         </div>
       )}
     </div>
