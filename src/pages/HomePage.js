@@ -28,6 +28,7 @@ const HomePage = () => {
   const location = useLocation();
   const [showMessage, setShowMessage] = useState(false);
   const [message, setMessage] = useState('');
+  const [viewable, setViewable] = useState('');
   //  const [unclaimedSaving, setUnclaimedSaving] = useState(0);
   // const [allUnclaimed, setAllUnclaimed] = useState(false);
   const { username, totalSaving, setTotalSaving, unclaimedSaving, setUnclaimedSaving, allUnclaimed, setAllUnclaimed } = useGlobalState();
@@ -189,7 +190,8 @@ const HomePage = () => {
               goalTitle: savingGoal,
               progress: 50,
               timestamp: serverTimestamp(),
-              celebrations: []
+              celebrations: [],
+              viewable: goalDocData.viewable
             });
           }
           if (newProgress === 100 && goalDocData.progress < 100) {
@@ -198,7 +200,8 @@ const HomePage = () => {
               goalTitle: savingGoal,
               progress: 100,
               timestamp: serverTimestamp(),
-              celebrations: []
+              celebrations: [],
+              viewable: goalDocData.viewable
             });
           }
           
@@ -282,7 +285,9 @@ const HomePage = () => {
           progress: 0,
           costs: parseFloat(cost),
           category: category,
+          viewable: viewable
           // select: false
+
           //  imageURL: imageURL
         };
         await addDoc(collection(firestore, "progressUpdates"), {
@@ -290,7 +295,8 @@ const HomePage = () => {
           goalTitle: newGoal,
           progress: 0,
           timestamp: serverTimestamp(),
-          celebrations: []
+          celebrations: [],
+          viewable: viewable
         });
         if (remainSaving > 0 && allUnclaimed) {
           const costFloat = parseFloat(cost);
@@ -300,14 +306,16 @@ const HomePage = () => {
                 goalTitle: newGoal,
                 progress: 50,
                 timestamp: serverTimestamp(),
-                celebrations: []
+                celebrations: [],
+                viewable: viewable
               });
                await addDoc(collection(firestore, "progressUpdates"), {
                 username,
                 goalTitle: newGoal,
                 progress: 100,
                 timestamp: serverTimestamp(),
-                celebrations: []
+                celebrations: [],
+                viewable: viewable
               });
             newGoalDataForUser.progress = 100;
             setUnclaimedSaving(unclaimedSaving + costFloat);
@@ -344,6 +352,7 @@ const HomePage = () => {
           setNewGoal('');
           setCost('');
           setCategory('');
+          setViewable('')
           const interestedList = userSnapshot.docs[0].data().interested_list || [];
           const updatedInterestedList = interestedList.filter(t => t !== newGoal.toLowerCase());
           await updateDoc(userDocRef, { interested_list: updatedInterestedList });
@@ -427,6 +436,16 @@ const HomePage = () => {
           <option value="Entertainment">Entertainment</option>
           <option value="Education and Personal Development">Education and Personal Development</option>
           <option value="Social and Lifestyle">Social and Lifestyle</option>
+        </select>
+        <select
+          value={viewable}
+          onChange={(e) => setViewable(e.target.value)}
+        >
+          <option value="">Select who can view it</option>
+          <option value="Me">Me</option>
+          <option value="My friends">My friends</option>
+          <option value="My followers">My followers</option>
+      
         </select>
         {/*<input
           label="Image"

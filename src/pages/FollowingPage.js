@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { collection, query, where, getDocs, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 import { firestore } from '../firebase';
 import { useGlobalState } from '../GlobalStateContext.js';
+import Menu from '../components/Menu.js';
+
 
 const FollowingPage = () => {
   const { username } = useGlobalState();
@@ -84,6 +86,7 @@ const FollowingPage = () => {
 
   return (
     <div>
+        <Menu />
       <h2>Manage Following</h2>
       <div>
         <input

@@ -4,6 +4,8 @@ import { firestore } from '../firebase';
 import { useGlobalState } from '../GlobalStateContext.js';
 import { useNavigate } from 'react-router-dom';
 import { update } from 'firebase/database';
+import Menu from '../components/Menu.js';
+
 
 
 const ProgressBoardPage = () => {
@@ -20,6 +22,7 @@ const ProgressBoardPage = () => {
     const [userNotClaim, setUserNotClaim] = useState([]);
     const [userAchievedGoals, setUserAchievedGoals] = useState([]);
     const [tips, setTips] = useState([]);
+    const [viewable, setViewable] = useState('');
     const navigate = useNavigate();
 
 
@@ -73,7 +76,7 @@ const ProgressBoardPage = () => {
                         );
                         const updatesSnapshot = await getDocs(updatesQuery);
                         const updatesData = await Promise.all(
-                            updatesSnapshot.docs.map(async doc => {
+                            updatesSnapshot.docs.filter(doc => doc.data().viewable !== "Me").map(async doc => {
                                 const data = doc.data();
                                 const tipsSnapshot = await getDocs(collection(doc.ref, 'tips'));
                                 const tips = tipsSnapshot.docs.map(tipDoc => tipDoc.data());
@@ -184,7 +187,8 @@ const ProgressBoardPage = () => {
                     goalTitle: title,
                     progress: 0,
                     timestamp: serverTimestamp(),
-                    celebrations: []
+                    celebrations: [],
+                    viewable: viewable
                 });
 
                 let costFloat = 0;
@@ -198,14 +202,16 @@ const ProgressBoardPage = () => {
                             goalTitle: title,
                             progress: 50,
                             timestamp: serverTimestamp(),
-                            celebrations: []
+                            celebrations: [], 
+                            viewable: viewable
                         });
                         await addDoc(collection(firestore, "progressUpdates"), {
                             username,
                             goalTitle: title,
                             progress: 100,
                             timestamp: serverTimestamp(),
-                            celebrations: []
+                            celebrations: [], 
+                            viewable: viewable
                         });
                         setUnclaimedSaving(unclaimedSaving + costFloat);
                     } else {
@@ -242,6 +248,7 @@ const ProgressBoardPage = () => {
 
     return (
         <div>
+            <Menu />
             <h2>Progress Board</h2>
             <ul>
                 {progressUpdates.map((update, index) => (
@@ -252,10 +259,10 @@ const ProgressBoardPage = () => {
                                     <p>{update.username} has created a new goal "{update.goalTitle}"</p>
                                     {(username === update.username && update.tips && update.tips.length > 0) && (
 
-                                        
+
                                         <div className="tips-section">
-                                                     <p><strong>Tips & advice:</strong> </p>
-                                             {update.tips.map((tip, tipIndex) => (
+                                            <p><strong>Tips & advice:</strong> </p>
+                                            {update.tips.map((tip, tipIndex) => (
                                                 <div key={tipIndex} className="tip-box">
                                                     <p><strong>{tip.username}:</strong> {tip.tips}</p>
                                                 </div>
@@ -334,7 +341,22 @@ const ProgressBoardPage = () => {
                                 <option value="Education and Personal Development">Education and Personal Development</option>
                                 <option value="Social and Lifestyle">Social and Lifestyle</option>
                             </select>
+                            
                         </div>
+                        <div className="modal-input">
+                            <label htmlFor="new-goal-category">Who can view it:</label>
+                            <select
+                                value={viewable}
+                                onChange={(e) => setViewable(e.target.value)}
+                            >
+                                <option value="Me">Me</option>
+                                <option value="My friends">My friends</option>
+                                <option value="My followers">My followers</option>
+
+                            </select>
+                            
+                        </div>
+                        
                         <button className="modal-button" onClick={() => handleAddNewGoal()}>Confirm</button>
                         <button className="modal-close" onClick={handleModalClose}>Close</button>
                     </div>
