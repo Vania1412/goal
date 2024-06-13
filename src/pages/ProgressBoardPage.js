@@ -254,7 +254,7 @@ const ProgressBoardPage = () => {
                 {progressUpdates.map((update, index) => (
                     <li key={index} className="progress-update-box">
                         <div className="progress-update-content">
-                            {update.status ? <p>{update.username} is in a {update.status} status</p>:(update.progress === 0 ?
+                            {update.status ? <p>{update.username} is in a {update.status}</p>:(update.progress === 0 ?
                                 <div>
                                     <p>{update.username} has created a new goal "{update.goalTitle}"</p>
                                     {(username === update.username && update.tips && update.tips.length > 0) && (
@@ -280,7 +280,7 @@ const ProgressBoardPage = () => {
                                     </p>
                                 ))}
                         </div>
-                        {(userNotClaim.includes(update.goalTitle) || userAchievedGoals.includes(update.goalTitle)) &&
+                        {!update.status && (userNotClaim.includes(update.goalTitle) || userAchievedGoals.includes(update.goalTitle)) &&
                             update.username !== username && update.progress === 0 &&
                             <div><p> You have achieved this goal before, any special tips and advice for {update.username}</p>
                                 <input
@@ -292,7 +292,7 @@ const ProgressBoardPage = () => {
                                 <button onClick={() => handleTips(update)}>Send</button>
                             </div>}
                         <div className="progress-update-buttons">
-                            {(update.username !== username) && (update.progress === 0 ? (
+                            {!update.status && (update.username !== username) && (update.progress === 0 ? (
                                 (userGoals.includes(update.goalTitle)) ? (
                                     <p>You share the same goal with {update.username}</p>
                                 ) : (
