@@ -382,7 +382,7 @@ const HomePage = () => {
   return (
     <div className="container">
       <Menu />
-      <Link to="/badges"> {username} </Link>
+      <Link to={`/profile/${username.toLowerCase()}`}> {username} </Link>
       <p>Expected Saving Per Month: £{espm}</p>
       <p>Total Saving: £{totalSaving}</p>
       <h1>Saving for your Goal</h1>

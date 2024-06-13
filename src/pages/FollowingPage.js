@@ -3,6 +3,7 @@ import { collection, query, where, getDocs, updateDoc, arrayUnion, arrayRemove }
 import { firestore } from '../firebase';
 import { useGlobalState } from '../GlobalStateContext.js';
 import Menu from '../components/Menu.js';
+import { Link } from 'react-router-dom';
 
 
 const FollowingPage = () => {
@@ -103,12 +104,13 @@ const FollowingPage = () => {
         <ul>
           {following.map(followerUsername => (
             <li key={followerUsername}>
-              {followerUsername}
+              <Link to={`/profile/${followerUsername.toLowerCase()}`} className="goal-link">{followerUsername}</Link> 
               <button onClick={() => handleRemoveFollower(followerUsername)}>Remove</button>
             </li>
           ))}
         </ul>
       </div>
+      <Link to="/progress-board"> View their progress </Link>
     </div>
   );
 };

@@ -3,7 +3,6 @@ import { collection, query, where, getDocs, orderBy, doc, updateDoc, arrayUnion,
 import { firestore } from '../firebase';
 import { useGlobalState } from '../GlobalStateContext.js';
 import { useNavigate } from 'react-router-dom';
-import { update } from 'firebase/database';
 import Menu from '../components/Menu.js';
 
 
@@ -232,7 +231,7 @@ const ProgressBoardPage = () => {
 
                 await addDoc(goalsCollectionRef, newGoalData);
                 const interestedList = userSnapshot.docs[0].data().interested_list || [];
-                const updatedInterestedList = interestedList.filter(t => t !== update.goalTitle.toLowerCase());
+                const updatedInterestedList = interestedList.filter(t => t !== title.toLowerCase());
                 await updateDoc(userDocRef, { interested_list: updatedInterestedList });
                 setShowModal(false);
                 document.body.style.overflow = 'auto';

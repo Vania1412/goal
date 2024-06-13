@@ -4,7 +4,7 @@ import HomePage from './pages/HomePage';
 import DetailsGoalPage from './pages/DetailsGoalPage';
 import AchievedGoalsPage from './pages/AchievedGoalsPage';
 import SuggestionPage from './pages/SuggestionPage';
-import BadgesPage from './pages/BadgesPage';
+import ProfilePage from './pages/ProfilePage';
 import NotFoundPage from './pages/NotFoundPage';
 import InterestedPage from './pages/InterestedPage';
 import SignupPage from './pages/SignUpPage';
@@ -25,7 +25,7 @@ function App() {
           <Route path="/details-goal/:goalTitle" element={<DetailsGoalPage />} />
           <Route path="/achieved" element={<AchievedGoalsPage />} />
           <Route path="/suggestion" element={<SuggestionPage />} />
-          <Route path="/badges" element={<BadgesPage />} />
+          <Route path="/profile/:profileUser" element={<ProfilePage />} />
           <Route path="/interested" element={<InterestedPage />} />
           <Route path="/sign-up" element={<SignupPage />} />
           <Route path="/log-in" element={<LoginPage />} />
