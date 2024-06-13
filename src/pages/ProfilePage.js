@@ -276,6 +276,7 @@ const handleAddNewGoal = async () => {
   return (
     <div className="container">
       <Menu />
+      <h1>{capitalizeFirstLetter(profileUser)}</h1>
       <h2>Badges</h2>
       {badges.length === 0 ? <p> Save and Share more actively to earn badges! </p> : <></>}
       {badges.map(item => (

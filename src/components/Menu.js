@@ -45,6 +45,7 @@ const Menu = () => {
       {showMenu && (
         <div className="menuOptions" style={styles.menuOptions}>
           <Link to="/home" style={styles.link}>Home</Link>
+          <Link to="/goal-adding" style={styles.link}>Add New Goal</Link> 
           <Link to="/achieved" style={styles.link}>Achieved Goals</Link>
           <Link to="/suggestion" style={styles.link}>Suggested Goals</Link>
           <Link to="/interested" style={styles.link}>Interests</Link>

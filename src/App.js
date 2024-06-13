@@ -12,6 +12,7 @@ import LoginPage from './pages/LogInPage';
 import FollowersPage from './pages/FollowersPage';
 import FollowingPage from './pages/FollowingPage';
 import ProgressBoardPage from './pages/ProgressBoardPage';
+import GoalAddingPage from './pages/GoalAddingPage';
 
 import { GlobalStateProvider } from './GlobalStateContext';
 
@@ -32,6 +33,7 @@ function App() {
           <Route path="/followers" element={<FollowersPage />} />
           <Route path="/following" element={<FollowingPage />} />
           <Route path="/progress-board" element={<ProgressBoardPage />} />
+          <Route path="/goal-adding" element={<GoalAddingPage />} />
           <Route path="*" element={<NotFoundPage />} /> {/* Catch-all route */}
         </Routes>
       </Router>
