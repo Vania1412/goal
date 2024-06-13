@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, query, where, addDoc, getDocs, updateDoc, increment, arrayUnion } from "firebase/firestore";
+import { collection, query, where, addDoc, getDocs, updateDoc, increment, arrayUnion, doc, getDoc } from "firebase/firestore";
 import { firestore } from '../firebase';
 import { Link } from 'react-router-dom';
 import Menu from '../components/Menu.js';
@@ -22,9 +22,10 @@ const HomePage = () => {
   const [category, setCategory] = useState('');
   const [totalSaving, setTotalSaving] = useState(0);
   const [espm, setEspm] = useState(0);
+  const [username, setUsername] = useState('');
 
   const auth = getAuth();
-  const currentUser = auth.currentUser; // Get the current user
+  const currentUser = auth.currentUser; // Get the current user.
 
 
 
@@ -54,6 +55,7 @@ const HomePage = () => {
         console.error("Error fetching goals: ", error);
       }
     };
+
     const fetchUserStats = async () => {
       try {
         const userQuery = query(collection(firestore, "users"), where("Username", "==", "Wendy237")); // Replace with actual username
@@ -70,6 +72,20 @@ const HomePage = () => {
       }
     };
 
+    const fetchUser = async () => {
+        try {
+          const userDoc = await getDoc(doc(firestore, 'users', currentUser.uid));
+          if (userDoc.exists()) {
+            setUsername(userDoc.data().username); // Set the username
+          } else {
+            console.log("User not found");
+          }
+        } catch (error) {
+          console.error("Error fetching user: ", error);
+        }
+      };
+      
+    fetchUser();  
     fetchGoals();
     fetchUserStats();
   }, []);
@@ -207,7 +223,7 @@ const HomePage = () => {
   return (
     <div className="container">
       <Menu />
-      <Link to="/badges"> {currentUser ? currentUser.email : 'Loading...'} </Link>
+      <Link to="/badges"> {username ? username : 'Loading...'} </Link>
       <p>Expected Saving Per Month: £{espm}</p>
       <p>Total Saving: £{totalSaving}</p>
       <h1>Saving for your Goal</h1>
