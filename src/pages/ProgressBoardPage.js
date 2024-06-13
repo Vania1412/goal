@@ -254,7 +254,7 @@ const ProgressBoardPage = () => {
                 {progressUpdates.map((update, index) => (
                     <li key={index} className="progress-update-box">
                         <div className="progress-update-content">
-                            {update.status ? <p>{update.username} is in a {update.status}</p>:(update.progress === 0 ?
+                            {update.status ? <p>{update.username} is in a {update.status} saving status</p>:(update.progress === 0 ?
                                 <div>
                                     <p>{update.username} has created a new goal "{update.goalTitle}"</p>
                                     {(username === update.username && update.tips && update.tips.length > 0) && (
