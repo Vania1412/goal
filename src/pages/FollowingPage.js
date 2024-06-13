@@ -110,7 +110,6 @@ const FollowingPage = () => {
           ))}
         </ul>
       </div>
-      <Link to="/progress-board"> View their progress </Link>
     </div>
   );
 };
