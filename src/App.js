@@ -8,6 +8,7 @@ import BadgesPage from './pages/BadgesPage';
 import NotFoundPage from './pages/NotFoundPage';
 import InterestedPage from './pages/InterestedPage';
 import SignupPage from './pages/SignUpPage';
+import LoginPage from './pages/LogInPage';
 import FollowersPage from './pages/FollowersPage';
 import FollowingPage from './pages/FollowingPage';
 import ProgressBoardPage from './pages/ProgressBoardPage';
@@ -27,6 +28,7 @@ function App() {
           <Route path="/badges" element={<BadgesPage />} />
           <Route path="/interested" element={<InterestedPage />} />
           <Route path="/sign-up" element={<SignupPage />} />
+          <Route path="/log-in" element={<LoginPage />} />
           <Route path="/followers" element={<FollowersPage />} />
           <Route path="/following" element={<FollowingPage />} />
           <Route path="/progress-board" element={<ProgressBoardPage />} />

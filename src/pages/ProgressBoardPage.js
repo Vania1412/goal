@@ -72,10 +72,14 @@ const ProgressBoardPage = () => {
                             orderBy("timestamp", "desc")
                         );
                         const updatesSnapshot = await getDocs(updatesQuery);
-                        const updatesData = updatesSnapshot.docs.map(doc => ({
-                            ...doc.data(),
-                            id: doc.id
-                        }));
+                        const updatesData = await Promise.all(
+                            updatesSnapshot.docs.map(async doc => {
+                                const data = doc.data();
+                                const tipsSnapshot = await getDocs(collection(doc.ref, 'tips'));
+                                const tips = tipsSnapshot.docs.map(tipDoc => tipDoc.data());
+                                return { ...data, id: doc.id, tips };
+                            })
+                        );
                         const filterFollowing = updatesData.filter(doc => following.includes(doc.username) || doc.username === username);
                         setProgressUpdates(filterFollowing);
                     }
@@ -94,8 +98,14 @@ const ProgressBoardPage = () => {
     }, [username, modifyCelebratedUsers]);
 
     const handleTips = async (update) => {
-        doc(firestore, `progressUpdates`, update.id)
-        //add new doc to the collection tips with tips: tips, username: username
+        const updateRef = doc(firestore, `progressUpdates`, update.id);
+        const tipsCollectionRef = collection(updateRef, 'tips');
+
+        await addDoc(tipsCollectionRef, {
+            tips: tips,
+            username: username,
+        });
+        setTips('');
 
     }
 
@@ -189,25 +199,25 @@ const ProgressBoardPage = () => {
                             progress: 50,
                             timestamp: serverTimestamp(),
                             celebrations: []
-                          });
-                           await addDoc(collection(firestore, "progressUpdates"), {
+                        });
+                        await addDoc(collection(firestore, "progressUpdates"), {
                             username,
                             goalTitle: title,
                             progress: 100,
                             timestamp: serverTimestamp(),
                             celebrations: []
-                          });
+                        });
                         setUnclaimedSaving(unclaimedSaving + costFloat);
                     } else {
                         if (Math.floor((remainSaving / costFloat) * 100) >= 50 && newGoalData.progress < 50) {
                             await addDoc(collection(firestore, "progressUpdates"), {
-                              username,
-                              goalTitle: title,
-                              progress: 50,
-                              timestamp: serverTimestamp(),
-                              celebrations: []
+                                username,
+                                goalTitle: title,
+                                progress: 50,
+                                timestamp: serverTimestamp(),
+                                celebrations: []
                             });
-                          } 
+                        }
                         newGoalData.progress = Math.floor((remainSaving / costFloat) * 100);
                     }
                 }
@@ -238,29 +248,46 @@ const ProgressBoardPage = () => {
                     <li key={index} className="progress-update-box">
                         <div className="progress-update-content">
                             {update.progress === 0 ?
-                                <p>{update.username} has created a new goal "{update.goalTitle}"</p>
+                                <div>
+                                    <p>{update.username} has created a new goal "{update.goalTitle}"</p>
+                                    {(username === update.username && update.tips && update.tips.length > 0) && (
+
+                                        
+                                        <div className="tips-section">
+                                                     <p><strong>Tips & advice:</strong> </p>
+                                             {update.tips.map((tip, tipIndex) => (
+                                                <div key={tipIndex} className="tip-box">
+                                                    <p><strong>{tip.username}:</strong> {tip.tips}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
                                 : (
                                     <p>
                                         {update.username} has reached {update.progress}% of their goal "{update.goalTitle}"
                                         {(update.celebrations && update.celebrations.length > 0) && (
                                             <span> ({update.celebrations.length} {update.celebrations.length === 1 ? "user" : "users"} celebrated)</span>
                                         )}
+
                                     </p>
                                 )}
                         </div>
                         {(userNotClaim.includes(update.goalTitle) || userAchievedGoals.includes(update.goalTitle)) &&
-                        update.username !== username && update.progress === 0 &&
+                            update.username !== username && update.progress === 0 &&
                             <div><p> You have achieved this goal before, any special tips and advice for {update.username}</p>
                                 <input
                                     type="text"
                                     placeholder="Enter tips or advice"
                                     value={tips}
                                     onChange={(e) => setTips(e.target.value)}
-                                /></div>}
+                                />
+                                <button onClick={() => handleTips(update)}>Send</button>
+                            </div>}
                         <div className="progress-update-buttons">
                             {(update.username !== username) && (update.progress === 0 ? (
                                 (userGoals.includes(update.goalTitle)) ? (
-                                    <p>You are sharing the same goal with {update.username}</p>
+                                    <p>You share the same goal with {update.username}</p>
                                 ) : (
                                     <>
                                         <button onClick={() => handleView(update)}>View Goal Detail</button>
@@ -269,7 +296,7 @@ const ProgressBoardPage = () => {
                                 )
                             ) : (
                                 <>
-                                    <button onClick={() => handleSupport(update)}>Celebrate</button>
+                                    <button onClick={() => handleSupport(update)}>{update.celebrations.includes(username) ? "Celebrated" : "Celebrate"}</button>
                                 </>
                             ))}
                         </div>
