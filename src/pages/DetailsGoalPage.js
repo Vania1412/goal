@@ -191,11 +191,11 @@ const DetailsGoalPage = () => {
                 progress: 50,
                 timestamp: serverTimestamp(),
                 celebrations: [], 
-                viewable: goalData.title
+                viewable: viewable
             });
             await addDoc(collection(firestore, "progressUpdates"), {
                 username,
-                goalTitle: title,
+                goalTitle: goalData.title,
                 progress: 100,
                 timestamp: serverTimestamp(),
                 celebrations: [], 
@@ -209,7 +209,8 @@ const DetailsGoalPage = () => {
                     goalTitle: goalData.title,
                     progress: 50,
                     timestamp: serverTimestamp(),
-                    celebrations: []
+                    celebrations: [], 
+                    viewable: viewable
                 });
             }
               newGoalData.progress = Math.floor((remainSaving / costFloat) * 100);

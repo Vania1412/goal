@@ -221,7 +221,8 @@ const ProgressBoardPage = () => {
                                 goalTitle: title,
                                 progress: 50,
                                 timestamp: serverTimestamp(),
-                                celebrations: []
+                                celebrations: [], 
+                                viewable: viewable
                             });
                         }
                         newGoalData.progress = Math.floor((remainSaving / costFloat) * 100);

@@ -323,10 +323,11 @@ const HomePage = () => {
             if (Math.floor((remainSaving / costFloat) * 100) >= 50 && newGoalDataForUser.progress < 50) {
               await addDoc(collection(firestore, "progressUpdates"), {
                 username,
-                goalTitle: savingGoal,
+                goalTitle: newGoal,
                 progress: 50,
                 timestamp: serverTimestamp(),
-                celebrations: []
+                celebrations: [], 
+                viewable: viewable
               });
             }
             newGoalDataForUser.progress = Math.floor((remainSaving / costFloat) * 100);
