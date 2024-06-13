@@ -188,7 +188,8 @@ const HomePage = () => {
               username,
               goalTitle: savingGoal,
               progress: 50,
-              timestamp: serverTimestamp()
+              timestamp: serverTimestamp(),
+              celebrations: []
             });
           }
           if (newProgress === 100 && goalDocData.progress < 100) {
@@ -196,7 +197,8 @@ const HomePage = () => {
               username,
               goalTitle: savingGoal,
               progress: 100,
-              timestamp: serverTimestamp()
+              timestamp: serverTimestamp(),
+              celebrations: []
             });
           }
           
@@ -283,13 +285,45 @@ const HomePage = () => {
           // select: false
           //  imageURL: imageURL
         };
+        await addDoc(collection(firestore, "progressUpdates"), {
+          username,
+          goalTitle: newGoal,
+          progress: 0,
+          timestamp: serverTimestamp(),
+          celebrations: []
+        });
         if (remainSaving > 0 && allUnclaimed) {
           const costFloat = parseFloat(cost);
           if (remainSaving >= costFloat) {
+               await addDoc(collection(firestore, "progressUpdates"), {
+                username,
+                goalTitle: newGoal,
+                progress: 50,
+                timestamp: serverTimestamp(),
+                celebrations: []
+              });
+               await addDoc(collection(firestore, "progressUpdates"), {
+                username,
+                goalTitle: newGoal,
+                progress: 100,
+                timestamp: serverTimestamp(),
+                celebrations: []
+              });
             newGoalDataForUser.progress = 100;
             setUnclaimedSaving(unclaimedSaving + costFloat);
           } else {
+            if (Math.floor((remainSaving / costFloat) * 100) >= 50 && newGoalDataForUser.progress < 50) {
+              await addDoc(collection(firestore, "progressUpdates"), {
+                username,
+                goalTitle: savingGoal,
+                progress: 50,
+                timestamp: serverTimestamp(),
+                celebrations: []
+              });
+            }
             newGoalDataForUser.progress = Math.floor((remainSaving / costFloat) * 100);
+            
+            
           }
         }
         const userQuery = query(collection(firestore, "users"), where("Username", "==", username));
@@ -304,12 +338,7 @@ const HomePage = () => {
               newGoalDataForUser.select = true;
             }*/
           const docRef = await addDoc(goalsCollectionRef, newGoalDataForUser);
-          await addDoc(collection(firestore, "progressUpdates"), {
-            username,
-            goalTitle: newGoal,
-            progress: 0,
-            timestamp: serverTimestamp()
-          });
+          
           setMessage(`You have successfully added the goal: ${newGoal}`);
           setGoals([...goals, { id: docRef.id, ...newGoalDataForUser }]);
           setNewGoal('');
