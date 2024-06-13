@@ -22,7 +22,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/home" element={<HomePage />} />
-          <Route path="/" element={<Navigate to="/home" />} />
+          <Route path="/" element={<Navigate to="/log-in" />} />
           <Route path="/details-goal/:goalTitle" element={<DetailsGoalPage />} />
           <Route path="/achieved" element={<AchievedGoalsPage />} />
           <Route path="/suggestion" element={<SuggestionPage />} />

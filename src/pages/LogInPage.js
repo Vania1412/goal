@@ -32,26 +32,27 @@ const LogInPage = () => {
 
   return (
     <div>
-      <h2>Sign Up</h2>
+      <h2>Log In</h2>
       {error && <p>{error}</p>}
       <form onSubmit={handleLogIn}>
         
-        <label>
-          Password:
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </label>
-        <br />
+        
         <label>
           Username:
           <input
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+        </label>
+        <br />
+        <label>
+          Password:
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
         </label>
