@@ -19,7 +19,7 @@ const FollowingFollowersPage = () => {
   const styles = {
     tabContainer: {
       display: 'flex',
-      justifyContent: 'center',
+     // justifyContent: 'center',
       gap: '20px',  // Increase space between tabs
       marginBottom: '20px',
      },

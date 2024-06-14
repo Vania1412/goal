@@ -9,8 +9,8 @@ const styles = {
     padding: '10px',
   },
   menuButton: {
-    fontSize: '24px',
-    padding: '10px',
+    fontSize: '22px',
+    padding: '6px',
     cursor: 'pointer',
     backgroundColor: '#007BFF',
     color: '#fff',
