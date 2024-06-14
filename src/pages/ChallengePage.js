@@ -132,36 +132,55 @@ const ChallengePage = () => {
     <div className="challenge-page">
       <Menu />
       <h2>Group Challenges</h2>
-      <div className="create-challenge">
-        <select
-          value={challengeType}
-          onChange={(e) => setChallengeType(e.target.value)}
-        >
-          <option value="">Select Challenge Type</option>
-          <option value="Competitive">Competitive</option>
-          <option value="Collaborative">Collaborative</option>
-          <option value="Daily-target">Daily Target</option>
-          <option value="Customise">Customise</option>
-        </select>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Describe the challenge"
-        />
-        <input
-          type="number"
-          value={userLimit}
-          onChange={(e) => setUserLimit(e.target.value)}
-          placeholder="User Limit"
-        />
-        <input
-          type="date"
-          value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
-          placeholder="End Date"
-        />
-        <button onClick={handleCreateChallenge}>Create Challenge</button>
-      </div>
+<div className="create-challenge">
+  <div className="input-group">
+    <label htmlFor="challengeType">Challenge Type:</label>
+    <select
+      id="challengeType"
+      value={challengeType}
+      onChange={(e) => setChallengeType(e.target.value)}
+    >
+      <option value="">Select Challenge Type</option>
+      <option value="Competitive">Competitive</option>
+      <option value="Collaborative">Collaborative</option>
+      <option value="Daily-target">Daily Target</option>
+      <option value="Customise">Customise</option>
+    </select>
+  </div>
+  <div className="input-group">
+    <label htmlFor="description">Description:</label>
+    <textarea
+      id="description"
+      value={description}
+      onChange={(e) => setDescription(e.target.value)}
+      placeholder="Describe the challenge"
+    />
+  </div>
+  <div className="input-group">
+    <label htmlFor="userLimit">User Limit:</label>
+    <input
+      type="number"
+      id="userLimit"
+      value={userLimit}
+      onChange={(e) => setUserLimit(e.target.value)}
+      placeholder="User Limit"
+    />
+  </div>
+  <div className="input-group">
+    <label htmlFor="endDate">End Date:</label>
+    <input
+      type="date"
+      id="endDate"
+      value={endDate}
+      onChange={(e) => setEndDate(e.target.value)}
+      placeholder="End Date"
+    />
+  </div>
+  <div className="input-group">
+    <button onClick={handleCreateChallenge}>Create Challenge</button>
+  </div>
+</div>
+
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <div className="invite-users">
         <h3>Invite Users</h3>
