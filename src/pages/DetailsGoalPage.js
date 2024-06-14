@@ -391,6 +391,8 @@ const DetailsGoalPage = () => {
           </div>
         ))}
       </div> */}
+      <h2 className="section-title">Discussion Forums</h2>
+      
     </div>
   );
 };

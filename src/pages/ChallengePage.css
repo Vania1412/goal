@@ -1,0 +1,59 @@
+.challenge-page {
+    padding: 20px;
+  }
+  
+  .create-challenge {
+    margin-bottom: 20px;
+  }
+  
+  .create-challenge input, .create-challenge select {
+    padding: 8px;
+    margin-right: 10px;
+    width: 200px;
+  }
+  
+  .create-challenge button {
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+  
+  .invite-users {
+    margin-bottom: 20px;
+  }
+  
+  .invite-users input {
+    padding: 8px;
+    margin-right: 10px;
+    width: 200px;
+  }
+  
+  .invite-users ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .invite-users ul li {
+    padding: 8px;
+    background-color: #f0f0f0;
+    margin-bottom: 5px;
+    cursor: pointer;
+  }
+  
+  .ongoing-challenges ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .ongoing-challenges ul li {
+    padding: 8px;
+    background-color: #f0f0f0;
+    margin-bottom: 5px;
+  }
+  
+  .ongoing-challenges ul li a {
+    text-decoration: none;
+    color: #000;
+  }
+  

@@ -103,14 +103,15 @@ const Menu = () => {
         <Link to="/interested" style={{ ...styles.link, ...(location.pathname === '/interested' ? styles.activeLink : {}) }}>
           Interests
         </Link>
-        <Link to="/following" style={{ ...styles.link, ...(location.pathname === '/following' ? styles.activeLink : {}) }}>
-          Manage Following
+        <Link to="/following-followers" style={{ ...styles.link, ...(location.pathname === '/following' ? styles.activeLink : {}) }}>
+          Following/Followers
         </Link>
-        <Link to="/followers" style={{ ...styles.link, ...(location.pathname === '/followers' ? styles.activeLink : {}) }}>
-          Your Followers
-        </Link>
+      
         <Link to="/progress-board" style={{ ...styles.link, ...(location.pathname === '/progress-board' ? styles.activeLink : {}) }}>
           Progress Board
+        </Link>
+        <Link to="/challenge" style={{ ...styles.link, ...(location.pathname === '/challenge' ? styles.activeLink : {}) }}>
+          Challenge
         </Link>
       </div>
     </div>

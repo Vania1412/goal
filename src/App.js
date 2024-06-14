@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { HashRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import DetailsGoalPage from './pages/DetailsGoalPage';
@@ -9,14 +9,28 @@ import NotFoundPage from './pages/NotFoundPage';
 import InterestedPage from './pages/InterestedPage';
 import SignupPage from './pages/SignUpPage';
 import LoginPage from './pages/LogInPage';
-import FollowersPage from './pages/FollowersPage';
-import FollowingPage from './pages/FollowingPage';
+import FollowingFollowersPage from './pages/FollowingFollowersPage';
 import ProgressBoardPage from './pages/ProgressBoardPage';
 import GoalAddingPage from './pages/GoalAddingPage';
+import ChallengePage from './pages/ChallengePage';
+import handleEndOfMonthResults from './utils/handleEndOfMonthResults';
+
 
 import { GlobalStateProvider } from './GlobalStateContext';
 
 function App() {
+  useEffect(() => {
+    // Schedule this function to run at the end of each month
+    const scheduleEndOfMonthResults = () => {
+      const now = new Date();
+      const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+      const timeUntilEndOfMonth = endOfMonth.getTime() - now.getTime();
+
+      setTimeout(handleEndOfMonthResults, timeUntilEndOfMonth);
+    };
+
+    scheduleEndOfMonthResults();
+  }, []);
   return (
     <GlobalStateProvider>
       <Router>
@@ -30,10 +44,11 @@ function App() {
           <Route path="/interested" element={<InterestedPage />} />
           <Route path="/sign-up" element={<SignupPage />} />
           <Route path="/log-in" element={<LoginPage />} />
-          <Route path="/followers" element={<FollowersPage />} />
-          <Route path="/following" element={<FollowingPage />} />
+          <Route path="/following-followers" element={<FollowingFollowersPage />} />
           <Route path="/progress-board" element={<ProgressBoardPage />} />
           <Route path="/goal-adding" element={<GoalAddingPage />} />
+          <Route path="/challenge" element={<ChallengePage />} />
+
           <Route path="*" element={<NotFoundPage />} /> {/* Catch-all route */}
         </Routes>
       </Router>
