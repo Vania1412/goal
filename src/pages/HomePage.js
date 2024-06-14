@@ -272,9 +272,9 @@ const HomePage = () => {
           value={savingStatus}
           onChange={(e) => handleStatus(e.target.value)}
         >
-          <option value="good">Good</option>
-          <option value="neutral">Neutral</option>
-          <option value="bad">Bad</option>
+          <option value="stable">Stable</option>
+          <option value="adequate">Adequate</option>
+          <option value="strained">Strained</option>
 
         </select>
       </div>
