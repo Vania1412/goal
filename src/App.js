@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { HashRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import DetailsGoalPage from './pages/DetailsGoalPage';
@@ -13,24 +13,11 @@ import FollowingFollowersPage from './pages/FollowingFollowersPage';
 import ProgressBoardPage from './pages/ProgressBoardPage';
 import GoalAddingPage from './pages/GoalAddingPage';
 import ChallengePage from './pages/ChallengePage';
-import handleEndOfMonthResults from './utils/handleEndOfMonthResults';
-
 
 import { GlobalStateProvider } from './GlobalStateContext';
 
 function App() {
-  useEffect(() => {
-    // Schedule this function to run at the end of each month
-    const scheduleEndOfMonthResults = () => {
-      const now = new Date();
-      const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
-      const timeUntilEndOfMonth = endOfMonth.getTime() - now.getTime();
 
-      setTimeout(handleEndOfMonthResults, timeUntilEndOfMonth);
-    };
-
-    scheduleEndOfMonthResults();
-  }, []);
   return (
     <GlobalStateProvider>
       <Router>
