@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { firestore } from '../firebase';
 import { useGlobalState } from '../GlobalStateContext.js';
@@ -60,6 +60,8 @@ const LogInPage = () => {
         
         <button type="submit">Log In</button>
       </form>
+      <Link to = "/sign-up">Have not created an account yet</Link>
+
     </div>
   );
 };
