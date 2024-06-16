@@ -121,6 +121,11 @@ const ChallengePage = () => {
     }
   };
 
+  const handleRemoveUser = async (username) => {
+      setSelectedUsers(selectedUsers.filter(user => user !== username));
+      
+  };
+
   const searchUsers = async (searchTerm) => {
     setSearchUser(searchTerm);
     if (searchTerm.length === 0) {
@@ -214,7 +219,9 @@ const ChallengePage = () => {
           <h4>Selected Users</h4>
           <ul>
             {selectedUsers.map((user) => (
-              <li key={user}>{user}</li>
+              <li key={user} onClick={() => handleRemoveUser(user)}>
+              {user}
+            </li>
             ))}
           </ul>
         </div>
