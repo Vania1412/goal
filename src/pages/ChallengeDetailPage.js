@@ -114,7 +114,15 @@ const ChallengeDetailPage = () => {
                 )}
 
                 {challenge.type === 'Collaborative' && (
+                    
                     <div className="progress">
+                        <ul>
+                            {challenge.participants.map(participant => (
+                                <li>
+                                   {participant} 
+                                </li>
+                            ))}
+                        </ul>
                         <h3>Progress</h3>
                         <div className="progress-bar">
                             <div

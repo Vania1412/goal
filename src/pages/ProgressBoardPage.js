@@ -68,8 +68,7 @@ const ProgressBoardPage = () => {
                     const userData = userSnapshot.docs[0].data();
                     const following = userData.following || [];
 
-                    if (following.length > 0) {
-                        const updatesQuery = query(
+                         const updatesQuery = query(
                             collection(firestore, "progressUpdates"),
                             orderBy("timestamp", "desc")
                         );
@@ -82,9 +81,9 @@ const ProgressBoardPage = () => {
                                 return { ...data, id: doc.id, tips };
                             })
                         );
-                        const filterFollowing = updatesData.filter(doc => following.includes(doc.username) || doc.username === username);
+                        const filterFollowing = updatesData.filter(doc =>  doc.username === username || following.includes(doc.username));
                         setProgressUpdates(filterFollowing);
-                    }
+                    
                 } else {
                     console.log("User not found");
                 }
@@ -251,14 +250,15 @@ const ProgressBoardPage = () => {
             <Menu />
             <h2>Progress Board</h2>
             <ul>
-                {progressUpdates.map((update, index) => (
+                {progressUpdates.filter(update => !update.invite || update.invite === username).map((update, index) => (
                     <li key={index} className="progress-update-box">
                         <div className="progress-update-content">
-                            {update.challengeType && ((update.invite && update.invite === username) ?
+                            {update.challengeType && ((update.invite && update.invite === username) &&
                                 <div>
                                     <p>{update.username} invited you to join the challenge!</p>
                                     <Link to={`/challenge/${update.challengeId}`}>Check it out</Link>
-                                </div> : <div>{update.username} created a {update.challengeType} Challenge</div>)}
+                                </div>)}
+                            {update.challengeType && !update.invite && <div>{update.username} created a {update.challengeType} Challenge</div>}
 
                             {!update.challengeType && (update.status ? <p>{update.username} is in a {update.status} saving status</p> : (update.progress === 0 ?
                                 <div>
