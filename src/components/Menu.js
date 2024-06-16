@@ -113,6 +113,9 @@ const Menu = () => {
         <Link to="/challenge" style={{ ...styles.link, ...(location.pathname === '/challenge' ? styles.activeLink : {}) }}>
           Challenge
         </Link>
+        <Link to="/log-in" style={{ ...styles.link, ...(location.pathname === '/log-in' ? styles.activeLink : {}) }}>
+          Log Out
+        </Link>
       </div>
     </div>
   );

@@ -13,7 +13,7 @@ import FollowingFollowersPage from './pages/FollowingFollowersPage';
 import ProgressBoardPage from './pages/ProgressBoardPage';
 import GoalAddingPage from './pages/GoalAddingPage';
 import ChallengePage from './pages/ChallengePage';
-
+import ChallengeDetailPage from './pages/ChallengeDetailPage';
 import { GlobalStateProvider } from './GlobalStateContext';
 
 function App() {
@@ -35,7 +35,7 @@ function App() {
           <Route path="/progress-board" element={<ProgressBoardPage />} />
           <Route path="/goal-adding" element={<GoalAddingPage />} />
           <Route path="/challenge" element={<ChallengePage />} />
-
+          <Route path="/challenge/:challengeId" element={<ChallengeDetailPage />} />
           <Route path="*" element={<NotFoundPage />} /> {/* Catch-all route */}
         </Routes>
       </Router>

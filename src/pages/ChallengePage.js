@@ -3,10 +3,12 @@ import { collection, addDoc, query, where, getDocs, updateDoc, getDoc, doc } fro
 import { firestore } from '../firebase.js';
 import Menu from '../components/Menu.js';
 import { useGlobalState } from '../GlobalStateContext.js';
+import { useNavigate } from 'react-router-dom';
+
 
 import './ChallengePage.css'; // Assuming you have a CSS file for styling
 
- 
+
 const ChallengePage = () => {
   const [challenges, setChallenges] = useState([]);
   const [challengeType, setChallengeType] = useState('');
@@ -17,8 +19,9 @@ const ChallengePage = () => {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [error, setError] = useState('');
   const [searchUser, setSearchUser] = useState('');
+  const [targetAmount, setTargetAmount] = useState('');
   const { username } = useGlobalState();
-  
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchChallenges();
@@ -51,6 +54,8 @@ const ChallengePage = () => {
         userLimit: parseInt(userLimit, 10),
         endDate: new Date(endDate),
         status: 'ongoing',
+        targetAmount: challengeType === 'Collaborative' ? parseFloat(targetAmount) : null,
+
       });
 
       selectedUsers.forEach(async (user) => {
@@ -72,40 +77,36 @@ const ChallengePage = () => {
       setUserLimit('');
       setEndDate('');
       setSelectedUsers([]);
-      fetchChallenges();  
+      setTargetAmount('');
+      fetchChallenges();
     } catch (error) {
       console.error('Error creating challenge: ', error);
     }
   };
 
   const handleJoinChallenge = async (challengeId) => {
-    try {
-      const challengeDocRef = doc(firestore, 'challenges', challengeId);
-      const challengeDoc = await getDoc(challengeDocRef);
+    const challengeRef = doc(firestore, 'challenges', challengeId);
+    const challengeDoc = await getDoc(challengeRef);
+
+    if (challengeDoc.exists()) {
       const challengeData = challengeDoc.data();
-
-      if (challengeData.invitees.length +challengeData.participants.length < challengeData.userLimit) {
-        await updateDoc(challengeDocRef, {
-          participant: [...challengeData.participant, username],
-        });
-
-        const userQuery = query(collection(firestore, 'users'), where('Username', '==', username));
-        const userSnapshot = await getDocs(userQuery);
-        if (!userSnapshot.empty) {
-          const userDocRef = userSnapshot.docs[0].ref;
-          const userDoc = await getDoc(userDocRef);
-          const userData = userDoc.data();
-
-          await updateDoc(userDocRef, {
-            challenges: userData.challenges ? [...userData.challenges, challengeId] : [challengeId],
-          });
-        }
-        fetchChallenges();  
-      } else {
-        setError('This challenge is already full.');
+      if (challengeData.participants.includes(username)) {
+        alert('You have already joined this challenge.');
+        return;
       }
-    } catch (error) {
-      console.error('Error joining challenge: ', error);
+
+      await updateDoc(challengeRef, {
+        participants: [...challengeData.participants, username]
+      });
+
+      // Update local state to reflect the change immediately
+      setChallenges(prevChallenges =>
+        prevChallenges.map(challenge =>
+          challenge.id === challengeId
+            ? { ...challenge, participants: [...challenge.participants, username] }
+            : challenge
+        )
+      );
     }
   };
 
@@ -132,54 +133,66 @@ const ChallengePage = () => {
     <div className="challenge-page">
       <Menu />
       <h2>Group Challenges</h2>
-<div className="create-challenge">
-  <div className="input-group">
-    <label htmlFor="challengeType">Challenge Type:</label>
-    <select
-      id="challengeType"
-      value={challengeType}
-      onChange={(e) => setChallengeType(e.target.value)}
-    >
-      <option value="">Select Challenge Type</option>
-      <option value="Competitive">Competitive</option>
-      <option value="Collaborative">Collaborative</option>
-      <option value="Daily-target">Daily Target</option>
-      <option value="Customise">Customise</option>
-    </select>
-  </div>
-  <div className="input-group">
-    <label htmlFor="description">Description:</label>
-    <textarea
-      id="description"
-      value={description}
-      onChange={(e) => setDescription(e.target.value)}
-      placeholder="Describe the challenge"
-    />
-  </div>
-  <div className="input-group">
-    <label htmlFor="userLimit">User Limit:</label>
-    <input
-      type="number"
-      id="userLimit"
-      value={userLimit}
-      onChange={(e) => setUserLimit(e.target.value)}
-      placeholder="User Limit"
-    />
-  </div>
-  <div className="input-group">
-    <label htmlFor="endDate">End Date:</label>
-    <input
-      type="date"
-      id="endDate"
-      value={endDate}
-      onChange={(e) => setEndDate(e.target.value)}
-      placeholder="End Date"
-    />
-  </div>
-  <div className="input-group">
-    <button onClick={handleCreateChallenge}>Create Challenge</button>
-  </div>
-</div>
+      <div className="create-challenge">
+        <div className="input-group">
+          <label htmlFor="challengeType">Challenge Type:</label>
+          <select
+            id="challengeType"
+            value={challengeType}
+            onChange={(e) => setChallengeType(e.target.value)}
+          >
+            <option value="">Select Challenge Type</option>
+            <option value="Competitive">Competitive</option>
+            <option value="Collaborative">Collaborative</option>
+            <option value="Customise">Customise</option>
+          </select>
+        </div>
+        <div className="input-group">
+          <label htmlFor="description">Description:</label>
+          <textarea
+            id="description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Describe the challenge"
+          />
+        </div>
+        <div className="input-group">
+          <label htmlFor="userLimit">User Limit:</label>
+          <input
+            type="number"
+            id="userLimit"
+            value={userLimit}
+            onChange={(e) => setUserLimit(e.target.value)}
+            placeholder="User Limit"
+          />
+        </div>
+        <div className="input-group">
+          <label htmlFor="endDate">End Date:</label>
+          <input
+            type="date"
+            id="endDate"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+            placeholder="End Date"
+          />
+        </div>
+
+        {challengeType === 'Collaborative' && (
+          <div className="input-group">
+            <label htmlFor="endDate">Target Amount per User:</label>
+            <input
+              type="number"
+              value={targetAmount}
+              onChange={(e) => setTargetAmount(e.target.value)}
+              placeholder="Target Amount per User"
+            />
+          </div>
+        )}
+
+        <div className="input-group">
+          <button onClick={handleCreateChallenge}>Create Challenge</button>
+        </div>
+      </div>
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <div className="invite-users">
@@ -207,21 +220,17 @@ const ChallengePage = () => {
         </div>
       </div>
       <div className="ongoing-challenges">
-        <h3>Challenges Joined</h3>
+        <h3>Your Challenges</h3>
         <ul>
           {challenges.filter(challenge => challenge.participants.includes(username)).map((challenge) => {
-            const endDate = challenge.endDate?.seconds
-              ? new Date(challenge.endDate.seconds * 1000)
-              : null;
-
+            const endDate = challenge.endDate ? challenge.endDate.toDate() : null;
             return (
-              <li key={challenge.id}>
+              <li key={challenge.id} onClick={() => navigate(`/challenge/${challenge.id}`)}>
                 <div>
                   <strong>{challenge.type} Challenge</strong>
                   <p>{challenge.description}</p>
                   <p>Ends on: {endDate ? endDate.toLocaleDateString() : 'N/A'}</p>
                   <p>Participants: {challenge.participants.length}/{challenge.userLimit}</p>
-            
                 </div>
               </li>
             );
@@ -246,7 +255,7 @@ const ChallengePage = () => {
                   {challenge.invitees.length + challenge.participants.length < challenge.userLimit && (
                     <button onClick={() => handleJoinChallenge(challenge.id)}>Join Challenge</button>
                   )}
-               
+
                 </div>
               </li>
             );
