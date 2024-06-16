@@ -21,44 +21,50 @@ const ChallengeDetailPage = () => {
             }
         });
 
+
+        const participantUnsubscribes = [];
+        const unsubscribeParticipants = () => {
+            participantUnsubscribes.forEach(unsub => unsub());
+        };
+
+        const setupParticipantListeners = async (participants) => {
+            unsubscribeParticipants();
+            let savingsSum = 0;
+            const savingsData = [];
+            participants.forEach((username) => {
+                const userQuery = query(collection(firestore, 'users'), where('Username', '==', username));
+                const userUnsubscribe = onSnapshot(userQuery, (querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        const userData = doc.data();
+                        const existingParticipant = savingsData.find((p) => p.username === username);
+                        if (existingParticipant) {
+                            savingsSum -= existingParticipant.savings;
+                            existingParticipant.savings = userData['total saving'] || 0;
+                            savingsSum += existingParticipant.savings;
+                        } else {
+                            const savings = userData['total saving'] || 0;
+                            savingsData.push({ username, savings });
+                            savingsSum += savings;
+                        }
+                        savingsData.sort((a, b) => b.savings - a.savings);
+                        setParticipantSavings([...savingsData]);
+                        setTotalSavings(savingsSum);
+                    });
+                });
+                participantUnsubscribes.push(userUnsubscribe);
+            });
+        };
+
         return () => {
             unsubscribeChallenge();
             unsubscribeParticipants();
         };
-    }, [challengeId, setupParticipantListeners, unsubscribeParticipants]);
+    }, [challengeId]);
 
-    const participantUnsubscribes = [];
-    const unsubscribeParticipants = () => {
-        participantUnsubscribes.forEach(unsub => unsub());
-    };
+ 
+   
 
-    const setupParticipantListeners = async (participants) => {
-        unsubscribeParticipants();
-        let savingsSum = 0;
-        const savingsData = [];
-        participants.forEach((username) => {
-            const userQuery = query(collection(firestore, 'users'), where('Username', '==', username));
-            const userUnsubscribe = onSnapshot(userQuery, (querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    const userData = doc.data();
-                    const existingParticipant = savingsData.find((p) => p.username === username);
-                    if (existingParticipant) {
-                        savingsSum -= existingParticipant.savings;
-                        existingParticipant.savings = userData['total saving'] || 0;
-                        savingsSum += existingParticipant.savings;
-                    } else {
-                        const savings = userData['total saving'] || 0;
-                        savingsData.push({ username, savings });
-                        savingsSum += savings;
-                    }
-                    savingsData.sort((a, b) => b.savings - a.savings);
-                    setParticipantSavings([...savingsData]);
-                    setTotalSavings(savingsSum);
-                });
-            });
-            participantUnsubscribes.push(userUnsubscribe);
-        });
-    };
+    
 
     if (!challenge) {
         return <div>Loading...</div>;
