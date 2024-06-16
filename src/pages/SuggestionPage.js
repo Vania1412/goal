@@ -138,7 +138,7 @@ const SuggestionPage = () => {
     return (
         <div>
             <Menu />
-            <h1>Suggested Goals</h1>
+            <h2>Suggested Goals</h2>
             <div>
                 <label htmlFor="sort-select">Sort by: </label>
                 <select id="sort-select" value={sortBy} onChange={handleSortChange}>

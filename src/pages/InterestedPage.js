@@ -126,7 +126,7 @@ const InterestedPage = () => {
     return (
         <div>
             <Menu />
-            <h1>Interested</h1>
+            <h2>Interested</h2>
 
             {goals.length === 0 ? <Link to={`/suggestion`}> Add a goal to Interested List! </Link> : <></>}
 

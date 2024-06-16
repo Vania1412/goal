@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { collection, addDoc, query, where, getDocs, updateDoc, getDoc, doc } from 'firebase/firestore';
+import { collection, addDoc, query, where, getDocs, updateDoc, getDoc, doc, serverTimestamp } from 'firebase/firestore';
 import { firestore } from '../firebase.js';
 import Menu from '../components/Menu.js';
 import { useGlobalState } from '../GlobalStateContext.js';
 import { useNavigate } from 'react-router-dom';
 
 
-import './ChallengePage.css'; // Assuming you have a CSS file for styling
+import './ChallengePage.css';  
 
 
 const ChallengePage = () => {
@@ -57,20 +57,22 @@ const ChallengePage = () => {
         targetAmount: challengeType === 'Collaborative' ? parseFloat(targetAmount) : null,
 
       });
+      await addDoc(collection(firestore, "progressUpdates"), {
+        username,
+        challengeType,
+        timestamp: serverTimestamp(),
+      });
 
       selectedUsers.forEach(async (user) => {
-        const userQuery = query(collection(firestore, 'users'), where('Username', '==', user));
-        const userSnapshot = await getDocs(userQuery);
-        if (!userSnapshot.empty) {
-          const userDocRef = userSnapshot.docs[0].ref;
-          const userDoc = await getDoc(userDocRef);
-          const userData = userDoc.data();
-
-          await updateDoc(userDocRef, {
-            challenges: userData.challenges ? [...userData.challenges, challengeDocRef.id] : [challengeDocRef.id],
-          });
-        }
-      });
+        await addDoc(collection(firestore, "progressUpdates"), {
+          username,
+          challengeType,
+          timestamp: serverTimestamp(),
+          invite: user,
+          challengeId: challengeDocRef.id
+        });
+      })
+   
 
       setChallengeType('');
       setDescription('');
@@ -110,9 +112,10 @@ const ChallengePage = () => {
     }
   };
 
-  const handleInviteUser = (username) => {
+  const handleInviteUser = async (username) => {
     if (username && !selectedUsers.includes(username)) {
       setSelectedUsers([...selectedUsers, username]);
+      
       setInvitees([]);
       setSearchUser('');
     }
@@ -189,14 +192,11 @@ const ChallengePage = () => {
           </div>
         )}
 
-        <div className="input-group">
-          <button onClick={handleCreateChallenge}>Create Challenge</button>
-        </div>
-      </div>
+        
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
-      <div className="invite-users">
-        <h3>Invite Users</h3>
+      <div className="invite-group">
+        <h3>Invite Users to Join!</h3>
         <input
           type="text"
           value={searchUser}
@@ -217,6 +217,10 @@ const ChallengePage = () => {
               <li key={user}>{user}</li>
             ))}
           </ul>
+        </div>
+      </div>
+      <div className="input-group">
+          <button onClick={handleCreateChallenge}>Create Challenge</button>
         </div>
       </div>
       <div className="ongoing-challenges">

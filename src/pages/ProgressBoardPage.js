@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { collection, query, where, getDocs, orderBy, doc, updateDoc, arrayUnion, addDoc, increment, serverTimestamp } from "firebase/firestore";
 import { firestore } from '../firebase';
 import { useGlobalState } from '../GlobalStateContext.js';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Menu from '../components/Menu.js';
 
 
@@ -201,7 +201,7 @@ const ProgressBoardPage = () => {
                             goalTitle: title,
                             progress: 50,
                             timestamp: serverTimestamp(),
-                            celebrations: [], 
+                            celebrations: [],
                             viewable: viewable
                         });
                         await addDoc(collection(firestore, "progressUpdates"), {
@@ -209,7 +209,7 @@ const ProgressBoardPage = () => {
                             goalTitle: title,
                             progress: 100,
                             timestamp: serverTimestamp(),
-                            celebrations: [], 
+                            celebrations: [],
                             viewable: viewable
                         });
                         setUnclaimedSaving(unclaimedSaving + costFloat);
@@ -220,7 +220,7 @@ const ProgressBoardPage = () => {
                                 goalTitle: title,
                                 progress: 50,
                                 timestamp: serverTimestamp(),
-                                celebrations: [], 
+                                celebrations: [],
                                 viewable: viewable
                             });
                         }
@@ -254,7 +254,13 @@ const ProgressBoardPage = () => {
                 {progressUpdates.map((update, index) => (
                     <li key={index} className="progress-update-box">
                         <div className="progress-update-content">
-                            {update.status ? <p>{update.username} is in a {update.status} saving status</p>:(update.progress === 0 ?
+                            {update.challengeType && ((update.invite && update.invite === username) ?
+                                <div>
+                                    <p>{update.username} invited you to join the challenge!</p>
+                                    <Link to={`/challenge/${update.challengeId}`}>Check it out</Link>
+                                </div> : <div>{update.username} created a {update.challengeType} Challenge</div>)}
+
+                            {!update.challengeType && (update.status ? <p>{update.username} is in a {update.status} saving status</p> : (update.progress === 0 ?
                                 <div>
                                     <p>{update.username} has created a new goal "{update.goalTitle}"</p>
                                     {(username === update.username && update.tips && update.tips.length > 0) && (
@@ -278,11 +284,12 @@ const ProgressBoardPage = () => {
                                         )}
 
                                     </p>
-                                ))}
+                                )))}
                         </div>
-                        {!update.status && (userNotClaim.includes(update.goalTitle) || userAchievedGoals.includes(update.goalTitle)) &&
+                        {update.goalTitle && (userNotClaim.includes(update.goalTitle) || userAchievedGoals.includes(update.goalTitle)) &&
                             update.username !== username && update.progress === 0 &&
-                            <div><p> You have achieved this goal before, any special tips and advice for {update.username}</p>
+                            <div>
+                                <p> You have achieved this goal before, any special tips and advice for {update.username}</p>
                                 <input
                                     type="text"
                                     placeholder="Enter tips or advice"
@@ -292,7 +299,7 @@ const ProgressBoardPage = () => {
                                 <button onClick={() => handleTips(update)}>Send</button>
                             </div>}
                         <div className="progress-update-buttons">
-                            {!update.status && (update.username !== username) && (update.progress === 0 ? (
+                            {update.goalTitle && (update.username !== username) && (update.progress === 0 ? (
                                 (userGoals.includes(update.goalTitle)) ? (
                                     <p>You share the same goal with {update.username}</p>
                                 ) : (
@@ -341,7 +348,7 @@ const ProgressBoardPage = () => {
                                 <option value="Education and Personal Development">Education and Personal Development</option>
                                 <option value="Social and Lifestyle">Social and Lifestyle</option>
                             </select>
-                            
+
                         </div>
                         <div className="modal-input">
                             <label htmlFor="new-goal-category">Who can view it:</label>
@@ -354,9 +361,9 @@ const ProgressBoardPage = () => {
                                 <option value="My followers">My followers</option>
 
                             </select>
-                            
+
                         </div>
-                        
+
                         <button className="modal-button" onClick={() => handleAddNewGoal()}>Confirm</button>
                         <button className="modal-close" onClick={handleModalClose}>Close</button>
                     </div>

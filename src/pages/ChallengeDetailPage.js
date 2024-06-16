@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { doc, collection, query, where, onSnapshot } from 'firebase/firestore';
+import { doc, collection, query, where, onSnapshot, getDoc, updateDoc, arrayUnion } from 'firebase/firestore';
 import { firestore } from '../firebase.js';
 import Menu from '../components/Menu.js';
+import { useGlobalState } from '../GlobalStateContext.js';
 import './ChallengeDetailPage.css';
 
 const ChallengeDetailPage = () => {
@@ -10,6 +11,9 @@ const ChallengeDetailPage = () => {
     const [challenge, setChallenge] = useState(null);
     const [participantSavings, setParticipantSavings] = useState([]);
     const [totalSavings, setTotalSavings] = useState(0);
+    const [showJoin, setShowJoin] = useState(false);
+    const { username } = useGlobalState();
+
 
     useEffect(() => {
         const docRef = doc(firestore, 'challenges', challengeId);
@@ -17,6 +21,9 @@ const ChallengeDetailPage = () => {
             if (docSnap.exists()) {
                 const challengeData = docSnap.data();
                 setChallenge(challengeData);
+                if (!challengeData.participants.includes(username)) {
+                    setShowJoin(true);
+                }
                 await setupParticipantListeners(challengeData.participants);
             }
         });
@@ -59,12 +66,23 @@ const ChallengeDetailPage = () => {
             unsubscribeChallenge();
             unsubscribeParticipants();
         };
-    }, [challengeId]);
+    }, [challengeId, username]);
 
- 
-   
+    const handleJoinChallenge = async () => {
+        const challengeRef = doc(firestore, 'challenges', challengeId);
+        const challengeDoc = await getDoc(challengeRef);
 
-    
+        if (challengeDoc.exists()) {
+
+            await updateDoc(challengeRef, {
+                participants: arrayUnion(username)
+            });
+            setShowJoin(false);
+
+        }
+    };
+
+
 
     if (!challenge) {
         return <div>Loading...</div>;
@@ -78,7 +96,7 @@ const ChallengeDetailPage = () => {
             <Menu />
             <div className="challenge-detail-container">
                 <h2>{challenge.type} Challenge</h2>
-                <p className="challenge-description">{challenge.description}</p>
+                <p className="challenge-description">Description: {challenge.description}</p>
                 <p className="challenge-end-date">Ends on: {endDate ? endDate.toLocaleDateString() : 'N/A'}</p>
                 <p className="challenge-participants">Participants: {challenge.participants.length}/{challenge.userLimit}</p>
 
@@ -110,6 +128,7 @@ const ChallengeDetailPage = () => {
                     </div>
                 )}
             </div>
+            {showJoin && <button onClick={handleJoinChallenge}>Join Challenge</button>}
         </div>
     );
 };

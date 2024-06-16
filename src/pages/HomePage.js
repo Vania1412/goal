@@ -257,7 +257,7 @@ const HomePage = () => {
       timestamp: serverTimestamp(),
       viewable: "my followers"
     });
-    setSavingStatus(status);
+   /// setSavingStatus(status);
 
   }
 
@@ -266,8 +266,7 @@ const HomePage = () => {
     <div className="container">
       <Menu />
       <Link to={`/profile/${username.toLowerCase()}`}> {username} </Link>
-      <div>
-        <p>Saving status:</p>
+         <p>Saving status: 
         <select
           value={savingStatus}
           onChange={(e) => handleStatus(e.target.value)}
@@ -276,9 +275,8 @@ const HomePage = () => {
           <option value="adequate">Adequate</option>
           <option value="strained">Strained</option>
 
-        </select>
-      </div>
-      <p>Expected Saving Per Month: £{espm}</p>
+        </select></p>
+       <p>Expected Saving Per Month: £{espm}</p>
       <p>Total Saving: £{totalSaving}</p>
       <h1>Saving for your Goal</h1>
       <div className="input-container">

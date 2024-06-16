@@ -1,0 +1,144 @@
+/* General styles */
+.container {
+    max-width: 800px;
+    margin: 0;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  h1, h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+  }
+  
+  /* Badges styles */
+  .badges-container {
+    margin-bottom: 20px;
+  }
+  
+  .badge-item {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+    width: calc(33.33% - 10px);
+    box-sizing: border-box;
+  }
+  
+  .progress-page-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .progress-page-content {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .badges-container {
+    margin-bottom: 20px;
+  }
+  
+  .badge-item {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+  }
+  
+  .progress-updates-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .progress-update-card {
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .progress-update-card .update-content {
+    margin-bottom: 10px;
+  }
+  
+  .progress-update-card p {
+    margin: 0;
+  }
+  
+  .challenge-update {
+    background-color: #e0f7fa;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  .goal-creation {
+    background-color: #fce4ec;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  .tips-section {
+    margin-top: 10px;
+  }
+  
+  .tip-box {
+    background-color: #f3f3f3;
+    padding: 5px;
+    margin-top: 5px;
+    border-radius: 5px;
+  }
+  
+  .update-buttons {
+    margin-top: 10px;
+  }
+  
+  .view-goal-btn,
+  .join-btn,
+  .celebrate-btn,
+  .send-tip-btn {
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin-right: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .view-goal-btn:hover,
+  .join-btn:hover,
+  .celebrate-btn:hover,
+  .send-tip-btn:hover {
+    opacity: 0.8;
+  }
+  
+  .tip-section {
+    margin-top: 10px;
+  }
+  
+  @media (max-width: 768px) {
+    .progress-page-container {
+      padding: 10px;
+    }
+  
+    .progress-page-content {
+      padding: 10px;
+    }
+  
+    .progress-update-card {
+      padding: 10px;
+    }
+  }
+  

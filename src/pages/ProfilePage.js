@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useGlobalState } from '../GlobalStateContext.js';
 
 import { collection, query, where, getDocs, orderBy, doc, updateDoc, arrayUnion, addDoc, increment, serverTimestamp } from "firebase/firestore";
 import { firestore } from '../firebase.js';
 import Menu from '../components/Menu.js';
+import './ProfilePage.css';
+
 
 
 const ProfilePage = () => {
@@ -272,82 +274,110 @@ const ProfilePage = () => {
   };
 
 
-
   return (
     <div className="container">
       <Menu />
       <h1>{capitalizeFirstLetter(profileUser)}</h1>
-      <h2>Badges</h2>
-      {badges.length === 0 ? <p> Save and Share more actively to earn badges! </p> : <></>}
-      {badges.map(item => (
-        <div key={item.id} className="badgesItem">
-          <p className="badgesItem">{item.title} lvl: {item.level}</p>
 
-        </div>
-      ))}
+      <div className="badges-container">
+        <h2>Badges</h2>
+        {badges.length === 0 ? <p>Save and Share more actively to earn badges!</p> : null}
+        {badges.map((item, index) => (
+          <div key={index} className="badge-item">
+            <p>{item.title} lvl: {item.level}</p>
+          </div>
+        ))}
+      </div>
 
-      <h2>Progress</h2>
-      <ul>
-        {progressUpdates.map((update, index) => (
-          <li key={index} className="progress-update-box">
-            <div className="progress-update-content">
-              {update.status ? <p>{update.username} is in a {update.status} saving status</p> : (update.progress === 0 ?
-                <div>
-                  <p>{update.username} has created a new goal "{update.goalTitle}"</p>
-                  {(username === update.username && update.tips && update.tips.length > 0) && (
-
-
-                    <div className="tips-section">
-                      <p><strong>Tips & advice:</strong> </p>
-                      {update.tips.map((tip, tipIndex) => (
-                        <div key={tipIndex} className="tip-box">
-                          <p><strong>{tip.username}:</strong> {tip.tips}</p>
-                        </div>
-                      ))}
+      <div className="progress-updates-container">
+        <h2>Progress</h2>
+        <ul className="progress-updates-list">
+          {progressUpdates
+            .filter(update => !update.invite)
+            .map((update, index) => (
+              <div key={index} className="progress-update-card">
+                <div className="update-content">
+                  {update.challengeType && !update.invite && (
+                    <div className="challenge-update">
+                      {update.username} created a {update.challengeType} Challenge
                     </div>
                   )}
-                </div>
-                : (
-                  <p>
-                    {update.username} has reached {update.progress}% of their goal "{update.goalTitle}"
-                    {(update.celebrations && update.celebrations.length > 0) && (
-                      <span> ({update.celebrations.length} {update.celebrations.length === 1 ? "user" : "users"} celebrated)</span>
-                    )}
 
-                  </p>
-                ))}
-            </div>
-            {!update.status && (userNotClaim.includes(update.goalTitle) || userAchievedGoals.includes(update.goalTitle)) &&
-              update.username !== username && update.progress === 0 &&
-              <div><p> You have achieved this goal before, any special tips and advice for {update.username}</p>
-                <input
-                  type="text"
-                  placeholder="Enter tips or advice"
-                  value={tips}
-                  onChange={(e) => setTips(e.target.value)}
-                />
-                <button onClick={() => handleTips(update)}>Send</button>
-              </div>}
-            <div className="progress-update-buttons">
-              {!update.status && (update.username !== username) && !userNotClaim.includes(update.goalTitle) && (update.progress === 0 ? (
-                (userGoals.includes(update.goalTitle)) ? (
-                  <p>You share the same goal with {update.username}</p>
-                ) : (
-                  <>
-                    <button onClick={() => handleView(update)}>View Goal Detail</button>
-                    <button onClick={() => handleSupport(update)}>Join</button>
-                  </>
-                )
-              ) : (
-                <>
-                  <button onClick={() => handleSupport(update)}>{update.celebrations.includes(username) ? "Celebrated" : "Celebrate"}</button>
-                </>
-              ))}
-            </div>
-          </li>
-        ))}
-      </ul>
-      {showModal && (
+                  {!update.challengeType && (
+                    <>
+                      {update.status ? (
+                        <p>{update.username} is in a {update.status} saving status</p>
+                      ) : (
+                        update.progress === 0 ? (
+                          <div className="goal-creation">
+                            <p>{update.username} has created a new goal "{update.goalTitle}"</p>
+                            {(username === update.username && update.tips && update.tips.length > 0) && (
+                              <div className="tips-section">
+                                <p><strong>Tips & advice:</strong></p>
+                                {update.tips.map((tip, tipIndex) => (
+                                  <div key={tipIndex} className="tip-box">
+                                    <p><strong>{tip.username}:</strong> {tip.tips}</p>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        ) : (
+                          <p>
+                            {update.username} has reached {update.progress}% of their goal "{update.goalTitle}"
+                            {update.celebrations && update.celebrations.length > 0 && (
+                              <span> ({update.celebrations.length} {update.celebrations.length === 1 ? "user" : "users"} celebrated)</span>
+                            )}
+                          </p>
+                        )
+                      )}
+                    </>
+                  )}
+                </div>
+
+                {update.goalTitle && (userNotClaim.includes(update.goalTitle) || userAchievedGoals.includes(update.goalTitle)) &&
+                  update.username !== username && update.progress === 0 && (
+                    <div className="tip-section">
+                      <p>You have achieved this goal before, any special tips and advice for {update.username}</p>
+                      <input
+                        type="text"
+                        placeholder="Enter tips or advice"
+                        value={tips}
+                        onChange={(e) => setTips(e.target.value)}
+                      />
+                      <button className="send-tip-btn" onClick={() => handleTips(update)}>Send</button>
+                    </div>
+                  )}
+
+                <div className="update-buttons">
+                  {update.goalTitle && (update.username !== username) && (
+                    update.progress === 0 ? (
+                      (userGoals.includes(update.goalTitle)) ? (
+                        <p>You share the same goal with {update.username}</p>
+                      ) : (
+                        <>
+                          <button className="view-goal-btn" onClick={() => handleView(update)}>View Goal Detail</button>
+                          <button className="join-btn" onClick={() => handleSupport(update)}>Join</button>
+                        </>
+                      )
+                    ) : (
+                      <button className="celebrate-btn" onClick={() => handleSupport(update)}>
+                        {update.celebrations.includes(username) ? "Celebrated" : "Celebrate"}
+                      </button>
+                    )
+                  )}
+                </div>
+              </div>
+            ))}
+        </ul>
+      </div>
+
+      {progressUpdates.length === 0 && (capitalizeFirstLetter(profileUser) === username ?
+        <Link to="/goal-adding">Start saving money by setting a goal!</Link> :
+        <p>{capitalizeFirstLetter(profileUser)} has not started saving for any goal.</p>)
+      }
+
+      {showModal &&
         <div className="modal-overlay">
           <div className="modal-content">
             <h2 className="modal-title">Add New Goal</h2>
@@ -367,10 +397,9 @@ const ProfilePage = () => {
               <label htmlFor="new-goal-category">Category:</label>
               <select
                 id="new-goal-category"
-                value={newGoalCategory !== '' ? newGoalCategory : category}
+                value={newGoalCategory !== '' ? newGoalCategory : 'Tech Gadgets'}
                 onChange={(e) => setNewGoalCategory(e.target.value)}
               >
-                <option value="">Select a category</option>
                 <option value="Tech Gadgets">Tech Gadgets</option>
                 <option value="Fashion and Accessories">Fashion and Accessories</option>
                 <option value="Travel">Travel</option>
@@ -378,7 +407,6 @@ const ProfilePage = () => {
                 <option value="Education and Personal Development">Education and Personal Development</option>
                 <option value="Social and Lifestyle">Social and Lifestyle</option>
               </select>
-
             </div>
             <div className="modal-input">
               <label htmlFor="new-goal-category">Who can view it:</label>
@@ -389,16 +417,13 @@ const ProfilePage = () => {
                 <option value="Me">Me</option>
                 <option value="My friends">My friends</option>
                 <option value="My followers">My followers</option>
-
               </select>
-
             </div>
-
             <button className="modal-button" onClick={() => handleAddNewGoal()}>Confirm</button>
             <button className="modal-close" onClick={handleModalClose}>Close</button>
           </div>
         </div>
-      )}
+      }
 
     </div>
   );

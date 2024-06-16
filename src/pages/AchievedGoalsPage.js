@@ -116,7 +116,7 @@ const AchievedGoalsPage = () => {
   return (
     <div className="container">
       <Menu />
-      <h1>Achieved Goals</h1>
+      <h2>Achieved Goals</h2>
       {achievedGoals.length === 0 ? <Link to={`/home`}> Keep saving and achieve your first goal! </Link> : <></>}
       {achievedGoals.map(item => (
         <div key={item.id} className="goalItem">

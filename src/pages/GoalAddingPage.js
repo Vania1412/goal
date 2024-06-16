@@ -274,7 +274,7 @@ const GoalAddingPage = () => {
           </div>
         </div>
       )}
-     <h1>Add a New Goal</h1>
+     <h2>Add a New Goal</h2>
 
       <div className="input-container">
         <input
