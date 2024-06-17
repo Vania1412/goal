@@ -37,7 +37,7 @@ const AchievedGoalsPage = () => {
         })
       })
     })
-  })
+  },[])
 
 
   useEffect(() => {
