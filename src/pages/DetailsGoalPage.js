@@ -11,7 +11,6 @@ const DetailsGoalPage = () => {
   const [goalData, setGoalData] = useState(null);
   const [isGoalSet, setIsGoalSet] = useState(true); // Start as true
   const [averageCosts, setAverageCosts] = useState(0);
-<<<<<<< Updated upstream
   const [featuredStories, setFeaturedStories] = useState([]);
   const [userUsefulStories, setUserUsefulStories] = useState({});
   const [showAllStories, setShowAllStories] = useState(false);
@@ -22,8 +21,7 @@ const DetailsGoalPage = () => {
   const [viewable, setViewable] = useState('');
   const { username, totalSaving, unclaimedSaving, setUnclaimedSaving, allUnclaimed } = useGlobalState();
 
-  const navigate = useNavigate();
-=======
+
   const navigate = useNavigate();
   const [img,setImg] = useState(null);
   const handleClick = () => {
@@ -31,7 +29,6 @@ const DetailsGoalPage = () => {
     uploadBytes(imgRef)
   }
   
->>>>>>> Stashed changes
 
 
   function formatGoalTitle(goalTitle) {
