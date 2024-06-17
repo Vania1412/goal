@@ -17,7 +17,7 @@ const DetailsGoalPage = () => {
   const navigate = useNavigate();
   const [img,setImg] = useState(null);
   const handleClick = () => {
-    const imgRef = ref(storage, `files/${v4()}`)
+    const imgRef = ref(storage, `files/${v4()}.png`)
     uploadBytes(imgRef)
   }
   
