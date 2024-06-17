@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { collection, query, where, getDocs, addDoc, updateDoc, increment, doc, arrayRemove, arrayUnion, serverTimestamp, ref, uploadBytes } from 'firebase/firestore';
+import { collection, query, where, getDocs, addDoc, updateDoc, increment, doc, arrayRemove, arrayUnion, serverTimestamp } from 'firebase/firestore';
 import { firestore } from '../firebase';
 import Menu from '../components/Menu.js';
 import './DetailsGoalPage.css';
 import { useGlobalState } from '../GlobalStateContext.js';
-import { storage } from "../firebase.js"
-import { v4 } from "uuid"
-
-
 
 const DetailsGoalPage = () => {
   const { goalTitle } = useParams(); // Get the goalTitle from the URL params
@@ -25,14 +21,7 @@ const DetailsGoalPage = () => {
   const [viewable, setViewable] = useState('');
   const { username, totalSaving, unclaimedSaving, setUnclaimedSaving, allUnclaimed } = useGlobalState();
 
-
   const navigate = useNavigate();
-  const [img,setImg] = useState(null);
-  const handleClick = () => {
-    const imgRef = ref(storage, `files/${goalTitle}/${v4()}`)
-    uploadBytes(imgRef)
-  }
-  
 
 
   function formatGoalTitle(goalTitle) {
