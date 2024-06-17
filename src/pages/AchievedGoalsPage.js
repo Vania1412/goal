@@ -197,7 +197,7 @@ const AchievedGoalsPage = () => {
       <br/>
       {
         imgUrl.map(dataVal=><div>
-          <img src={dataVal} height="200px" width="200px" />
+          <img src={dataVal} height="200px" width="200px" alt="achieved goal"/>
           <br/>
         </div>)
       }
