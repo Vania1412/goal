@@ -1,15 +1,44 @@
 import React, { useEffect, useState } from 'react';
 import { collection, query, where, getDocs, updateDoc, doc, setDoc, addDoc } from 'firebase/firestore';
-import { firestore } from '../firebase';
+import { firestore, storage } from '../firebase';
 import Menu from '../components/Menu.js';
 import { Link } from 'react-router-dom';
 import { useGlobalState } from '../GlobalStateContext.js';
+import { listAll, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { v4 } from "uuid";
 
 
 const AchievedGoalsPage = () => {
   const [achievedGoals, setAchievedGoals] = useState([]);
   const [successMessage, setMessage] = useState('');
   const { username } = useGlobalState();
+  const [img,setImg] = useState('');
+  const [imgUrl,setImgUrl] = useState([]);
+
+
+  const handleClick = () =>{
+    if (img !== null) {
+      const imgRef = ref(storage,`files/${v4()}`);
+      uploadBytes(imgRef,img).then(value=>{
+        console.log(value)
+        getDownloadURL(value.ref).then(url=>{
+          setImgUrl(data=>[...data,url])
+        })
+      });
+    }
+  }
+
+  useEffect(()=>{
+    listAll(ref(storage,"files")).then(imgs=>{
+      console.log(imgs);
+      imgs.items.forEach(val=>{
+        getDownloadURL(val).then(url=>{
+          setImgUrl(data=>[...data,url])
+        })
+      })
+    })
+  })
+
 
   useEffect(() => {
     const fetchAchievedGoals = async () => {
@@ -163,6 +192,16 @@ const AchievedGoalsPage = () => {
           <p className="modalText">{successMessage}</p>
         </div>
       )}
+      <input type="file" onChange={(e)=>setImg(e.target.files[0])}/>
+      <button onClick={handleClick}>Upload</button>
+      <br/>
+      {
+        imgUrl.map(dataVal=><div>
+          <img src={dataVal} height="200px" width="200px" />
+          <br/>
+        </div>)
+      }
+
     </div>
   );
 };
