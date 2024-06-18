@@ -95,7 +95,8 @@ const ChallengeDetailPage = () => {
         <div className="container">
             <Menu />
             <div className="challenge-detail-container">
-                <h2>{challenge.type} Challenge</h2>
+                <h2>Challenge</h2>
+                <p className="challenge-description">Mode: {challenge.type}</p>
                 <p className="challenge-description">Description: {challenge.description}</p>
                 <p className="challenge-end-date">Ends on: {endDate ? endDate.toLocaleDateString() : 'N/A'}</p>
                 <p className="challenge-participants">Participants: {challenge.participants.length}/{challenge.userLimit}</p>
