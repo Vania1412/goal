@@ -1,73 +1,133 @@
-.challenge-page {
-    padding: 20px;
-  }
-  .create-challenge {
-    display: flex;
-    flex-direction: column;
-    gap: 10px; /* Adjust as needed for spacing between inputs */
-  }
-  
-  .input-group {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .input-group label {
-    margin-bottom: 5px;
-  }
-  
-  .create-challenge {
-    margin-bottom: 20px;
-  }
-  
-  .create-challenge input, .create-challenge select {
-    padding: 8px;
-    margin-right: 10px;
-    width: 200px;
-  }
-  
-  .create-challenge button {
-    padding: 8px 12px;
-    cursor: pointer;
-  }
-  
-  .invite-users {
-    margin-bottom: 20px;
-  }
-  
-  .invite-users input {
-    padding: 8px;
-    margin-right: 10px;
-    width: 200px;
-  }
-  
-  .invite-users ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .invite-users ul li {
-    padding: 8px;
-    background-color: #f0f0f0;
-    margin-bottom: 5px;
-    cursor: pointer;
-  }
-  
-  .ongoing-challenges ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .ongoing-challenges ul li {
-    padding: 8px;
-    background-color: #f0f0f0;
-    margin-bottom: 5px;
-  }
-  
-  .ongoing-challenges ul li a {
-    text-decoration: none;
-    color: #000;
-  }
-  
+ 
+
+.create-challenge {
+  width: 100%;
+  max-width: 600px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.input-group {
+  margin-bottom: 15px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #333;
+  font-size: 1.1em;
+}
+
+.input-group input,
+.input-group select,
+.input-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1em;
+}
+
+.input-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.invite-group {
+  background-color: #f4f4f9;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.invite-group h3,
+.invite-group h4 {
+  color: #333;
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+.invite-group input[type='text'] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1em;
+  margin-bottom: 5px;
+}
+
+.invite-group ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.invite-group ul li {
+  cursor: pointer;
+  padding: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 5px;
+  background-color: #fff;
+}
+
+.invite-group ul li:hover {
+  background-color: #f0f0f0;
+}
+
+.ongoing-challenges {
+  width: 100%;
+  max-width: 600px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.ongoing-challenges h3 {
+  color: #333;
+  font-size: 1.8em;
+  margin-bottom: 15px;
+}
+
+.ongoing-challenges ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.ongoing-challenges ul li {
+  margin-bottom: 20px;
+}
+
+.ongoing-challenges ul li strong {
+  font-size: 1.3em;
+  color: #333;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.ongoing-challenges ul li p {
+  color: #666;
+  font-size: 1.1em;
+  margin-bottom: 5px;
+}
+
+.ongoing-challenges ul li button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.ongoing-challenges ul li button:hover {
+  background-color: #0056b3;
+}

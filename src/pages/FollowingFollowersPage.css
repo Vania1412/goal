@@ -1,8 +1,4 @@
-.follow-container {
-    margin: 0 auto;
-    padding: 20px;
-    font-family: Arial, sans-serif;
-  }
+ 
   
   .follow-tab-container {
     display: flex;
@@ -31,8 +27,7 @@
   .follow-content {
     padding: 20px;
     background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+     border-radius: 5px;
   }
   
   .follow-input-container {

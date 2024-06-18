@@ -112,7 +112,7 @@ const Menu = () => {
           Progress Board
         </Link>
         <Link to="/challenge" style={{ ...styles.link, ...(location.pathname === '/challenge' ? styles.activeLink : {}) }}>
-          Challenge
+          Challenges
         </Link>
         <Link to="/log-in" style={{ ...styles.link, ...(location.pathname === '/log-in' ? styles.activeLink : {}) }}>
           Log Out

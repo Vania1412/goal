@@ -13,48 +13,54 @@ const FollowingFollowersPage = () => {
   const [newFollower, setNewFollower] = useState('');
   const [error, setError] = useState('');
   const [followers, setFollowers] = useState([]);
-  const [view, setView] = useState('following'); 
+  const [view, setView] = useState('following');
   const [invitees, setInvitees] = useState([]);
 
 
-/*  const styles = {
-    tabContainer: {
-      display: 'flex',
-     // justifyContent: 'center',
-      gap: '20px',  // Increase space between tabs
-      marginBottom: '20px',
-     },
-    tab: {
-      padding: '10px 20px',
-      cursor: 'pointer',
-      borderBottom: '2px solid transparent',
-      transition: 'border-bottom 0.3s ease',
-    },
-    activeTab: {
-      borderBottom: '2px solid #007BFF',
-    },
-    inputContainer: {
-      maxWidth: '200px',
-      
-    },
-    input: {
-      width: '100%',
-      padding: '8px',
-      marginBottom: '10px',
-      borderRadius: '4px',
-      border: '1px solid #ccc',
-    },
-    addButton: {
-      padding: '7px 20px',
-      fontSize: '14px',
-      cursor: 'pointer',
-      borderRadius: '5px',
-      border: 'none',
-      backgroundColor: '#28a745',
-      color: 'white',
-      transition: 'background-color 0.3s ease',
-    },
-  }; */
+    const styles = {
+      tabContainer: {
+        display: 'flex',
+        justifyContent: 'center',
+        position: 'fixed',
+    bottom: 0,
+    left: 0,
+    width: '100%',  
+        gap: '20px',  // Increase space between tabs
+        marginBottom: '20px',
+        backgroundColor: '#fff', 
+        zIndex: 999,
+       },
+      tab: {
+        padding: '10px 20px',
+        cursor: 'pointer',
+        borderBottom: '2px solid transparent',
+        transition: 'border-bottom 0.3s ease',
+      },
+      activeTab: {
+        borderBottom: '2px solid #007BFF',
+      },
+      inputContainer: {
+        maxWidth: '200px',
+        
+      },
+      input: {
+        width: '100%',
+        padding: '8px',
+        marginBottom: '10px',
+        borderRadius: '4px',
+        border: '1px solid #ccc',
+      },
+      addButton: {
+        padding: '7px 20px',
+        fontSize: '14px',
+        cursor: 'pointer',
+        borderRadius: '5px',
+        border: 'none',
+        backgroundColor: '#28a745',
+        color: 'white',
+        transition: 'background-color 0.3s ease',
+      },
+    }; 
 
   useEffect(() => {
     const fetchFollowing = async () => {
@@ -71,7 +77,7 @@ const FollowingFollowersPage = () => {
         console.error("Error fetching following list:", error);
       }
     };
-    
+
 
     const fetchFollowers = async () => {
       try {
@@ -92,7 +98,7 @@ const FollowingFollowersPage = () => {
     fetchFollowers();
   }, [username]);
 
- 
+
 
   const handleAddFollower = async (searchUser) => {
     if (searchUser.trim()) {
@@ -160,24 +166,11 @@ const FollowingFollowersPage = () => {
     setInvitees(userSnapshot.docs.map(doc => doc.data().Username));
   };
 
- 
+
   return (
     <div className="follow-container">
       <Menu />
-      <div className="follow-tab-container">
-        <div
-          className={view === 'following' ? "follow-tab follow-active-tab" : "follow-tab"}
-          onClick={() => setView('following')}
-        >
-          Following
-        </div>
-        <div
-          className={view === 'followers' ? "follow-tab follow-active-tab" : "follow-tab"}
-          onClick={() => setView('followers')}
-        >
-          Followers
-        </div>
-      </div>
+      
 
       <div className="follow-content">
         {view === 'following' && (
@@ -234,7 +227,7 @@ const FollowingFollowersPage = () => {
           <div>
             <h2>My Followers</h2>
             <div>
-               <ul className="follow-list">
+              <ul className="follow-list">
                 {followers.map((followerUsername) => (
                   <li key={followerUsername} className="follow-list-item">
                     <Link
@@ -249,6 +242,20 @@ const FollowingFollowersPage = () => {
             </div>
           </div>
         )}
+      </div>
+      <div style={styles.tabContainer}>
+        <div
+          style={view === 'following' ? { ...styles.tab, ...styles.activeTab } : styles.tab}
+          onClick={() => setView('following')}
+        >
+          Following
+        </div>
+        <div
+          style={view === 'followers' ? { ...styles.tab, ...styles.activeTab } : styles.tab}
+          onClick={() => setView('followers')}
+        >
+          Followers
+        </div>
       </div>
     </div>
   );
