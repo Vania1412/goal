@@ -24,8 +24,9 @@ const LogInPage = () => {
       }
 
       const email = usernameSnapshot.docs[0].data().email;
+      const pwd = usernameSnapshot.docs[0].data().pwd;
 
-      await signInWithEmailAndPassword(auth, email, password);
+      await signInWithEmailAndPassword(auth, email, pwd);
       navigate('/home');
     } catch (error) {
       console.error("Error logging in: ", error);
