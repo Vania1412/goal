@@ -4,6 +4,7 @@ import { firestore } from '../firebase.js';
 import { useGlobalState } from '../GlobalStateContext.js';
 import Menu from '../components/Menu.js';
 import { Link } from 'react-router-dom';
+import './FollowingFollowersPage.css';
 
 
 const FollowingFollowersPage = () => {
@@ -16,7 +17,7 @@ const FollowingFollowersPage = () => {
   const [invitees, setInvitees] = useState([]);
 
 
-  const styles = {
+/*  const styles = {
     tabContainer: {
       display: 'flex',
      // justifyContent: 'center',
@@ -53,7 +54,7 @@ const FollowingFollowersPage = () => {
       color: 'white',
       transition: 'background-color 0.3s ease',
     },
-  }; 
+  }; */
 
   useEffect(() => {
     const fetchFollowing = async () => {
@@ -161,74 +162,94 @@ const FollowingFollowersPage = () => {
 
  
   return (
-    <div className="container">
+    <div className="follow-container">
       <Menu />
-      <div style={styles.tabContainer}>
+      <div className="follow-tab-container">
         <div
-          style={view === 'following' ? { ...styles.tab, ...styles.activeTab } : styles.tab}
+          className={view === 'following' ? "follow-tab follow-active-tab" : "follow-tab"}
           onClick={() => setView('following')}
         >
           Following
         </div>
         <div
-          style={view === 'followers' ? { ...styles.tab, ...styles.activeTab } : styles.tab}
+          className={view === 'followers' ? "follow-tab follow-active-tab" : "follow-tab"}
           onClick={() => setView('followers')}
         >
           Followers
         </div>
       </div>
 
-      {view === 'following' && (
-        <div>
-          <h2>Manage Following</h2>
-          <div style={styles.inputContainer}>
-            <input
-              type="text"
-              value={newFollower}
-              onChange={(e) => searchUsers(e.target.value)}
-              placeholder="Add new follower"
-              style={styles.input}
-            />
-          </div>
-          <div className="invite-users">
-          <ul>
-          {invitees.map((invitee) => (
-            <li key={invitee} onClick={() => handleAddFollower(invitee)}>
-              {invitee}
-            </li>
-          ))}
-        </ul>
-        </div>
-          {error && <p style={{ color: 'red' }}>{error}</p>}
+      <div className="follow-content">
+        {view === 'following' && (
           <div>
-            <h3>Following</h3>
-            <ul>
-              {following.map(followerUsername => (
-                <li key={followerUsername}>
-                  <Link to={`/profile/${followerUsername.toLowerCase()}`} className="goal-link">{followerUsername}</Link> 
-                  <button onClick={() => handleRemoveFollower(followerUsername)}>Remove</button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      )}
+            <h2>Manage Following</h2>
+            <div className="follow-input-container">
+              <input
+                type="text"
+                value={newFollower}
+                onChange={(e) => searchUsers(e.target.value)}
+                placeholder="Add new follower"
+                className="follow-input"
+              />
+            </div>
 
-      {view === 'followers' && (
-        <div>
-          <h2>My Followers</h2>
-          <div>
-            <h3>Followers</h3>
-            <ul>
-              {followers.map(followerUsername => (
-                <li key={followerUsername}>
-                  <Link to={`/profile/${followerUsername.toLowerCase()}`} className="goal-link">{followerUsername}</Link> 
-                </li>
-              ))}
-            </ul>
+            <div className="follow-invite-users">
+              <ul className="follow-invite-list">
+                {invitees.map((invitee) => (
+                  <li
+                    key={invitee}
+                    className="follow-invite-item"
+                    onClick={() => handleAddFollower(invitee)}
+                  >
+                    {invitee}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+
+            <div>
+              <h3>Following</h3>
+              <ul className="follow-list">
+                {following.map((followerUsername) => (
+                  <li key={followerUsername} className="follow-list-item">
+                    <Link
+                      to={`/profile/${followerUsername.toLowerCase()}`}
+                      className="goal-link"
+                    >
+                      {followerUsername}
+                    </Link>
+                    <button onClick={() => handleRemoveFollower(followerUsername)}>
+                      Remove
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+
+        {view === 'followers' && (
+          <div>
+            <h2>My Followers</h2>
+            <div>
+               <ul className="follow-list">
+                {followers.map((followerUsername) => (
+                  <li key={followerUsername} className="follow-list-item">
+                    <Link
+                      to={`/profile/${followerUsername.toLowerCase()}`}
+                      className="goal-link"
+                    >
+                      {followerUsername}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
