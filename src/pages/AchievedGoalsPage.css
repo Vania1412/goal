@@ -18,15 +18,50 @@
   
   .imageGallery {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 10px;
-    margin-top: 10px;
+  }
+  
+  .uploadContainer {
+    margin-bottom: 20px;
+  }
+  
+  .uploadContainer input[type="file"] {
+    margin-right: 10px; /* Adjust spacing */
   }
   
   .goalImage {
-    width: 100%;
-    max-width: 150px; /* Adjust the max-width to fit inside the goal box */
-    cursor: pointer;
+    max-width: 100%; /* Ensure image fits container width */
+    height: auto; /* Maintain aspect ratio */
+    cursor: pointer; /* Change cursor to pointer on hover */
+  }
+  
+  .imageContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .imageWrapper {
+    width: 100%; /* Ensure image fits within container */
+    margin-bottom: 10px; /* Adjust spacing */
+  }
+  
+  .imageNavigation {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .imageNavigation button {
+    margin: 0 5px; /* Adjust spacing between navigation buttons */
+    background-color: #f0f0f0; /* Background color */
+    border: none;
+    padding: 5px 10px; /* Adjust button padding */
+    cursor: pointer; /* Change cursor to pointer on hover */
+  }
+  
+  .imageNavigation button:hover {
+    background-color: #e0e0e0; /* Darker background color on hover */
   }
   
   .modal {
@@ -49,5 +84,6 @@
   
   .modalText {
     margin: 0;
+    color: #ccc;
   }
   

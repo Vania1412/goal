@@ -224,23 +224,31 @@ const AchievedGoalsPage = () => {
             </div>
           )}
           <div className="imageGallery">
-            <input type="file" onChange={(e) => setImg(e.target.files[0])} />
-            <button onClick={() => handleImageUpload(item.id)}>Upload Image</button> 
-            <div>
-            {item.imageUrls && item.imageUrls.length > 0 && (
-              <>
-                <button onClick={() => showPreviousImage(item.id)}>&lt;</button>
-                <img
-                  src={item.imageUrls[currentImageIndex[item.id]]}
-                  alt="achieved goal"
-                  className="goalImage"
-                  onClick={() => openModal(item.imageUrls[currentImageIndex[item.id]])}
-                />
-                <button onClick={() => showNextImage(item.id)}>&gt;</button>
-              </>
-            )}
+            <div className="uploadContainer">
+
             </div>
+            {item.imageUrls && item.imageUrls.length > 0 && (
+              <div className="imageContainer">
+                <div className="imageWrapper">
+                  <img
+                    src={item.imageUrls[currentImageIndex[item.id]]}
+                    alt="achieved goal"
+                    className="goalImage"
+                    onClick={() => openModal(item.imageUrls[currentImageIndex[item.id]])}
+                  />
+                </div>
+                <div className="imageNavigation">
+                  <button onClick={() => showPreviousImage(item.id)}>&lt;</button>
+                  <button onClick={() => showNextImage(item.id)}>&gt;</button>
+                </div>
+                
+              </div>
+            )}
+            
           </div>
+          <div><input type="file" onChange={(e) => setImg(e.target.files[0])} />
+          <button onClick={() => handleImageUpload(item.id)}>Upload Image</button></div>
+
         </div>
       ))}
       {successMessage && (
