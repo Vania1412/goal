@@ -1,39 +1,89 @@
- 
-.progress-update-box {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 16px;
-  margin: 8px 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #f9f9f9;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
-.progress-update-content p {
-  margin: 0;
-  font-size: 16px;
-  color: #333;
+.progress-board {
+  display: grid;
+  gap: 20px;
+}
+
+.progress-update-box {
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.username {
+  font-weight: bold;
+}
+
+.action-description {
+  margin-bottom: 10px;
+}
+
+.action-image {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.action-img {
+  max-width: 100%;
+  height: auto;
+  cursor: pointer;
+  border-radius: 8px;
 }
 
 .progress-update-buttons {
-  display: flex;
-  gap: 8px;
+  margin-top: 10px;
 }
 
-.progress-update-buttons button {
-  padding: 8px 12px;
+.tips-section {
+  margin-top: 10px;
+}
+
+.tip-box {
+  margin-top: 5px;
+  padding: 5px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.tips-input {
+  margin-top: 10px;
+}
+
+button {
+  padding: 8px 16px;
+  margin-right: 10px;
+  cursor: pointer;
+  background-color: #007BFF;
+  color: #fff;
   border: none;
   border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
   transition: background-color 0.3s;
 }
 
-.progress-update-buttons button:hover {
-  background-color: #ddd;
+button:hover {
+  background-color: #0056b3;
 }
+
 
 .modal-overlay {
   position: fixed;

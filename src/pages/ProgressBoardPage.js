@@ -4,8 +4,7 @@ import { firestore } from '../firebase';
 import { useGlobalState } from '../GlobalStateContext.js';
 import { useNavigate, Link } from 'react-router-dom';
 import Menu from '../components/Menu.js';
-
-
+import './ProgressBoardPage.css';  
 
 const ProgressBoardPage = () => {
     const { username, totalSaving, unclaimedSaving, setUnclaimedSaving, allUnclaimed } = useGlobalState();
@@ -246,78 +245,114 @@ const ProgressBoardPage = () => {
 
 
     return (
-        <div>
-            <Menu />
-            <h2>Progress Board</h2>
-            <ul>
-                {progressUpdates.filter(update => !update.invite || update.invite === username).map((update, index) => (
-                    <li key={index} className="progress-update-box">
-                        <div className="progress-update-content">
-                            {update.challengeType && ((update.invite && update.invite === username) &&
-                                <div>
-                                    <p>{update.username} invited you to join the challenge!</p>
-                                    <Link to={`/challenge/${update.challengeId}`}>Check it out</Link>
-                                </div>)}
-                            {update.challengeType && !update.invite && <div>{update.username} created a {update.challengeType} Challenge</div>}
+        <div className="container">
+      <Menu />
+      <h2>Progress Board</h2>
+      <div className="progress-board">
+        {progressUpdates
+          .filter((update) => !update.invite || update.invite === username)
+          .map((update, index) => (
+            <div key={index} className="progress-update-box">
+              <div className="progress-update-content">
+                {/* User icon and username */}
+                <div className="user-info">
+                  <img
+                    className="user-avatar"
+                    src={`https://ui-avatars.com/api/?name=${update.username}&background=random&size=32`}
+                    alt="User Avatar"
+                  />
+                  <span className="username">{update.username}</span>
+                </div>
 
-                            {!update.challengeType && (update.status ? <p>{update.username} is in a {update.status} saving status</p> : (update.progress === 0 ?
-                                <div>
-                                    <p>{update.username} has created a new goal "{update.goalTitle}"</p>
-                                    {(username === update.username && update.tips && update.tips.length > 0) && (
-
-
-                                        <div className="tips-section">
-                                            <p><strong>Tips & advice:</strong> </p>
-                                            {update.tips.map((tip, tipIndex) => (
-                                                <div key={tipIndex} className="tip-box">
-                                                    <p><strong>{tip.username}:</strong> {tip.tips}</p>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-                                : (
-                                    <p>
-                                        {update.username} has reached {update.progress}% of their goal "{update.goalTitle}"
-                                        {(update.celebrations && update.celebrations.length > 0) && (
-                                            <span> ({update.celebrations.length} {update.celebrations.length === 1 ? "user" : "users"} celebrated)</span>
-                                        )}
-
-                                    </p>
-                                )))}
+                {/* Description of the action */}
+                <div className="action-description">
+                  {update.challengeType && update.invite && update.invite === username && (
+                    <div>
+                      <p>{update.username} invited you to join the challenge!</p>
+                      <Link to={`/challenge/${update.challengeId}`}>Check it out</Link>
+                    </div>
+                  )}
+                  {update.challengeType && !update.invite && (
+                    <div>
+                      <p>{update.username} created a {update.challengeType} Challenge</p>
+                    </div>
+                  )}
+                  {!update.challengeType && (update.status ? (
+                    <p>{update.username} is in a {update.status} saving status</p>
+                  ) : (update.progress === 0 ? (
+                    <div>
+                      <p>{update.username} has created a new goal "{update.goalTitle}"</p>
+                      {username === update.username && update.tips && update.tips.length > 0 && (
+                        <div className="tips-section">
+                          <p><strong>Tips & advice:</strong></p>
+                          {update.tips.map((tip, tipIndex) => (
+                            <div key={tipIndex} className="tip-box">
+                              <p><strong>{tip.username}:</strong> {tip.tips}</p>
+                            </div>
+                          ))}
                         </div>
-                        {update.goalTitle && (userNotClaim.includes(update.goalTitle) || userAchievedGoals.includes(update.goalTitle)) &&
-                            update.username !== username && update.progress === 0 &&
-                            <div>
-                                <p> You have achieved this goal before, any special tips and advice for {update.username}</p>
-                                <input
-                                    type="text"
-                                    placeholder="Enter tips or advice"
-                                    value={tips}
-                                    onChange={(e) => setTips(e.target.value)}
-                                />
-                                <button onClick={() => handleTips(update)}>Send</button>
-                            </div>}
-                        <div className="progress-update-buttons">
-                            {update.goalTitle && (update.username !== username) && (update.progress === 0 ? (
-                                (userGoals.includes(update.goalTitle)) ? (
-                                    <p>You share the same goal with {update.username}</p>
-                                ) : (
-                                    <>
-                                        <button onClick={() => handleView(update)}>View Goal Detail</button>
-                                        <button onClick={() => handleSupport(update)}>Join</button>
-                                    </>
-                                )
-                            ) : (
-                                <>
-                                    <button onClick={() => handleSupport(update)}>{update.celebrations.includes(username) ? "Celebrated" : "Celebrate"}</button>
-                                </>
-                            ))}
-                        </div>
-                    </li>
-                ))}
-            </ul>
-            {showModal && (
+                      )}
+                    </div>
+                  ) : (
+                    <p>
+                      {update.username} has reached {update.progress}% of their goal "{update.goalTitle}"
+                      {update.celebrations && update.celebrations.length > 0 && (
+                        <span> ({update.celebrations.length} {update.celebrations.length === 1 ? "user" : "users"} celebrated)</span>
+                      )}
+                    </p>
+                  )))}
+                </div>
+
+                {/* Image representing the action */}
+                {update.imageUrls && update.imageUrls.length > 0 && (
+                  <div className="action-image">
+                    <img
+                      src={update.imageUrls[0]} // Assuming the first image represents the action
+                      alt="Action"
+                      className="action-img"
+                      onClick={() => console.log('Enlarge image')} // Handle click to enlarge
+                    />
+                  </div>
+                )}
+
+                {/* Buttons/elements for actions */}
+                <div className="progress-update-buttons">
+                  {update.goalTitle && update.username !== username && update.progress === 0 && (
+                    (userGoals.includes(update.goalTitle)) ? (
+                      <p>You share the same goal with {update.username}</p>
+                    ) : (
+                      <>
+                        <button onClick={() => handleView(update)}>View Goal Detail</button>
+                        <button onClick={() => handleSupport(update)}>Join</button>
+                      </>
+                    )
+                  )}
+                  {update.goalTitle && update.username !== username && update.progress !== 0 && (
+                    <button onClick={() => handleSupport(update)}>
+                      {update.celebrations && update.celebrations.includes(username) ? "Celebrated" : "Celebrate"}
+                    </button>
+                  )}
+                </div>
+
+                {/* Special tips and advice input */}
+                {update.goalTitle && (userNotClaim.includes(update.goalTitle) || userAchievedGoals.includes(update.goalTitle)) &&
+                  update.username !== username && update.progress === 0 && (
+                    <div className="tips-input">
+                      <p>You have achieved this goal before, any special tips and advice for {update.username}</p>
+                      <input
+                        type="text"
+                        placeholder="Enter tips or advice"
+                        value={tips}
+                        onChange={(e) => setTips(e.target.value)}
+                      />
+                      <button onClick={() => handleTips(update)}>Send</button>
+                    </div>
+                  )}
+              </div>
+            </div>
+          ))}
+      </div>
+             {showModal && (
                 <div className="modal-overlay">
                     <div className="modal-content">
                         <h2 className="modal-title">Add New Goal</h2>

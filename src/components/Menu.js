@@ -3,10 +3,11 @@ import { Link, useLocation } from 'react-router-dom';
 
 const styles = {
   menuContainer: {
-    position: 'absolute',
+    position: 'fixed',  // Fixed position
     top: '10px',
     right: '10px',
     padding: '10px',
+    zIndex: '1000',     // Ensure it's above other content
   },
   menuButton: {
     fontSize: '22px',
