@@ -4,6 +4,8 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 import { firestore } from '../firebase';
 import { useGlobalState } from '../GlobalStateContext.js';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import logo from '../assets/saversquad logo.png';
+import './LoginPage.css'
 
 const LogInPage = () => {
   const [password, setPassword] = useState('');
@@ -37,12 +39,15 @@ const LogInPage = () => {
   };
 
   return (
-    <div>
-      <h2>Log In</h2>
-      {error && <p>{error}</p>}
-      <form onSubmit={handleLogIn}>
-
-
+    <div className="container">
+      <div className="header-container">
+      <h1 className="header-text">SAVERSQUAD</h1>
+      <img src={logo} alt="Logo" className="header-logo" />
+    </div>
+      
+    <h2>Log In</h2>
+      {error && <p className="login-error">{error}</p>}
+      <form className="login-form" onSubmit={handleLogIn}>
         <label>
           Username:
           <input
@@ -52,7 +57,6 @@ const LogInPage = () => {
             required
           />
         </label>
-        <br />
         <label>
           Password:
           <input
@@ -62,12 +66,9 @@ const LogInPage = () => {
             required
           />
         </label>
-        <br />
-
         <button type="submit">Log In</button>
       </form>
-      <Link to="/sign-up">Have not created an account yet</Link>
-
+      <Link className="login-link" to="/sign-up">Have not created an account yet</Link>
     </div>
   );
 };

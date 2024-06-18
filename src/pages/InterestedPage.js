@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, query, getDocs, where, updateDoc, increment, addDoc } from "firebase/firestore";
+import { collection, query, getDocs, where, updateDoc, increment, addDoc, serverTimestamp } from "firebase/firestore";
 import { firestore } from '../firebase';
 import Menu from '../components/Menu.js';
 import { Link, useNavigate } from 'react-router-dom';
@@ -11,6 +11,7 @@ const InterestedPage = () => {
     const [newGoalCosts, setNewGoalCosts] = useState(0);
     const [newGoalCategory, setNewGoalCategory] = useState('');
     const [goalAddData, setGoalAddData] = useState(null);
+    const [viewable, setViewable] = useState('');
     const { username, totalSaving, unclaimedSaving, setUnclaimedSaving, allUnclaimed } = useGlobalState();
 
     const navigate = useNavigate();
@@ -77,16 +78,53 @@ const InterestedPage = () => {
                     title: goalAddData.title,
                     progress: 0,
                     costs: parseFloat(newGoalCosts !== 0 ? newGoalCosts : goalAddData['average costs']),
-                    category: newGoalCategory !== '' ? newGoalCategory : goalAddData.category[0]
+                    category: newGoalCategory !== '' ? newGoalCategory : goalAddData.category[0],
+                    viewable: viewable
                 };
+
+                await addDoc(collection(firestore, "progressUpdates"), {
+                    username,
+                    goalTitle: goalAddData.title,
+                    progress: 0,
+                    timestamp: serverTimestamp(),
+                    celebrations: [],
+                    viewable: viewable
+                });
+
                 let costFloat = 0;
                 const remainSaving = totalSaving - unclaimedSaving;
                 if (remainSaving > 0 && allUnclaimed) {
                     costFloat = newGoalData.costs;
                     if (remainSaving >= costFloat) {
                         newGoalData.progress = 100;
+                        await addDoc(collection(firestore, "progressUpdates"), {
+                            username,
+                            goalTitle: goalAddData.title,
+                            progress: 50,
+                            timestamp: serverTimestamp(),
+                            celebrations: [], 
+                            viewable: viewable
+                        });
+                        await addDoc(collection(firestore, "progressUpdates"), {
+                            username,
+                            goalTitle: goalAddData.title,
+                            progress: 100,
+                            timestamp: serverTimestamp(),
+                            celebrations: [], 
+                            viewable: viewable
+                        });
                         setUnclaimedSaving(unclaimedSaving + costFloat);
                     } else {
+                        if (Math.floor((remainSaving / costFloat) * 100) >= 50 && newGoalData.progress < 50) {
+                            await addDoc(collection(firestore, "progressUpdates"), {
+                                username,
+                                goalTitle: goalAddData.title,
+                                progress: 50,
+                                timestamp: serverTimestamp(),
+                                celebrations: [], 
+                                viewable: viewable
+                            });
+                        }
                         newGoalData.progress = Math.floor((remainSaving / costFloat) * 100);
                     }
                 }
@@ -180,6 +218,19 @@ const InterestedPage = () => {
                                 <option value="Education and Personal Development">Education and Personal Development</option>
                                 <option value="Social and Lifestyle">Social and Lifestyle</option>
                             </select>
+                        </div>
+                        <div className="modal-input">
+                            <label htmlFor="new-goal-category">Who can view it:</label>
+                            <select
+                                value={viewable}
+                                onChange={(e) => setViewable(e.target.value)}
+                            >
+                                <option value="Me">Me</option>
+                                <option value="My friends">My friends</option>
+                                <option value="My followers">My followers</option>
+
+                            </select>
+
                         </div>
                         <button className="modal-button" onClick={handleAddNewGoal}>Confirm</button>
                         <button className="modal-close" onClick={handleModalClose}>Close</button>

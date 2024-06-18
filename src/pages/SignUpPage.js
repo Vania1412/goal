@@ -4,6 +4,8 @@ import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
 import { firestore } from '../firebase';
 import { useGlobalState } from '../GlobalStateContext.js';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import logo from '../assets/saversquad logo.png';
+import './SignUpPage.css'
 
 const SignUpPage = () => {
   const [email, setEmail] = useState('');
@@ -42,10 +44,14 @@ const SignUpPage = () => {
   };
 
   return (
-    <div>
-      <h2>Sign Up</h2>
-      {error && <p>{error}</p>}
-      <form onSubmit={handleSignUp}>
+      <div className="container">
+      <div className="header-container">
+      <h1 className="header-text">Welcome to SAVERSQUAD</h1>
+      <img src={logo} alt="Logo" className="header-logo" />
+    </div>
+    <h2>Sign Up</h2>
+      {error && <p className="signup-error">{error}</p>}
+      <form className="signup-form" onSubmit={handleSignUp}>
         <label>
           Email:
           <input
@@ -55,7 +61,6 @@ const SignUpPage = () => {
             required
           />
         </label>
-        <br />
         <label>
           Password:
           <input
@@ -65,7 +70,6 @@ const SignUpPage = () => {
             required
           />
         </label>
-        <br />
         <label>
           Username:
           <input
@@ -75,7 +79,6 @@ const SignUpPage = () => {
             required
           />
         </label>
-        <br />
         <label>
           Expected Saving per Month:
           <input
@@ -85,7 +88,6 @@ const SignUpPage = () => {
             required
           />
         </label>
-        <br />
         <button type="submit">Sign Up</button>
       </form>
     </div>
