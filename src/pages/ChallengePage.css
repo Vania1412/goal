@@ -1,5 +1,4 @@
  
-
 .create-challenge {
   width: 100%;
   max-width: 600px;
@@ -30,6 +29,7 @@
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 1em;
+  box-sizing: border-box; /* Ensure padding and border are included in the width */
 }
 
 .input-group textarea {
@@ -57,7 +57,18 @@
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 1em;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+.input-group button {
+  background-color: #007bff;
+  color: white;
+  align-content: center;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
 }
 
 .invite-group ul {
@@ -102,6 +113,16 @@
 
 .ongoing-challenges ul li {
   margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  transition: box-shadow 0.3s, transform 0.3s;
+  cursor: pointer;
+}
+
+.ongoing-challenges ul li:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-3px);
 }
 
 .ongoing-challenges ul li strong {
