@@ -1,0 +1,53 @@
+.container {
+    padding: 20px;
+  }
+  
+  .goalItem {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .goalText {
+    margin: 5px 0;
+  }
+  
+  .input {
+    margin-right: 10px;
+  }
+  
+  .imageGallery {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .goalImage {
+    width: 100%;
+    max-width: 150px; /* Adjust the max-width to fit inside the goal box */
+    cursor: pointer;
+  }
+  
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modalImage {
+    max-width: 90%;
+    max-height: 90%;
+  }
+  
+  .modalText {
+    margin: 0;
+  }
+  

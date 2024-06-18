@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { collection, query, where, getDocs, updateDoc, doc, setDoc, addDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, updateDoc, doc, setDoc, addDoc, getDoc } from 'firebase/firestore';
 import { firestore, storage } from '../firebase';
 import Menu from '../components/Menu.js';
 import { Link } from 'react-router-dom';
 import { useGlobalState } from '../GlobalStateContext.js';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { uploadBytes, getDownloadURL, ref } from 'firebase/storage';
 import { v4 } from "uuid";
-//import './AchievedGoalsPage.css';
+import './AchievedGoalsPage.css';
 
 const AchievedGoalsPage = () => {
   const [achievedGoals, setAchievedGoals] = useState([]);
   const [successMessage, setMessage] = useState('');
   const { username } = useGlobalState();
   const [img, setImg] = useState(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalImage, setModalImage] = useState('');
 
   useEffect(() => {
     const fetchAchievedGoals = async () => {
@@ -25,6 +28,11 @@ const AchievedGoalsPage = () => {
           const goalsSnapshot = await getDocs(goalsQuery);
           const goalsData = goalsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
           setAchievedGoals(goalsData);
+          const initialImageIndexes = {};
+          goalsData.forEach(goal => {
+            initialImageIndexes[goal.id] = 0;
+          });
+          setCurrentImageIndex(initialImageIndexes);
         } else {
           console.log("User not found");
         }
@@ -116,16 +124,23 @@ const AchievedGoalsPage = () => {
 
             if (!userSnapshot.empty) {
               const userId = userSnapshot.docs[0].id;
-              await updateDoc(doc(firestore, `users/${userId}/achieved_goals`, itemId), {
-                'imageUrl': url
+              const goalDoc = doc(firestore, `users/${userId}/achieved_goals`, itemId);
+              const goalSnapshot = await getDoc(goalDoc);
+              const goalData = goalSnapshot.data();
+              const existingImages = goalData.imageUrls || [];
+
+              await updateDoc(goalDoc, {
+                imageUrls: [...existingImages, url]
               });
+
               setAchievedGoals(prevGoals => prevGoals.map(goal => {
                 if (goal.id === itemId) {
-                  return { ...goal, imageUrl: url };
+                  return { ...goal, imageUrls: [...existingImages, url] };
                 }
                 return goal;
               }));
               setMessage('Image uploaded successfully!');
+              setImg(null);  // Reset image input
             } else {
               console.log("User not found");
             }
@@ -136,6 +151,33 @@ const AchievedGoalsPage = () => {
         });
       });
     }
+  };
+
+  const showNextImage = (goalId) => {
+    setCurrentImageIndex(prevIndexes => {
+      const currentIndex = prevIndexes[goalId];
+      const newIndex = (currentIndex + 1) % achievedGoals.find(goal => goal.id === goalId).imageUrls.length;
+      return { ...prevIndexes, [goalId]: newIndex };
+    });
+  };
+
+  const showPreviousImage = (goalId) => {
+    setCurrentImageIndex(prevIndexes => {
+      const currentIndex = prevIndexes[goalId];
+      const goal = achievedGoals.find(goal => goal.id === goalId);
+      const newIndex = (currentIndex - 1 + goal.imageUrls.length) % goal.imageUrls.length;
+      return { ...prevIndexes, [goalId]: newIndex };
+    });
+  };
+
+  const openModal = (url) => {
+    setModalImage(url);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setModalImage('');
   };
 
   return (
@@ -181,14 +223,34 @@ const AchievedGoalsPage = () => {
               </button>
             </div>
           )}
-          <input type="file" onChange={(e) => setImg(e.target.files[0])} />
-          <button onClick={() => handleImageUpload(item.id)}>Upload Image</button>
-          {item.imageUrl && <img src={item.imageUrl} height="200px" width="200px" alt="achieved goal" />}
+          <div className="imageGallery">
+            <input type="file" onChange={(e) => setImg(e.target.files[0])} />
+            <button onClick={() => handleImageUpload(item.id)}>Upload Image</button> 
+            <div>
+            {item.imageUrls && item.imageUrls.length > 0 && (
+              <>
+                <button onClick={() => showPreviousImage(item.id)}>&lt;</button>
+                <img
+                  src={item.imageUrls[currentImageIndex[item.id]]}
+                  alt="achieved goal"
+                  className="goalImage"
+                  onClick={() => openModal(item.imageUrls[currentImageIndex[item.id]])}
+                />
+                <button onClick={() => showNextImage(item.id)}>&gt;</button>
+              </>
+            )}
+            </div>
+          </div>
         </div>
       ))}
       {successMessage && (
         <div className="modal">
           <p className="modalText">{successMessage}</p>
+        </div>
+      )}
+      {isModalOpen && (
+        <div className="modal" onClick={closeModal}>
+          <img src={modalImage} alt="enlarged goal" className="modalImage" />
         </div>
       )}
     </div>

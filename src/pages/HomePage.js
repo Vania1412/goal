@@ -169,7 +169,10 @@ const HomePage = () => {
       if (!userSnapshot.empty) {
 
         const newSaving = userSnapshot.docs[0].data()['total saving'] + parseInt(saving);
-        await updateDoc(userDocRef, { 'total saving': newSaving });
+        await updateDoc(userDocRef, {
+           'total saving': newSaving,
+           // add a document to 'saving_record' of the user with amount: parseInt(saving) and timestamp: serverTimestamp() 
+          });
         setTotalSaving(newSaving);
         const goalsCollectionRef = query(collection(firestore, `users/${userId}/current_goals`), where("title", "==", savingGoal));
         const goalSnapshot = await getDocs(goalsCollectionRef);
