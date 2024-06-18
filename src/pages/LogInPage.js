@@ -19,14 +19,16 @@ const LogInPage = () => {
       const usernameQuery = query(collection(firestore, "users"), where("Username", "==", username));
       const usernameSnapshot = await getDocs(usernameQuery);
 
-      if (usernameSnapshot.empty) { 
+      if (usernameSnapshot.empty) {
         setError("Username does not exist");
         return;
       }
 
       const email = usernameSnapshot.docs[0].data().email;
 
-      await signInWithEmailAndPassword(auth, email, password);
+      const pwd = usernameSnapshot.docs[0].data().pwd;
+
+      await signInWithEmailAndPassword(auth, email, pwd);
       navigate('/home');
     } catch (error) {
       console.error("Error logging in: ", error);
@@ -39,8 +41,8 @@ const LogInPage = () => {
       <h2>Log In</h2>
       {error && <p>{error}</p>}
       <form onSubmit={handleLogIn}>
-        
-        
+
+
         <label>
           Username:
           <input
@@ -61,10 +63,10 @@ const LogInPage = () => {
           />
         </label>
         <br />
-        
+
         <button type="submit">Log In</button>
       </form>
-      <Link to = "/sign-up">Have not created an account yet</Link>
+      <Link to="/sign-up">Have not created an account yet</Link>
 
     </div>
   );
