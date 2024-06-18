@@ -12,7 +12,8 @@ const LogInPage = () => {
   const { username, setUsername } = useGlobalState();
   const auth = getAuth();
 
-  const handleLogIn = async () => {
+  const handleLogIn = async (e) => {
+    e.preventDefault();
     try {
       // Look up the username in Firestore to get the corresponding email.
       const usernameQuery = query(collection(firestore, "users"), where("Username", "==", username));
@@ -24,9 +25,8 @@ const LogInPage = () => {
       }
 
       const email = usernameSnapshot.docs[0].data().email;
-      const pwd = usernameSnapshot.docs[0].data().pwd;
 
-      await signInWithEmailAndPassword(auth, email, pwd);
+      await signInWithEmailAndPassword(auth, email, password);
       navigate('/home');
     } catch (error) {
       console.error("Error logging in: ", error);
