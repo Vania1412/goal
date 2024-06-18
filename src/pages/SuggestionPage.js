@@ -79,7 +79,7 @@ const SuggestionPage = () => {
                         .map(goal => ({
                             ...goal,
                             matchCount: keywords.reduce((count, keyword) => {
-                                return count + (goal.titleKeywords.includes(keyword) ? 1 : 0);
+                                return count + (goal.titleKeywords.includes(keyword) ? 1 : (goal.titleKeywords.some(kw => kw >= keyword && kw <= keyword + '\uf8ff'? 0.5: 0)));
                             }, 0)
                         }))
                         .sort((a, b) => b.matchCount - a.matchCount).filter(a => a.matchCount > 0);
@@ -120,7 +120,7 @@ const SuggestionPage = () => {
     };
 
     const handleKeywordsChange = (event) => {
-        setKeywords(event.target.value.toLowerCase().split(' '))
+        setKeywords(event.target.value === '' ? [] : event.target.value.toLowerCase().split(' '))
     }
 
     const shuffleArray = (array) => {

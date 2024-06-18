@@ -4,41 +4,15 @@ import { firestore, storage } from '../firebase';
 import Menu from '../components/Menu.js';
 import { Link } from 'react-router-dom';
 import { useGlobalState } from '../GlobalStateContext.js';
-import { listAll, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { v4 } from "uuid";
-
+//import './AchievedGoalsPage.css';
 
 const AchievedGoalsPage = () => {
   const [achievedGoals, setAchievedGoals] = useState([]);
   const [successMessage, setMessage] = useState('');
   const { username } = useGlobalState();
-  const [img,setImg] = useState('');
-  const [imgUrl,setImgUrl] = useState([]);
-
-
-  const handleClick = () =>{
-    if (img !== null) {
-      const imgRef = ref(storage,`files/${v4()}`);
-      uploadBytes(imgRef,img).then(value=>{
-        console.log(value)
-        getDownloadURL(value.ref).then(url=>{
-          setImgUrl(data=>[...data,url])
-        })
-      });
-    }
-  }
-
-  useEffect(()=>{
-    listAll(ref(storage,"files")).then(imgs=>{
-      console.log(imgs);
-      imgs.items.forEach(val=>{
-        getDownloadURL(val).then(url=>{
-          setImgUrl(data=>[...data,url])
-        })
-      })
-    })
-  },[])
-
+  const [img, setImg] = useState(null);
 
   useEffect(() => {
     const fetchAchievedGoals = async () => {
@@ -64,47 +38,38 @@ const AchievedGoalsPage = () => {
   const handleShare = async (itemId, text, originalText, itemTitle) => {
     if (text !== undefined && text !== originalText) {
       try {
-        // Query the user collection to find the document with the username username
         const userQuery = query(collection(firestore, "users"), where("Username", "==", username));
         const userSnapshot = await getDocs(userQuery);
 
         if (!userSnapshot.empty) {
           const userId = userSnapshot.docs[0].id;
-          // Update the "S&T" field of the corresponding achieved goal document under the user's document
           await updateDoc(doc(firestore, `users/${userId}/achieved_goals`, itemId), {
             's&t': text
           });
 
-          // Update the "featured_s&t" collection within the goal document
           const goalDocQuery = query(collection(firestore, "goals"), where("title", "==", itemTitle));
-
           const goalSnapshot = await getDocs(goalDocQuery);
           if (!goalSnapshot.empty) {
             const goalData = goalSnapshot.docs[0].data();
             const goalDataRef = goalSnapshot.docs[0].ref;
             const goalId = goalSnapshot.docs[0].id;
 
-            // Check if the "featured_s&t" collection exists
             if (!goalData['featured_s&t']) {
-              // Create the "featured_s&t" collection if it doesn't exist
               await setDoc(doc(firestore, `goals/${goalId}/featured_s&t/initialDoc`), {
                 username: userSnapshot.docs[0].data().Username,
                 content: text,
                 useful: []
               });
             } else {
-              // Update or add a new document in the "featured_s&t" collection
               const featuredSTQuery = query(collection(firestore, `goals/${goalId}/featured_s&t`), where('username', '==', userSnapshot.docs[0].data().Username));
               const featuredSTSnapshot = await getDocs(featuredSTQuery);
 
               if (!featuredSTSnapshot.empty) {
-                // Update the existing document in the "featured_s&t" collection
                 const docRefToUpdate = featuredSTSnapshot.docs[0].ref;
                 await updateDoc(docRefToUpdate, {
-                  content: text  //maybe a record show it is updated
+                  content: text
                 });
               } else {
-                // Add a new document to the "featured_s&t" collection
                 await addDoc(collection(goalDataRef, 'featured_s&t'), {
                   username: userSnapshot.docs[0].data().Username,
                   content: text
@@ -112,7 +77,6 @@ const AchievedGoalsPage = () => {
               }
             }
           }
-
 
           setAchievedGoals(prevGoals => prevGoals.map(goal => {
             if (goal.id === itemId) {
@@ -141,6 +105,38 @@ const AchievedGoalsPage = () => {
     }, 2000);
   };
 
+  const handleImageUpload = async (itemId) => {
+    if (img !== null) {
+      const imgRef = ref(storage, `files/${v4()}`);
+      uploadBytes(imgRef, img).then(value => {
+        getDownloadURL(value.ref).then(async (url) => {
+          try {
+            const userQuery = query(collection(firestore, "users"), where("Username", "==", username));
+            const userSnapshot = await getDocs(userQuery);
+
+            if (!userSnapshot.empty) {
+              const userId = userSnapshot.docs[0].id;
+              await updateDoc(doc(firestore, `users/${userId}/achieved_goals`, itemId), {
+                'imageUrl': url
+              });
+              setAchievedGoals(prevGoals => prevGoals.map(goal => {
+                if (goal.id === itemId) {
+                  return { ...goal, imageUrl: url };
+                }
+                return goal;
+              }));
+              setMessage('Image uploaded successfully!');
+            } else {
+              console.log("User not found");
+            }
+          } catch (error) {
+            console.error('Error uploading image:', error);
+            setMessage('Error uploading image');
+          }
+        });
+      });
+    }
+  };
 
   return (
     <div className="container">
@@ -185,6 +181,9 @@ const AchievedGoalsPage = () => {
               </button>
             </div>
           )}
+          <input type="file" onChange={(e) => setImg(e.target.files[0])} />
+          <button onClick={() => handleImageUpload(item.id)}>Upload Image</button>
+          {item.imageUrl && <img src={item.imageUrl} height="200px" width="200px" alt="achieved goal" />}
         </div>
       ))}
       {successMessage && (
@@ -192,16 +191,6 @@ const AchievedGoalsPage = () => {
           <p className="modalText">{successMessage}</p>
         </div>
       )}
-      <input type="file" onChange={(e)=>setImg(e.target.files[0])}/>
-      <button onClick={handleClick}>Upload</button>
-      <br/>
-      {
-        imgUrl.map(dataVal=><div>
-          <img src={dataVal} height="200px" width="200px" alt="achieved goal"/>
-          <br/>
-        </div>)
-      }
-
     </div>
   );
 };
