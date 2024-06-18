@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
 import { firestore } from '../firebase';
 import { useGlobalState } from '../GlobalStateContext.js';
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 const SignUpPage = () => {
   const [email, setEmail] = useState('');
@@ -11,6 +12,7 @@ const SignUpPage = () => {
   const [error, setError] = useState('');
   const [espm, setEspm] = useState('');
   const { username, setUsername } = useGlobalState();
+  const auth = getAuth();
 
   const handleSignUp = async () => {
     try {
@@ -21,10 +23,17 @@ const SignUpPage = () => {
         setError("Username is already taken");
         return;
       }
+
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
  
   //    await auth.createUserWithEmailAndPassword(email, password);
        
-      const userData = { email: email, Username: username, pwd: password, espm: parseInt(espm), 'total saving': 0};
+      const userData = { 
+        email: email, 
+        Username: username, 
+        espm: parseInt(espm), 
+        'total saving': 0
+      };
       await addDoc(collection(firestore, 'users'), userData);
  
       navigate('/home');
@@ -70,7 +79,7 @@ const SignUpPage = () => {
         </label>
         <br />
         <label>
-          Expected Saving per month:
+          Expected Saving per Month:
           <input
             type="text"
             value={espm}
