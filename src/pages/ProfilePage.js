@@ -99,7 +99,7 @@ const ProfilePage = () => {
           const updatesSnapshot = await getDocs(updatesQuery);
           const updatesData = await Promise.all(
             updatesSnapshot.docs.filter(doc => (doc.data().viewable === "Me" && username === profileUserFormatted)
-              || (followers.includes(username) && username !== profileUserFormatted)).map(async doc => {
+              || (followers.includes(username) && username !== profileUserFormatted) || username === profileUserFormatted).map(async doc => {
                 const data = doc.data();
                 const tipsSnapshot = await getDocs(collection(doc.ref, 'tips'));
                 const tips = tipsSnapshot.docs.map(tipDoc => tipDoc.data());

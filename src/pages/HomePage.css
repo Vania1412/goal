@@ -1,118 +1,119 @@
+/* Shared Styles */
+
 .container {
   margin: 0 auto;
   padding: 20px;
   font-family: Arial, sans-serif;
 }
 
-h1 {
-  text-align: left; /* Align text to the left */
-  margin-bottom: 20px;
-  font-size: 2em; /* Slightly reduce font size */
+.link-to-profile {
+  text-decoration: none;
   color: #333;
+  font-size: 1.2em;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.link-to-profile:hover {
+  text-decoration: underline;
+}
+
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  margin-top: 20px;
+}
+
+.card {
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin: 10px;
+  width: calc(50% - 20px); /* Two cards per row, considering margins */
+  background-color: #fff;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.card-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.card h3 {
+  margin-bottom: 10px;
+  color: #333;
+  font-size: 1.2em;
+}
+
+.card p {
+  margin-bottom: 10px;
+  color: #666;
+  font-size: 1em;
+}
+
+.profile-info {
+  text-align: left;
+  color: #555;
+  font-size: 1em;
 }
 
 .input-container {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Align items to the left */
+  align-items: flex-start;
   margin-bottom: 20px;
   background-color: #f4f4f9;
-  padding: 15px; /* Reduce padding */
+  padding: 15px;
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  width: 321px; /* Make the container full width */
 }
 
-.input-container input, .input-container select {
+.input-container input,
+.input-container select {
   width: 100%;
-  max-width: 300px; /* Reduce max width */
-  padding: 10px; /* Reduce padding */
-  margin: 5px 0; /* Reduce margin */
+  max-width: 300px;
+  padding: 10px;
+  margin: 5px 0;
   border-radius: 5px;
   border: 1px solid #ccc;
   font-size: 1em;
 }
 
 .input-container a {
-  width: auto; /* Remove width and max-width */
-  padding: 0; /* Remove padding */
-  border-radius: 0; /* Remove border radius */
-  border: none;
-  background: none; /* Remove background */
-  color: blue; /* Set color to blue */
-  font-size: inherit; /* Inherit font size */
+  color: blue;
+  font-size: 1em;
   cursor: pointer;
   margin-top: 10px;
-  text-align: left; /* Align text to the left */
-  text-decoration: underline; /* Add underline */
+  text-align: left;
+  text-decoration: underline;
 }
 
 .input-container a:hover {
-  background-color: transparent; /* Remove background color on hover */
+  background-color: transparent;
 }
-
 
 .input-container button {
   width: 100%;
-  max-width: 300px; /* Reduce max width */
-  padding: 10px; /* Reduce padding */
+  max-width: 300px;
+  padding: 10px;
   border-radius: 5px;
   border: none;
   background-color: #28a745;
   color: white;
-  font-size: 1em; /* Reduce font size */
+  font-size: 1em;
   cursor: pointer;
   margin-top: 10px;
 }
 
 .input-container button:hover {
   background-color: #218838;
-}
-
-.goal-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start; /* Align items to the left */
-  margin-top: 20px; /* Add some margin to separate from inputs */
-}
-
-.goal-box {
-  border: 1px solid #ccc;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  margin: 10px;
-  width: calc(50% - 20px); /* Increase width */
-  background-color: #fff;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.goal-box:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-}
-
-.goal-link {
-  text-decoration: none;
-  color: inherit;
-}
-
-.goal-link h3 {
-  margin-bottom: 10px;
-  color: #333;
-  font-size: 1.2em; /* Increase font size */
-}
-
-.goal-link p {
-  margin-bottom: 10px;
-  color: #666;
-  font-size: 1em;
-}
-
-p {
-  text-align: left; /* Align text to the left */
-  color: #555;
-  font-size: 1em; /* Reduce font size */
 }
 
 .modal-overlay {
@@ -122,13 +123,10 @@ p {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  /* Semi-transparent black background */
   display: flex;
   justify-content: center;
   align-items: center;
-  /* Align modal content at the top */
   z-index: 999;
-  /* Ensure modal appears above other content */
 }
 
 .message-modal {
@@ -149,7 +147,7 @@ p {
 
 @media screen and (max-width: 600px) {
   .message-modal {
-    width: 80%; /* Adjust width for smaller screens */
+    width: 80%;
   }
 }
 
@@ -163,4 +161,3 @@ p {
   cursor: pointer;
   margin-top: 10px;
 }
-

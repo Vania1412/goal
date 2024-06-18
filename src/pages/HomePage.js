@@ -268,8 +268,8 @@ const HomePage = () => {
   return (
     <div className="container">
       <Menu />
-      <Link to={`/profile/${username.toLowerCase()}`}> {username} </Link>
-         <p>Saving status: 
+      <Link to={`/profile/${username.toLowerCase()}`} className="link-to-profile">{username}</Link>
+      <p className="profile-info">Saving status:
         <select
           value={savingStatus}
           onChange={(e) => handleStatus(e.target.value)}
@@ -277,10 +277,10 @@ const HomePage = () => {
           <option value="stable">Stable</option>
           <option value="adequate">Adequate</option>
           <option value="strained">Strained</option>
-
-        </select></p>
-       <p>Expected Saving Per Month: £{espm}</p>
-      <p>Total Saving: £{totalSaving}</p>
+        </select>
+      </p>
+      <p className="profile-info">Expected Saving Per Month: £{espm}</p>
+      <p className="profile-info">Total Saving: £{totalSaving}</p>
       <h1>Saving for your Goal</h1>
       <div className="input-container">
         <input
@@ -295,7 +295,6 @@ const HomePage = () => {
         >
           <option value="">Select a goals</option>
           {goals.filter(goal => goal.progress !== 100).map(goal => <option value={goal.title}>{goal.title}</option>)}
-
         </select>
         <button onClick={handleAddSaving}>Add Saving</button>
       </div>
@@ -309,30 +308,18 @@ const HomePage = () => {
         </div>
       )}
 
-
-      {/* <div className="input-container">
-        
-         <button onClick={updateAllExistGoals}>Update Goals</button>
-      </div>
- */}
-      <div className="goal-list">
+      <div className="flex-container">
         {goals.sort((a, b) => b.progress - a.progress).map(goal => (
-          <div className="goal-box" key={goal.id}>
-            <Link to={`/details-goal/${goal.title.toLowerCase().replace(/ /g, '-')}`} className="goal-link">
+          <div className="card" key={goal.id}>
+            <Link to={`/details-goal/${goal.title.toLowerCase().replace(/ /g, '-')}`} className="card-link">
               <h3>{goal.title}</h3>
               <p>Costs: £{goal.costs}</p>
               <p>Progress: {goal.progress}%</p>
             </Link>
-            {goal.progress === 100 ? <button onClick={() => handldeClaim(goal)}> Claim </button> : <></>}
-            {/*  <div className="goal-info">
-        <button onClick={() => handleGoalClick(goal)}>
-          Edit costs
-        </button>
-  </div>*/}
+            {goal.progress === 100 && <button onClick={() => handldeClaim(goal)}>Claim</button>}
           </div>
         ))}
       </div>
-
     </div>
   );
 }
