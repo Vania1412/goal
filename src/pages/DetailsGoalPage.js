@@ -19,6 +19,9 @@ const DetailsGoalPage = () => {
   const [newGoalCategory, setNewGoalCategory] = useState('');
   const [isSavedAsInterested, setIsSavedAsInterested] = useState(false);
   const [viewable, setViewable] = useState('');
+  const [memories, setMemories] = useState([]);
+  const [selectedImageUrls, setSelectedImageUrls] = useState([]);
+  const [showImageModal, setShowImageModal] = useState(false);
   const { username, totalSaving, unclaimedSaving, setUnclaimedSaving, allUnclaimed } = useGlobalState();
 
   const navigate = useNavigate();
@@ -56,6 +59,16 @@ const DetailsGoalPage = () => {
 
           setFeaturedStories(storiesData);
           setUserUsefulStories(userUsefulMap);
+
+           // Fetch memories associated with the goal
+           const memoriesRef = collection(firestore, `goals/${querySnapshot.docs[0].id}/memories`);
+           const memoriesSnapshot = await getDocs(memoriesRef);
+           const memoriesData = memoriesSnapshot.docs.map(doc => ({
+             id: doc.id,
+             ...doc.data()
+           }));
+ 
+           setMemories(memoriesData);
 
           // Check if the goal is already set for the user
           const userQuery = query(collection(firestore, 'users'), where('Username', '==', username));
@@ -241,6 +254,11 @@ const DetailsGoalPage = () => {
     document.body.style.overflow = 'auto';
   };
 
+  const handleImageModalClose = () => {
+    setShowImageModal(false);
+    document.body.style.overflow = 'auto';
+  };
+
   const toggleShowAllStories = () => {
     setShowAllStories(!showAllStories);
   };
@@ -266,6 +284,25 @@ const DetailsGoalPage = () => {
     }
   };
 
+  const openImageModal = (imageUrls) => {
+    // Open modal or handle image click functionality
+    console.log('Opening modal for images:', imageUrls);
+    // Implement modal logic here (e.g., set state to open modal and pass imageUrls)
+    // You can implement modal logic using a library like react-modal or create your own modal component
+    // Example with useState to manage modal state
+    setShowImageModal(true);
+    setSelectedImageUrls(imageUrls);
+  };
+  const renderMemoryBoxes = () => {
+
+
+    return memories.map((memory, index) => (
+      <div key={index} className="memory-box" onClick={() => openImageModal(memory.imageUrls)} >
+        <img src={memory.imageUrls[0]} alt="Memory" className="memory-image" />
+        <p className="memory-username">{memory.username}</p>
+      </div>
+    ));
+  };
 
   if (!goalData) {
     return <div>Loading...</div>;
@@ -383,15 +420,21 @@ const DetailsGoalPage = () => {
 
       {/* Render memory collection */}
       <h2 className="section-title">Memory Collection</h2>
-      {/* <div className="memory-collection">
-        {memoryCollection.map((memory, index) => (
-          <div key={index} className="memory">
-            <p className="memory-author">{memory.author}</p>
-            <p className="memory-tip">{memory.tip}</p>
+      <div className="memory-collection">
+        {renderMemoryBoxes()}
+      </div>
+
+      {showImageModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <button className="modal-close" onClick={handleImageModalClose}>Close</button>
+            <div className="modal-image-container">
+              <img src={selectedImageUrls} alt="Memory" className="modal-image" />
+            </div>
+            {/* Add buttons or controls for switching images here */}
           </div>
-        ))}
-      </div> */}
-      <h2 className="section-title">Discussion Forums</h2>
+        </div>
+      )}
       
     </div>
   );
