@@ -52,27 +52,72 @@
     border-radius: 8px;
   }
   
-  .progress-updates-list {
-    list-style: none;
-    padding: 0;
+  .progress-board {
+    display: grid;
+    gap: 20px;
   }
   
-  .progress-update-card {
+  .progress-update-box {
     border: 1px solid #ccc;
-    margin-bottom: 20px;
-    padding: 15px;
+    padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
   }
   
-  .progress-update-card .update-content {
+  .user-info {
+    display: flex;
+    align-items: center;
     margin-bottom: 10px;
   }
   
-  .progress-update-card p {
-    margin: 0;
+  .user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 10px;
   }
   
+  .username {
+    font-weight: bold;
+  }
+  
+  .action-description {
+    margin-bottom: 10px;
+  }
+  
+  .action-image {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  
+  .action-img {
+    max-width: 100%;
+    height: auto;
+    cursor: pointer;
+    border-radius: 8px;
+  }
+  
+  .progress-update-buttons {
+    margin-top: 10px;
+  }
+  
+  .tips-section {
+    margin-top: 10px;
+  }
+  
+  .tip-box {
+    margin-top: 5px;
+    padding: 5px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .tips-input {
+    margin-top: 10px;
+  }
+  
+ 
   .challenge-update {
     background-color: #e0f7fa;
     padding: 10px;

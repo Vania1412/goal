@@ -322,13 +322,13 @@ const ProgressBoardPage = () => {
                       <p>You share the same goal with {update.username}</p>
                     ) : (
                       <>
-                        <button onClick={() => handleView(update)}>View Goal Detail</button>
-                        <button onClick={() => handleSupport(update)}>Join</button>
+                        <button className='progress-button' onClick={() => handleView(update)}>View Goal Detail</button>
+                        <button className='progress-button' onClick={() => handleSupport(update)}>Join</button>
                       </>
                     )
                   )}
                   {update.goalTitle && update.username !== username && update.progress !== 0 && (
-                    <button onClick={() => handleSupport(update)}>
+                    <button className='progress-button' onClick={() => handleSupport(update)}>
                       {update.celebrations && update.celebrations.includes(username) ? "Celebrated" : "Celebrate"}
                     </button>
                   )}
@@ -345,7 +345,7 @@ const ProgressBoardPage = () => {
                         value={tips}
                         onChange={(e) => setTips(e.target.value)}
                       />
-                      <button onClick={() => handleTips(update)}>Send</button>
+                      <button className='progress-button' onClick={() => handleTips(update)}>Send</button>
                     </div>
                   )}
               </div>
