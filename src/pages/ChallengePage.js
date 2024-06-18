@@ -138,7 +138,7 @@ const ChallengePage = () => {
   };
 
   return (
-    <div className="challenge-page">
+    <div className="container">
       <Menu />
       <h2>Group Challenges</h2>
       <div className="create-challenge">

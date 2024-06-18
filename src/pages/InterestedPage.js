@@ -124,7 +124,7 @@ const InterestedPage = () => {
     };
 
     return (
-        <div>
+        <div className="container">
             <Menu />
             <h2>Interested</h2>
 

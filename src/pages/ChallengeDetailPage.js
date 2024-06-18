@@ -92,7 +92,7 @@ const ChallengeDetailPage = () => {
     const endDate = challenge.endDate ? challenge.endDate.toDate() : null;
 
     return (
-        <div className="challenge-detail-page">
+        <div className="container">
             <Menu />
             <div className="challenge-detail-container">
                 <h2>{challenge.type} Challenge</h2>

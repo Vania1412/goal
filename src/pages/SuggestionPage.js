@@ -136,7 +136,7 @@ const SuggestionPage = () => {
     };
 
     return (
-        <div>
+        <div className="container-suggestion">
             <Menu />
             <h2>Suggested Goals</h2>
             <div>

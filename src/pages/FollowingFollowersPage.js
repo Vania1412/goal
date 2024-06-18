@@ -161,7 +161,7 @@ const FollowingFollowersPage = () => {
 
  
   return (
-    <div>
+    <div className="container">
       <Menu />
       <div style={styles.tabContainer}>
         <div

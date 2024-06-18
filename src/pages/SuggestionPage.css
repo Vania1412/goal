@@ -1,3 +1,9 @@
+.container-suggestion {
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
 .goal-list {
   display: flex;
   flex-wrap: wrap;
