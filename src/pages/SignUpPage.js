@@ -24,9 +24,7 @@ const SignUpPage = () => {
         return;
       }
 
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
- 
-  //    await auth.createUserWithEmailAndPassword(email, password);
+      await createUserWithEmailAndPassword(auth, email, password);
        
       const userData = { 
         email: email, 
