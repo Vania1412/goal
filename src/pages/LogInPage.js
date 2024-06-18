@@ -6,14 +6,25 @@ import { useGlobalState } from '../GlobalStateContext.js';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 const LogInPage = () => {
-  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
   const [error, setError] = useState('');
+  const { username, setUsername } = useGlobalState();
   const auth = getAuth();
 
   const handleLogIn = async () => {
     try {
+      // Look up the username in Firestore to get the corresponding email.
+      const usernameQuery = query(collection(firestore, "users"), where("Username", "==", username));
+      const usernameSnapshot = await getDocs(usernameQuery);
+
+      if (usernameSnapshot.empty) { 
+        setError("Username does not exist");
+        return;
+      }
+
+      const email = usernameSnapshot.docs[0].data().email;
+
       await signInWithEmailAndPassword(auth, email, password);
       navigate('/home');
     } catch (error) {
@@ -30,11 +41,11 @@ const LogInPage = () => {
         
         
         <label>
-          Email:
+          Username:
           <input
             type="text"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             required
           />
         </label>
