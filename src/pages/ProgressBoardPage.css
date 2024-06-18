@@ -99,9 +99,7 @@
   margin-bottom: 16px;
 }
 
-.modal-input {
-  margin-bottom: 16px;
-}
+ 
 
 .modal-input label {
   display: block;
@@ -129,7 +127,7 @@
 }
 
 /* Media query for mobile devices */
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .modal-content {
     width: 95%; /* Slightly smaller than the width of the Android phone */
   }

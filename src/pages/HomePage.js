@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { collection, query, where, addDoc, getDocs, updateDoc, serverTimestamp, deleteDoc } from "firebase/firestore";
+import { collection, query, where, addDoc, getDocs, updateDoc, serverTimestamp, deleteDoc, doc } from "firebase/firestore";
 import { firestore } from '../firebase';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Menu from '../components/Menu.js';
 import './HomePage.css';
 import { useGlobalState } from '../GlobalStateContext.js';
@@ -28,9 +28,14 @@ const HomePage = () => {
   const location = useLocation();
   const [showMessage, setShowMessage] = useState(false);
   const [message, setMessage] = useState('');
+  const [claimModalOpen, setClaimModalOpen] = useState(false);
+  const [selectedGoal, setSelectedGoal] = useState(null);
+  const [actualCosts, setActualCosts] = useState('');
   //  const [unclaimedSaving, setUnclaimedSaving] = useState(0);
   // const [allUnclaimed, setAllUnclaimed] = useState(false);
   const { username, totalSaving, setTotalSaving, unclaimedSaving, setUnclaimedSaving, allUnclaimed, setAllUnclaimed } = useGlobalState();
+
+  const navigate = useNavigate();   
 
 
   useEffect(() => {
@@ -170,9 +175,9 @@ const HomePage = () => {
 
         const newSaving = userSnapshot.docs[0].data()['total saving'] + parseInt(saving);
         await updateDoc(userDocRef, {
-           'total saving': newSaving,
-           // add a document to 'saving_record' of the user with amount: parseInt(saving) and timestamp: serverTimestamp() 
-          });
+          'total saving': newSaving,
+          // add a document to 'saving_record' of the user with amount: parseInt(saving) and timestamp: serverTimestamp() 
+        });
         setTotalSaving(newSaving);
         const goalsCollectionRef = query(collection(firestore, `users/${userId}/current_goals`), where("title", "==", savingGoal));
         const goalSnapshot = await getDocs(goalsCollectionRef);
@@ -232,12 +237,61 @@ const HomePage = () => {
 
 
 
-  const handldeClaim = async (reachedGoal) => {
 
-  }
+  const handleClaim = (goal) => {
+    setSelectedGoal(goal);
+    setActualCosts(goal.costs);
+    setClaimModalOpen(true);
+  };
+
+  const handleConfirmClaim = async () => {
+    const today = new Date();
+const startDate = selectedGoal.startDate && selectedGoal.startDate.toDate().getTime();  
+const differenceInTime = today.getTime() - startDate;
+const savingDays = Math.floor(differenceInTime / (1000 * 3600 * 24));
+
+    const userQuery = query(collection(firestore, 'users'), where('Username', '==', username));
+    const userSnapshot = await getDocs(userQuery);
+    if (!userSnapshot.empty) {
+      const userId = userSnapshot.docs[0].id;
+      const userDocRef = userSnapshot.docs[0].ref;
+      const userData = userSnapshot.docs[0].data();
+      const currentTotalSavings = userData['total saving'] || 0;
+
+      // Calculate the new total savings after deducting actualCosts
+      const newTotalSavings = currentTotalSavings - actualCosts;
+
+      // Update the user document with the new total savings
+      await updateDoc(userDocRef, {
+        'total saving': newTotalSavings,
+      });
+      const goalDocRef = doc(firestore, `users/${userId}/current_goals`, selectedGoal.id);
+      await deleteDoc(goalDocRef);
+      const achievedGoal = {
+        ...selectedGoal,
+        'actual costs': actualCosts,
+        'expected costs': selectedGoal.costs,
+        'saving days': savingDays || 1,
+        title: selectedGoal.title,
+        's&t': '', 
+        timestamp: serverTimestamp()
+      };
+
+      const goalsCollectionRef = collection(firestore, `users/${userId}/achieved_goals`);
+      await addDoc(goalsCollectionRef, achievedGoal);
+      navigate('/achieved');
+    }
+
+
+
+    // Update local state
+    const updatedGoals = goals.filter(goal => goal.id !== selectedGoal.id);
+    setGoals(updatedGoals);
+    setClaimModalOpen(false);
+  };
 
   const handleStatus = async (status) => {
-    
+
     const userQuery = query(collection(firestore, "users"), where("Username", "==", username));
     const userSnapshot = await getDocs(userQuery);
     const userDocRef = userSnapshot.docs[0].ref;
@@ -260,7 +314,7 @@ const HomePage = () => {
       timestamp: serverTimestamp(),
       viewable: "my followers"
     });
-   /// setSavingStatus(status);
+    /// setSavingStatus(status);
 
   }
 
@@ -316,10 +370,28 @@ const HomePage = () => {
               <p>Costs: £{goal.costs}</p>
               <p>Progress: {goal.progress}%</p>
             </Link>
-            {goal.progress === 100 && <button onClick={() => handldeClaim(goal)}>Claim</button>}
+            {goal.progress === 100 && <button onClick={() => handleClaim(goal)}>Claim</button>}
           </div>
         ))}
       </div>
+      <Link to="/goal-adding"> Add new goal </Link>
+      {claimModalOpen && (
+        <div className="claim-modal">
+          <div className="claim-modal-content">
+            <h2>Claim Goal</h2>
+            <label>
+              Actual Costs:
+              <input
+                type="number"
+                value={actualCosts}
+                onChange={(e) => setActualCosts(e.target.value)}
+              />
+            </label>
+            <button onClick={handleConfirmClaim}>Confirm</button>
+            <button onClick={() => setClaimModalOpen(false)}>Cancel</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

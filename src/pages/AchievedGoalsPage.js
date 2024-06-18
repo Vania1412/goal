@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { collection, query, where, getDocs, updateDoc, doc, setDoc, addDoc, getDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, updateDoc, doc, setDoc, addDoc, getDoc, orderBy } from 'firebase/firestore';
 import { firestore, storage } from '../firebase';
 import Menu from '../components/Menu.js';
 import { Link } from 'react-router-dom';
@@ -24,7 +24,7 @@ const AchievedGoalsPage = () => {
         const userSnapshot = await getDocs(userQuery);
         if (!userSnapshot.empty) {
           const userId = userSnapshot.docs[0].id;
-          const goalsQuery = query(collection(firestore, `users/${userId}/achieved_goals`));
+          const goalsQuery = query(collection(firestore, `users/${userId}/achieved_goals`), orderBy("timestamp", "desc"));
           const goalsSnapshot = await getDocs(goalsQuery);
           const goalsData = goalsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
           setAchievedGoals(goalsData);

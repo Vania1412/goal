@@ -169,7 +169,8 @@ const GoalAddingPage = () => {
           progress: 0,
           costs: parseFloat(cost),
           category: category,
-          viewable: viewable
+          viewable: viewable,
+          startDate: new Date() 
           // select: false
 
           //  imageURL: imageURL
