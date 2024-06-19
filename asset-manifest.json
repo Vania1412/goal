@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/goal/static/css/main.f7500ba8.css",
-    "main.js": "/goal/static/js/main.ff4baabb.js",
+    "main.js": "/goal/static/js/main.33528f3d.js",
     "static/js/453.75a41e88.chunk.js": "/goal/static/js/453.75a41e88.chunk.js",
     "static/media/saversquad logo.png": "/goal/static/media/saversquad logo.dffe513add4606504aed.png",
     "index.html": "/goal/index.html",
     "main.f7500ba8.css.map": "/goal/static/css/main.f7500ba8.css.map",
-    "main.ff4baabb.js.map": "/goal/static/js/main.ff4baabb.js.map",
+    "main.33528f3d.js.map": "/goal/static/js/main.33528f3d.js.map",
     "453.75a41e88.chunk.js.map": "/goal/static/js/453.75a41e88.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.f7500ba8.css",
-    "static/js/main.ff4baabb.js"
+    "static/js/main.33528f3d.js"
   ]
 }
