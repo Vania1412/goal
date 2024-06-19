@@ -15,8 +15,8 @@ const firebaseConfig = {
     storageBucket: "saving-goal-1e180.appspot.com",
     messagingSenderId: "472859181501",
     appId: "1:472859181501:android:7e5fd23b77ca0b05fd52d4",
-};
-*/
+};*/
+
 const firebaseConfig = {
     apiKey: "AIzaSyB1hvcgxbSgUx_zJnTT8Zs26RWKfLNImvQ",
     authDomain: "goal-simple.firebaseapp.com",

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { doc, collection, query, where, onSnapshot, getDoc, updateDoc, arrayUnion } from 'firebase/firestore';
 import { firestore } from '../firebase.js';
 import Menu from '../components/Menu.js';
@@ -107,7 +107,12 @@ const ChallengeDetailPage = () => {
                         <ul>
                             {participantSavings.map((participant, index) => (
                                 <li key={index}>
-                                    Rank {index + 1}: {participant.username} --- £{participant.savings}
+                                    Rank {index + 1}: <Link
+                                to={`/profile/${participant.username.toLowerCase()}`}
+                                className="goal-link"
+                              >
+                                {participant.username}
+                              </Link> --- £{participant.savings}
                                 </li>
                             ))}
                         </ul>
@@ -119,9 +124,12 @@ const ChallengeDetailPage = () => {
                     <div className="progress">
                         <ul>
                             {challenge.participants.map(participant => (
-                                <li>
-                                   {participant} 
-                                </li>
+                                <Link
+                                to={`/profile/${participant.toLowerCase()}`}
+                                className="goal-link"
+                              >
+                                {participant}
+                              </Link>
                             ))}
                         </ul>
                         <h3>Progress</h3>
@@ -137,7 +145,7 @@ const ChallengeDetailPage = () => {
                     </div>
                 )}
             </div>
-            {showJoin && <button onClick={handleJoinChallenge}>Join Challenge</button>}
+            {showJoin && <button className = "progress-button" onClick={handleJoinChallenge}>Join Challenge</button>}
         </div>
     );
 };
