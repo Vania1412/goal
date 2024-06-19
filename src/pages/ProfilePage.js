@@ -136,7 +136,7 @@ const ProfilePage = () => {
             const followers = userData.followers || [];
             const filteredUpdates = resolvedUpdates.filter(doc => 
               (doc.viewable === "Me" && username === profileUserFormatted) ||
-              (followers.includes(username) && username !== profileUserFormatted) ||
+              (doc.viewable !== "Me" && followers.includes(username) && username !== profileUserFormatted) ||
               username === profileUserFormatted
             );
             const filterFollowing = filteredUpdates.filter(doc => doc.username === profileUserFormatted);
