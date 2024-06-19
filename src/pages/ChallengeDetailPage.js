@@ -124,12 +124,13 @@ const ChallengeDetailPage = () => {
                     <div className="progress">
                         <ul>
                             {challenge.participants.map(participant => (
+                                <li>
                                 <Link
                                 to={`/profile/${participant.toLowerCase()}`}
                                 className="goal-link"
                               >
                                 {participant}
-                              </Link>
+                              </Link></li>
                             ))}
                         </ul>
                         <h3>Progress</h3>
