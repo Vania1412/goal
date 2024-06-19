@@ -387,7 +387,7 @@ const DetailsGoalPage = () => {
       </div>
   */}
       {/* Render featured stories and tips */}
-      <h2 className="section-title">Featured Stories & Tips</h2>
+      {/*<h2 className="section-title">Featured Stories & Tips</h2>
       <div className={`featured-stories ${showModal ? 'grayed-out' : ''}`}>
         {featuredStories.sort((a, b) => b.useful.length - a.useful.length).slice(0, showAllStories ? undefined : 3).map((story, index) => (
           <div key={index} className="story">
@@ -416,7 +416,7 @@ const DetailsGoalPage = () => {
       {featuredStories.length === 0 && (
         <p>No featured stories & tips currently.</p>
       )}
-
+*/}
 
       {/* Render memory collection */}
       <h2 className="section-title">Memory Collection</h2>
