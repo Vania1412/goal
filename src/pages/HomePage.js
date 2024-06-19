@@ -35,7 +35,7 @@ const HomePage = () => {
   // const [allUnclaimed, setAllUnclaimed] = useState(false);
   const { username, totalSaving, setTotalSaving, unclaimedSaving, setUnclaimedSaving, allUnclaimed, setAllUnclaimed } = useGlobalState();
 
-  const navigate = useNavigate();   
+  const navigate = useNavigate();
 
 
   useEffect(() => {
@@ -246,9 +246,9 @@ const HomePage = () => {
 
   const handleConfirmClaim = async () => {
     const today = new Date();
-const startDate = selectedGoal.startDate && selectedGoal.startDate.toDate().getTime();  
-const differenceInTime = today.getTime() - startDate;
-const savingDays = Math.floor(differenceInTime / (1000 * 3600 * 24));
+    const startDate = selectedGoal.startDate && selectedGoal.startDate.toDate().getTime();
+    const differenceInTime = today.getTime() - startDate;
+    const savingDays = Math.floor(differenceInTime / (1000 * 3600 * 24));
 
     const userQuery = query(collection(firestore, 'users'), where('Username', '==', username));
     const userSnapshot = await getDocs(userQuery);
@@ -273,7 +273,7 @@ const savingDays = Math.floor(differenceInTime / (1000 * 3600 * 24));
         'expected costs': selectedGoal.costs,
         'saving days': savingDays || 1,
         title: selectedGoal.title,
-        's&t': '', 
+        's&t': '',
         timestamp: serverTimestamp()
       };
 
@@ -366,12 +366,27 @@ const savingDays = Math.floor(differenceInTime / (1000 * 3600 * 24));
         {goals.sort((a, b) => b.progress - a.progress).map(goal => (
           <div className="card" key={goal.id}>
             <Link to={`/details-goal/${goal.title.toLowerCase().replace(/ /g, '-')}`} className="card-link">
-              <h3>{goal.title}</h3>
-              <p>Costs: £{goal.costs}</p>
-              <p>Progress: {goal.progress}%</p>
+              <div className="card-header">
+                <h3>{goal.title}</h3>
+                <p className="cost">Costs: £{goal.costs}</p>
+              </div>
+              <div className="card-content">
+                <p>Saved: £{goal.progress === 100 ? goal.costs : (goal.costs * goal.progress / 100).toFixed(2)}</p>
+                <div className="home-progress-bar">
+                  <div
+                    className="home-progress-bar-fill"
+                    style={{
+                      width: `${goal.progress}%`,
+                    }}
+                  ></div>
+                </div>
+                <p className="cost">Progress: {goal.progress}%</p>
+              </div>
+
             </Link>
             {goal.progress === 100 && <button onClick={() => handleClaim(goal)}>Claim</button>}
           </div>
+
         ))}
       </div>
       <Link to="/goal-adding"> Add new goal </Link>
