@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { collection, query, where, getDocs, addDoc, updateDoc, increment, doc, arrayRemove, arrayUnion, serverTimestamp } from 'firebase/firestore';
-import { firestore } from '../firebase';
+import { collection, query, where, getDocs, addDoc, updateDoc, increment,  serverTimestamp } from 'firebase/firestore';
+import { firestore } from '../firebase';//doc, arrayRemove, arrayUnion,
 import Menu from '../components/Menu.js';
 import './DetailsGoalPage.css';
 import { useGlobalState } from '../GlobalStateContext.js';
@@ -11,9 +11,9 @@ const DetailsGoalPage = () => {
   const [goalData, setGoalData] = useState(null);
   const [isGoalSet, setIsGoalSet] = useState(true); // Start as true
   const [averageCosts, setAverageCosts] = useState(0);
-  const [featuredStories, setFeaturedStories] = useState([]);
+/*  const [featuredStories, setFeaturedStories] = useState([]);
   const [userUsefulStories, setUserUsefulStories] = useState({});
-  const [showAllStories, setShowAllStories] = useState(false);
+  const [showAllStories, setShowAllStories] = useState(false);*/
   const [showModal, setShowModal] = useState(false);
   const [newGoalCosts, setNewGoalCosts] = useState(0);
   const [newGoalCategory, setNewGoalCategory] = useState('');
@@ -44,7 +44,7 @@ const DetailsGoalPage = () => {
           const data = querySnapshot.docs[0].data();
           setGoalData(data);
           setAverageCosts(data['average costs']);
-
+/*
           const featuredStoriesRef = collection(firestore, `goals/${querySnapshot.docs[0].id}/featured_s&t`);
           const storiesSnapshot = await getDocs(featuredStoriesRef);
           const storiesData = storiesSnapshot.docs.map(doc => ({
@@ -52,13 +52,13 @@ const DetailsGoalPage = () => {
             ...doc.data(),
           })).filter(story => story.content !== "");
 
-          const userUsefulMap = storiesData.reduce((acc, story) => {
+         const userUsefulMap = storiesData.reduce((acc, story) => {
             acc[story.id] = story.useful.includes(username);
             return acc;
           }, {});
-
+          
           setFeaturedStories(storiesData);
-          setUserUsefulStories(userUsefulMap);
+          setUserUsefulStories(userUsefulMap);*/
 
            // Fetch memories associated with the goal
            const memoriesRef = collection(firestore, `goals/${querySnapshot.docs[0].id}/memories`);
@@ -98,7 +98,7 @@ const DetailsGoalPage = () => {
     fetchGoalData();
   }, [goalTitle, username]);
 
-  const handleUsefulClick = async (storyId) => {
+ /* const handleUsefulClick = async (storyId) => {
     console.log("Clicked on useful for storyId:", storyId);
     try {
       const goalDocQuery = query(collection(firestore, "goals"), where("titlelc", "==", formatGoalTitle(goalTitle)));
@@ -146,7 +146,7 @@ const DetailsGoalPage = () => {
       console.error('Error updating useful status:', error);
     }
   };
-
+*/
 
 
   const handleSetGoal = () => {
@@ -258,10 +258,10 @@ const DetailsGoalPage = () => {
     setShowImageModal(false);
     document.body.style.overflow = 'auto';
   };
-
+/*
   const toggleShowAllStories = () => {
     setShowAllStories(!showAllStories);
-  };
+  };*/
 
   const handleSaveAsInterested = async () => {
     if (goalData) {
