@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useGlobalState } from '../GlobalStateContext.js';
 
-import { collection, query, where, getDocs, orderBy, doc, updateDoc, arrayUnion, addDoc, increment, serverTimestamp } from "firebase/firestore";
+import { collection, query, where, getDocs, orderBy, doc, updateDoc, arrayUnion, addDoc, increment, serverTimestamp, onSnapshot } from "firebase/firestore";
 import { firestore } from '../firebase.js';
 import Menu from '../components/Menu.js';
 import './ProfilePage.css';
@@ -84,7 +84,7 @@ const ProfilePage = () => {
         console.error("Error fetching user goals:", error);
       }
     };
-    const fetchProgressUpdates = async () => {
+   /* const fetchProgressUpdates = async () => {
       try {
         const userQuery = query(collection(firestore, "users"), where("Username", "==", profileUserFormatted));
         const userSnapshot = await getDocs(userQuery);
@@ -114,14 +114,50 @@ const ProfilePage = () => {
       } catch (error) {
         console.error("Error fetching progress updates:", error);
       }
-    };
+    };*/
+
+    const unsubscribe = onSnapshot(
+      query(collection(firestore, "progressUpdates"), orderBy("timestamp", "desc")),
+      async (updatesSnapshot) => {
+        try {
+          const updatesDataPromises = updatesSnapshot.docs.map(async (doc) => {
+            const data = doc.data();
+            const tipsSnapshot = await getDocs(collection(doc.ref, 'tips'));
+            const tips = tipsSnapshot.docs.map((tipDoc) => tipDoc.data());
+            return { ...data, id: doc.id, tips };
+          });
+  
+          const resolvedUpdates = await Promise.all(updatesDataPromises);
+   
+          const userQuery = query(collection(firestore, "users"), where("Username", "==", profileUserFormatted));
+          const userSnapshot = await getDocs(userQuery);
+          if (!userSnapshot.empty) {
+            const userData = userSnapshot.docs[0].data();
+            const followers = userData.followers || [];
+            const filteredUpdates = resolvedUpdates.filter(doc => 
+              (doc.viewable === "Me" && username === profileUserFormatted) ||
+              (followers.includes(username) && username !== profileUserFormatted) ||
+              username === profileUserFormatted
+            );
+            const filterFollowing = filteredUpdates.filter(doc => doc.username === profileUserFormatted);
+            setProgressUpdates(filterFollowing);
+          }
+        } catch (error) {
+          console.error('Error processing progress updates:', error);
+        }
+      },
+      (error) => {
+        console.error('Error fetching progress updates:', error);
+      }
+    );
 
     fetchUserGoals();
     fetchUserAchievedGoals();
 
 
-    fetchProgressUpdates();
+    //fetchProgressUpdates();
     fetchBadges();
+    return () => unsubscribe();
   }, [username, profileUser, modifyCelebratedUsers]);
 
   const capitalizeFirstLetter = (string) => {
