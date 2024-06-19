@@ -1,7 +1,7 @@
  
 .create-challenge {
   width: 100%;
-  max-width: 600px;
+  max-width: calc(100% - 6px);;
   background-color: #fff;
   border: 1px solid #ccc;
   border-radius: 8px;
